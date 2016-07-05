@@ -31,4 +31,4 @@ module.exports = {
 };
 ```
 
-Then you can run the `testrail-sync` command (or `./node_modules/.bin/testrail-sync` if it's not installer globally).
+Then you can run the `testrail-sync` command (or `./node_modules/.bin/testrail-sync` if it's not installed globally).
