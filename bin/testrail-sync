@@ -1,0 +1,21 @@
+#!/usr/bin/env node
+
+var path = require('path');
+var fs = require('fs');
+var _ = require('lodash');
+var ScenarioSynchronizer = require('../lib/').ScenarioSynchronizer;
+
+
+var dir = path.resolve(__dirname, '..');
+
+var defaultOptions = {
+  featuresDir: path.resolve(dir, 'features'),
+  jsDir: path.resolve(dir, 'features', 'step_definitions'),
+};
+
+var options = require(path.resolve(dir, '.testrailsync.js'));
+options = _.defaultsDeep(options, defaultOptions);
+
+new ScenarioSynchronizer(options, function (err) {
+
+});

@@ -1,0 +1,8 @@
+module.exports = function () {
+    {{#steps}}
+    this.{{keyword}}(/^{{regex}}$/, function (callback) {
+        callback(null, 'pending');
+    }.bind(this));
+    
+    {{/steps}}
+};

@@ -1,0 +1,39 @@
+{
+  "name": "cucumber-testrail-sync",
+  "version": "0.1.0",
+  "description": "",
+  "bin": "./bin/testrail-sync",
+  "scripts": {
+    "lint": "./node_modules/.bin/eslint lib/*.js",
+    "test": "NODE_ENV=test ./node_modules/.bin/cucumberjs -r features --format summary",
+    "cover": "NODE_ENV=test ./node_modules/.bin/istanbul cover ./node_modules/.bin/cucumberjs --fail-fast --report html --bail -- -r features"
+  },
+  "author": "SSENSE",
+  "license": "MIT",
+  "engines": {
+    "node": ">= 0.12.0"
+  },
+  "dependencies": {
+    "async": "^2.0.0-rc.6",
+    "chalk": "^1.1.3",
+    "escape-string-regexp": "^1.0.5",
+    "handlebars": "^4.0.5",
+    "inquirer": "^1.0.3",
+    "joi": "^8.4.2",
+    "lodash": "^4.13.1",
+    "mkdirp": "^0.5.1",
+    "string": "^3.3.1",
+    "testrail-api": "^1.0.1"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "cucumber": "^1.0.0",
+    "eslint": "^2.13.1",
+    "eslint-config-airbnb-base": "^3.0.1",
+    "eslint-plugin-import": "^1.9.2",
+    "istanbul": "^0.4.4",
+    "mock-fs": "^3.9.0",
+    "nock": "^8.0.0",
+    "rewire": "^2.5.2"
+  }
+}
