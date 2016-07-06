@@ -71,3 +71,31 @@ Feature: Local overwrite tests
       """
       Some content
       """
+
+
+  Scenario: Don't overwrite local .feature file if overwrite.local = True but file hasn't changed
+    Given I have 1 TestCase in a TestPlan in TestRail
+    And There is a file named "/feature/C100-my-first-test.feature" with the content:
+      """
+      Feature: my first test
+        @tcid:100
+        Scenario: C100 - my first test
+          Given that I am a tester
+          When I am testing
+          Then I should see test results
+          And I should be satified
+      """
+    And I enable the overwrite.local option
+    When I run the synchronization script
+    Then I should have 1 feature file on the file system
+    And The file "/feature/C100-my-first-test.feature" should have the following content:
+      """
+      Feature: my first test
+        @tcid:100
+        Scenario: C100 - my first test
+          Given that I am a tester
+          When I am testing
+          Then I should see test results
+          And I should be satified
+      """
+    And The file "/feature/C100-my-first-test.feature" should not have been modified

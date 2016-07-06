@@ -5,9 +5,17 @@ module.exports = function() {
 
   var Testrail = require('testrail-api');
 
+  var fsMock = require('mock-fs');
+
 
   this.When(/^There is a file named "(.*)" with the content:$/, function (filePath, fileContent, callback) {
-    this.fsMockConfig[filePath] = fileContent;
+    this.fsMockConfig[filePath] = fsMock.file({
+      content: fileContent,
+      ctime: new Date(1),
+      mtime: new Date(1)
+    });
+
+    //console.log(this.fsMockConfig[filePath]());
 
     callback();
   }.bind(this));
@@ -42,6 +50,13 @@ module.exports = function() {
 
   this.Then(/^The file "(.*)" should have the following content:$/, function (filePath, fileContent, callback) {
     expect(fs.readFileSync(filePath).toString()).to.equal(fileContent);
+
+    callback();
+  }.bind(this));
+
+
+  this.Then(/^The file "(.*)" should not have been modified$/, function (filePath, callback) {
+    expect(fs.statSync(filePath).mtime.getTime()).to.equal(new Date(1).getTime());
 
     callback();
   }.bind(this));

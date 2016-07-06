@@ -1,14 +1,16 @@
 # cucumber-testrail-sync
 
+This module has two main features:
 
-This package has two main goals:
+> It can synchronize test cases from TestRail to `.feature` files on your local filesystem.
 
-1. Synchronize test cases from TestRail to .feature files on the local filesystem.
+We propose the following collaborative workflow for BDD testing:
 
-  ![Synchronize test cases!](images/sync-scenarios.png)
+![Synchronize test cases!](images/sync-scenarios.png)
 
-2. Create a test run on TestRail and send back the test results
+=====
 
+> It can automatically push test results back to TestRail.
 
 ## Installation
 
@@ -16,19 +18,40 @@ This package has two main goals:
 
 ## Usage
 
-At the root of your project, create the `.testrail-sync.js` file.
+* At the root of your project, create the `.testrail-sync.js` file.
 
-```js
-module.exports = {
-  testrail: {
-    host: '', // testrail host
-    user: '', // testrail username
-    password: '', // testrail password or api key
-    filters: {
-      plan_id: '', // required
-    }
+  ```js
+  module.exports = {
+    testrail: {
+      host: '', // testrail host
+      user: '', // testrail username
+      password: '', // testrail password or api key
+      filters: {
+        plan_id: '', // testrail plan id
+      }
+    },
+  };
+  ```
+
+  There are other possible options:
+
+  * __overwrite__:
+
+  ```js
+  overwrite: {
+    local: 'ask',
+    remote: false,
   }
-};
-```
+  ```
 
-Then you can run the `testrail-sync` command (or `./node_modules/.bin/testrail-sync` if it's not installed globally).
+  * __testFilesTemplate__:  The template to use to generate blank step definition files (ie. `testFilesTemplate: 'cucumberjs.es5'`)
+
+  * __indent__: The indentation to use when generating `.feature` or `.js` files (ie. `indent: '    '`)
+
+  * __featuresDir__:  The directory where `.feature` files should be created (ie. `featuresDir: 'features'`)
+
+  * __jsDir__:  The directory where blank step definition files should be created  (ie. `featuresDir: 'features/step_definitions'`)
+
+  Then you can run the `testrail-sync` command (or `./node_modules/.bin/testrail-sync` if it's not installed globally).
+
+* To push the tests results back to TestRail, @todo
