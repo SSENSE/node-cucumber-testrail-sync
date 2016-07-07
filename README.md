@@ -8,7 +8,7 @@ We propose the following collaborative workflow for BDD testing:
 
 ![Synchronize test cases!](images/sync-scenarios.png)
 
-=====
+------------
 
 > It can automatically push test results back to TestRail.
 
@@ -16,26 +16,26 @@ We propose the following collaborative workflow for BDD testing:
 
 > npm i cucumber-testrail-sync [-g]
 
-## Usage
+## Usage (test cases synchronization)
 
-* At the root of your project, create the `.testrail-sync.js` file.
+At the root of your project, create the `.testrail-sync.js` file.
 
-  ```js
-  module.exports = {
-    testrail: {
-      host: '', // testrail host
-      user: '', // testrail username
-      password: '', // testrail password or api key
-      filters: {
-        plan_id: '', // testrail plan id
-      }
-    },
-  };
-  ```
+```js
+module.exports = {
+  testrail: {
+    host: '', // testrail host
+    user: '', // testrail username
+    password: '', // testrail password or api key
+    filters: {
+      plan_id: '', // testrail plan id
+    }
+  },
+};
+```
 
-  There are other possible options:
+There are other possible options:
 
-  * __overwrite__:
+  * __overwrite__: Toggle the local .feature file overwrite OR remote test case overwrite if the local Gherkins doesn't match the TestRail Gherkins.
 
   ```js
   overwrite: {
@@ -52,6 +52,8 @@ We propose the following collaborative workflow for BDD testing:
 
   * __jsDir__:  The directory where blank step definition files should be created  (ie. `featuresDir: 'features/step_definitions'`)
 
-  Then you can run the `testrail-sync` command (or `./node_modules/.bin/testrail-sync` if it's not installed globally).
+Then you can run the `testrail-sync` command (or `./node_modules/.bin/testrail-sync` if it's not installed globally).
 
-* To push the tests results back to TestRail, @todo
+## Usage (test results synchronization)
+
+You will first need to setup the `.testrail-sync.js` config file, as described above.
