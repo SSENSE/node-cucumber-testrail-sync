@@ -6,7 +6,7 @@
   "scripts": {
     "lint": "./node_modules/.bin/eslint lib/*.js",
     "test": "NODE_ENV=test ./node_modules/.bin/cucumberjs -r features --format summary",
-    "cover": "NODE_ENV=test ./node_modules/.bin/istanbul cover ./node_modules/.bin/cucumberjs --fail-fast --report html --bail -- -r features"
+    "cover": "NODE_ENV=test ./node_modules/.bin/istanbul cover ./node_modules/.bin/cucumberjs --fail-fast --report html --bail -- --format summary -r features"
   },
   "author": "SSENSE",
   "license": "MIT",

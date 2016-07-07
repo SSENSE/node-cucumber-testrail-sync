@@ -29,10 +29,12 @@ var myHooks = function () {
     nock('https://test.testrail.com')
       .get('/index.php?/api/v2/get_plan/1')
       .reply(200, {
+        "project_id": "98",
         "entries": [
           {
             "id": "3933d74b-4282-4c1f-be62-a641ab427063",
             "name": "My template",
+            "suite_id": "99",
             "runs": [
               { "id": "1" }
             ]
@@ -45,6 +47,25 @@ var myHooks = function () {
       .reply(function (uri, requestBody) {
         return [200, [
           this.testCases[100]
+        ]];
+      }.bind(this));
+
+
+    nock('https://test.testrail.com')
+      .get('/index.php?/api/v2/get_cases/98&suite_id=99')
+      .reply(function (uri, requestBody) {
+        return [200, [
+          { id: 100, section_id: 2 }
+        ]];
+      }.bind(this));
+
+
+    nock('https://test.testrail.com')
+      .get('/index.php?/api/v2/get_sections/98&suite_id=99')
+      .reply(function (uri, requestBody) {
+        return [200, [
+          { id: 1, name: 'parent section', parent_id: null },
+          { id: 2, name: 'a sub section', parent_id: 1 }
         ]];
       }.bind(this));
 

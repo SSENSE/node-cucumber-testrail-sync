@@ -9,6 +9,9 @@ module.exports = function() {
 
 
   this.When(/^There is a file named "(.*)" with the content:$/, function (filePath, fileContent, callback) {
+    this.fsMockConfig['/feature/parent-section'] = {};
+    this.fsMockConfig['/feature/parent-section/a-sub-section'] = {};
+
     this.fsMockConfig[filePath] = fsMock.file({
       content: fileContent,
       ctime: new Date(1),
