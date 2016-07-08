@@ -40,7 +40,6 @@ exports.createNewTestRunMock = function () {
     .persist()
     .get('/index.php?/api/v2/get_tests/100')
     .reply(200, function (uri, requestBody) {
-      //console.log('dasdasd');
       return testplan.entries[0].runs[0].tests;
     });
 
@@ -48,7 +47,6 @@ exports.createNewTestRunMock = function () {
     .persist()
     .post('/index.php?/api/v2/add_plan_entry/10')
     .reply(200, function (uri, requestBody) {
-      //console.log(requestBody);
       newTestRunRequest = requestBody;
       return {
         runs: [
