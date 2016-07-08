@@ -31,7 +31,7 @@ var syncOptionsDontSend = {
   sendResults: false
 };
 
-describe('Send ressults to TestRail', function () {
+describe('Send results to TestRail', function () {
 
   var Cucumber = require('cucumber');
 
