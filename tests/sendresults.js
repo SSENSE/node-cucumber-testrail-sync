@@ -1,8 +1,7 @@
 var util = require('util');
 var chai = require('chai');
 var expect = chai.expect;
-var trhelper = require('../lib/trhelper.js');
-var Testrail = require('testrail-api');
+var resultSynchronizer = require('../lib/ResultSynchronizer.js');
 var testrailmock = require('./testrail-fixture.js');
 
 //var testrail
@@ -33,6 +32,8 @@ var syncOptionsDontSend = {
 
 describe('Send results to TestRail', function () {
 
+  var sync = null;
+
   var Cucumber = require('cucumber');
 
   var scenariodata = {
@@ -47,9 +48,11 @@ describe('Send results to TestRail', function () {
 
   it('creates a new test run when sendResults is activated', function (done) {
 
+    sync = new resultSynchronizer(syncOptions);
+
     testrailmock.createNewTestRunMock();
 
-    trhelper.createNewTestRun(syncOptions, function () {
+    sync.createNewTestRun(function () {
       expect(testrailmock.getCreateNewTestRunRequest().case_ids.length).to.equal(1);
       expect(testrailmock.getCreateNewTestRunRequest().case_ids[0]).to.equal(200);
       done();
@@ -59,9 +62,11 @@ describe('Send results to TestRail', function () {
 
   it('does not create a new test run when sendResults is false', function (done) {
 
+    sync = new resultSynchronizer(syncOptionsDontSend);
+
     testrailmock.createNewTestRunMock();
 
-    trhelper.createNewTestRun(syncOptionsDontSend, function () {
+    sync.createNewTestRun(function () {
       expect(testrailmock.getCreateNewTestRunRequest()).to.be.empty;
       done();
     });
@@ -69,6 +74,8 @@ describe('Send results to TestRail', function () {
   });
 
   it('sends PASSED when scenario is successful', function (done) {
+
+    sync = new resultSynchronizer(syncOptions);
 
     testrailmock.updateResultMock();
 
@@ -82,14 +89,17 @@ describe('Send results to TestRail', function () {
     scenario_result.witnessStepResult(step_result);
     var scenario = Cucumber.Api.Scenario(astscenario, scenario_result);
 
-    trhelper.updateResult(syncOptions, scenario, function () {
-      expect(testrailmock.getUpdateResultRequest().status_id).to.equal(1);
-      done();
+    sync.createNewTestRun(function() {
+      sync.updateResult(scenario, function () {
+        expect(testrailmock.getUpdateResultRequest().status_id).to.equal(1);
+        done();
+      });
     });
-
   });
 
   it('sends FAILED when scenario is failed', function (done) {
+
+    sync = new resultSynchronizer(syncOptions);
 
     testrailmock.updateResultMock();
 
@@ -103,15 +113,19 @@ describe('Send results to TestRail', function () {
     scenario_result.witnessStepResult(step_result);
     var scenario = Cucumber.Api.Scenario(astscenario, scenario_result);
 
-    trhelper.updateResult(syncOptions, scenario, function () {
-      expect(testrailmock.getUpdateResultRequest().status_id).to.equal(5);
-      done();
+    sync.createNewTestRun(function() {
+      sync.updateResult(scenario, function () {
+        expect(testrailmock.getUpdateResultRequest().status_id).to.equal(5);
+        done();
+      });
     });
 
   });
 
   it('does not send results when sendResult is off', function (done) {
 
+    sync = new resultSynchronizer(syncOptionsDontSend);
+
     testrailmock.updateResultMock();
 
     var astscenario = Cucumber.Ast.Scenario(scenariodata);
@@ -124,7 +138,7 @@ describe('Send results to TestRail', function () {
     scenario_result.witnessStepResult(step_result);
     var scenario = Cucumber.Api.Scenario(astscenario, scenario_result);
 
-    trhelper.updateResult(syncOptionsDontSend, scenario, function () {
+    sync.updateResult(scenario, function () {
       expect(testrailmock.getUpdateResultRequest()).to.be.empty;
       done();
     });
