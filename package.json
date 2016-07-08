@@ -5,7 +5,9 @@
   "bin": "./bin/testrail-sync",
   "scripts": {
     "lint": "./node_modules/.bin/eslint lib/*.js",
-    "test": "NODE_ENV=test ./node_modules/.bin/cucumberjs -r features --format summary",
+    "test": "NODE_ENV=test ./node_modules/.bin/cucumberjs -r features --format summary && ./node_modules/.bin/mocha tests",
+    "test:bdd": "NODE_ENV=test ./node_modules/.bin/cucumberjs -r features --format summary",
+    "test:unit": "./node_modules/.bin/mocha tests",
     "cover": "NODE_ENV=test ./node_modules/.bin/istanbul cover ./node_modules/.bin/cucumberjs --fail-fast --report html --bail -- -r features"
   },
   "author": "SSENSE",
@@ -34,6 +36,7 @@
     "istanbul": "^0.4.4",
     "mock-fs": "^3.9.0",
     "nock": "^8.0.0",
-    "rewire": "^2.5.2"
+    "rewire": "^2.5.2",
+    "mocha": "^2.5.3"
   }
 }
