@@ -57,3 +57,5 @@ Then you can run the `testrail-sync` command (or `./node_modules/.bin/testrail-s
 ## Usage (test results synchronization)
 
 You will first need to setup the `.testrail-sync.js` config file, as described above.
+
+@to complete
