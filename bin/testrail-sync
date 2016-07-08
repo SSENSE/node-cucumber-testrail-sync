@@ -13,7 +13,10 @@ var defaultOptions = {
   jsDir: path.resolve(dir, 'features', 'step_definitions'),
 };
 
-var options = require(path.resolve(dir, '.testrailsync.js'));
+var options = require(path.resolve(dir, '.testrail-sync.js'));
+if (options.featuresDir) {
+    defaultOptions.jsDir = path.resolve(options.featuresDir, 'step_definitions');
+}
 options = _.defaultsDeep(options, defaultOptions);
 
 new ScenarioSynchronizer(options, function (err) {

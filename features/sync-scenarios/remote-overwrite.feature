@@ -2,7 +2,7 @@ Feature: Remote overwrite tests
 
   Scenario: Don't overwrite remote Gherkins if overwrite.remote is not set
     Given I have 1 TestCase in a TestPlan in TestRail
-    And There is a file named "/feature/C100-my-first-test.feature" with the content:
+    And There is a file named "/feature/parent-section/a-sub-section/C100-my-first-test.feature" with the content:
       """
       Some content
       """
@@ -18,7 +18,7 @@ Feature: Remote overwrite tests
 
   Scenario: Overwrite remote Gherkins if overwrite.remote = True
     Given I have 1 TestCase in a TestPlan in TestRail
-    And There is a file named "/feature/C100-my-first-test.feature" with the content:
+    And There is a file named "/feature/parent-section/a-sub-section/C100-my-first-test.feature" with the content:
       """
       Feature: my first test
         @tcid:100
@@ -41,7 +41,7 @@ Feature: Remote overwrite tests
 
   Scenario: Overwrite remote Gherkins if overwrite.remote = 'ask' and the user confirms the overwrite
     Given I have 1 TestCase in a TestPlan in TestRail
-    And There is a file named "/feature/C100-my-first-test.feature" with the content:
+    And There is a file named "/feature/parent-section/a-sub-section/C100-my-first-test.feature" with the content:
       """
       Feature: my first test
         @tcid:100
@@ -65,7 +65,7 @@ Feature: Remote overwrite tests
 
   Scenario: Don't overwrite remote Gherkins if overwrite.remote = 'ask' and the user denies the overwrite
     Given I have 1 TestCase in a TestPlan in TestRail
-    And There is a file named "/feature/C100-my-first-test.feature" with the content:
+    And There is a file named "/feature/parent-section/a-sub-section/C100-my-first-test.feature" with the content:
       """
       Feature: my first test
         @tcid:100
