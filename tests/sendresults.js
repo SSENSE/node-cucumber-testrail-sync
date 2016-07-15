@@ -145,4 +145,37 @@ describe('Send results to TestRail', function () {
 
   });
 
+  it('does not send results if @tcid metatag is not present', function (done) {
+
+    sync = new resultSynchronizer(syncOptionsDontSend);
+
+    testrailmock.updateResultMock();
+
+    var scenariodata_notag = {
+      name: 'test scenario',
+      tags: [
+        {
+          name: '@test:1'
+        }
+      ],
+      steps: [],
+    }
+
+    var astscenario = Cucumber.Ast.Scenario(scenariodata_notag);
+    var scenario_result = Cucumber.Runtime.ScenarioResult(astscenario);
+    var step = Cucumber.Ast.Step({});
+    var step_result = Cucumber.Runtime.StepResult({
+      status: Cucumber.Status.FAILED,
+      step: step
+    });
+    scenario_result.witnessStepResult(step_result);
+    var scenario = Cucumber.Api.Scenario(astscenario, scenario_result);
+
+    sync.updateResult(scenario, function () {
+      expect(testrailmock.getUpdateResultRequest()).to.be.empty;
+      done();
+    });
+
+  });
+
 })
