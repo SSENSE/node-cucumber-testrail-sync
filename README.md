@@ -58,4 +58,35 @@ Then you can run the `testrail-sync` command (or `./node_modules/.bin/testrail-s
 
 You will first need to setup the `.testrail-sync.js` config file, as described above.
 
-@to complete
+The typical flow is:
+
+1. Create a test plan in Test Rail
+2. Start Cucumber Tests
+3. Create New Test Run before executing feature files
+4. Parse the `@tcid` metatag from the feature file
+5. Update result for each scenario
+
+It is recommended to use a `BeforeFeatures` hook to create the new test run like this:
+```
+this.registerHandler('BeforeFeatures', function (features, callback) {
+  testrailsync.createNewTestRun(callback);
+});
+```
+This will take care of creating a new test run attached to the TestPlanID provided in the `.testrail-sync.js` file.
+
+Next, you need a hook that will update the scenario results. You can use the `After` event to do so:
+```
+this.After(function (scenario, callback) {
+  testrailsync.updateResult(scenario, callback);
+});
+```
+### @tcid metatag
+The matching TestRail ID for each each scenario must be provided using a Cucumber metatag called `@tcid`. Here is an example:
+```
+Feature: Send result to testrail
+@tcid:2151
+Scenario: send a pass result
+Given the number "3"
+When I add the number "4"
+Then total is "7"
+```
