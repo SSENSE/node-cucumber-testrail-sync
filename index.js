@@ -48,7 +48,7 @@ var getJsFileContent = function(gherkins) {
 
 var cases = [2151/*, 2154*/];
 var featuresDir = '/home/mickaelburguet/Desktop/node-cucumber-testrail-sync/features/';
-var jsDir = path.resolve(featuresDir, 'step_definitions');
+var stepDefinitionsDir = path.resolve(featuresDir, 'step_definitions');
 var TAB = '    ';
 
 console.log(chalk.bgBlack.green('Syncing with TestRail ...'));
@@ -58,7 +58,7 @@ async.eachSeries(cases, function (item, next) {
     testrail.getCase(item, function (err, testcase) {
         var filebasename = 'C' + testcase.id + '-' + S(testcase.title).slugify().s;
 
-        var jsfilepath = path.resolve(jsDir, filebasename + '.js');
+        var jsfilepath = path.resolve(stepDefinitionsDir, filebasename + '.js');
         var jsfileexists = false;
 
         var featurefilepath = path.resolve(featuresDir, filebasename + '.feature');

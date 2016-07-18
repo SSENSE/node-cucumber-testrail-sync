@@ -10,12 +10,12 @@ var dir = path.resolve(__dirname, '..');
 
 var defaultOptions = {
   featuresDir: path.resolve(dir, 'features'),
-  jsDir: path.resolve(dir, 'features', 'step_definitions'),
+  stepDefinitionsDir: path.resolve(dir, 'features', 'step_definitions'),
 };
 
 var options = require(path.resolve(dir, '.testrail-sync.js'));
 if (options.featuresDir) {
-    defaultOptions.jsDir = path.resolve(options.featuresDir, 'step_definitions');
+    defaultOptions.stepDefinitionsDir = path.resolve(options.featuresDir, 'step_definitions');
 }
 options = _.defaultsDeep(options, defaultOptions);
 

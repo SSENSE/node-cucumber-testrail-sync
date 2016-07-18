@@ -18,7 +18,7 @@ module.exports = function() {
         },
       },
       featuresDir: '/feature',
-      jsDir: '/js',
+      stepDefinitionsDir: '/js',
       silent: true
     };
 
@@ -27,7 +27,7 @@ module.exports = function() {
 
 
   this.When(/^I want to write test stubs$/, function (callback) {
-    this.syncOptions.testFilesTemplate = 'cucumberjs.es6';
+    this.syncOptions.stepDefinitionsTemplate = 'es6.js';
     callback();
   }.bind(this));
 

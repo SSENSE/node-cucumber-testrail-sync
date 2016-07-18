@@ -44,13 +44,13 @@ There are other possible options:
   }
   ```
 
-  * __testFilesTemplate__:  The template to use to generate blank step definition files (ie. `testFilesTemplate: 'cucumberjs.es5'`)
+  * __stepDefinitionsTemplate__:  The template to use to generate blank step definition files (ie. `stepDefinitionsTemplate: 'es5.js'`)
 
   * __indent__: The indentation to use when generating `.feature` or `.js` files (ie. `indent: '    '`)
 
   * __featuresDir__:  The directory where `.feature` files should be created (ie. `featuresDir: 'features'`)
 
-  * __jsDir__:  The directory where blank step definition files should be created  (ie. `featuresDir: 'features/step_definitions'`)
+  * __stepDefinitionsDir__:  The directory where blank step definition files should be created  (ie. `stepDefinitionsDir: 'features/step_definitions'`)
 
 Then you can run the `testrail-sync` command (or `./node_modules/.bin/testrail-sync` if it's not installed globally).
 
