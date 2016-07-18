@@ -40,9 +40,9 @@ module.exports = function() {
 
 
   this.Then(/^I should have (\d+) (\w+) file(?:s?) on the file system$/, function (fileCount, rootDir, callback) {
-    expect(fs.readdirSync('/'+rootDir)).to.have.lengthOf(1);
-    expect(fs.readdirSync('/'+rootDir+'/parent-section')).to.have.lengthOf(1);
-    expect(fs.readdirSync('/'+rootDir+'/parent-section/a-sub-section')).to.have.lengthOf(fileCount);
+    expect(fs.readdirSync('/'+rootDir)).to.have.lengthOf(1); // root section folder
+    expect(fs.readdirSync('/'+rootDir+'/parent-section')).to.have.lengthOf(parseInt(fileCount) + 1); // sub section folder + feature file
+    expect(fs.readdirSync('/'+rootDir+'/parent-section/a-sub-section')).to.have.lengthOf(fileCount); // feature file
 
     callback();
   }.bind(this));

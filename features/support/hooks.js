@@ -23,6 +23,12 @@ var myHooks = function () {
       "custom_gherkin": "Given that I am a tester\nWhen I am testing\nThen I should see test results\nAnd I should be satified",
       "case_id": "100"
     };
+    this.testCases[101] = {
+      "id": "1",
+      "title": "my second test",
+      "custom_gherkin": "Given that I am a tester <name>\n| name |\n| tester 1 |\n| tester 2 |\nWhen I am testing\nThen I should see test results\nAnd I should be satified",
+      "case_id": "101"
+    };
 
     nock.disableNetConnect();
 
@@ -46,7 +52,8 @@ var myHooks = function () {
       .get('/index.php?/api/v2/get_tests/1')
       .reply(function (uri, requestBody) {
         return [200, [
-          this.testCases[100]
+          this.testCases[100],
+          this.testCases[101]
         ]];
       }.bind(this));
 
@@ -55,7 +62,8 @@ var myHooks = function () {
       .get('/index.php?/api/v2/get_cases/98&suite_id=99')
       .reply(function (uri, requestBody) {
         return [200, [
-          { id: 100, section_id: 2 }
+          { id: 100, section_id: 2 },
+          { id: 101, section_id: 1 }
         ]];
       }.bind(this));
 
@@ -83,6 +91,22 @@ var myHooks = function () {
       .get('/index.php?/api/v2/get_case/100')
       .reply(function (uri, requestBody) {
         return [200, this.testCases[100]]
+      }.bind(this));
+
+
+    nock('https://test.testrail.com')
+      .post('/index.php?/api/v2/update_case/101')
+      .reply(function (uri, requestBody) {
+        this.testCases[101].custom_gherkin = requestBody.custom_gherkin;
+
+        return [200, this.testCases[101]]
+      }.bind(this));
+
+
+    nock('https://test.testrail.com')
+      .get('/index.php?/api/v2/get_case/101')
+      .reply(function (uri, requestBody) {
+        return [200, this.testCases[101]]
       }.bind(this));
 
 

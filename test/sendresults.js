@@ -4,8 +4,6 @@ var expect = chai.expect;
 var resultSynchronizer = require('../lib/ResultSynchronizer.js');
 var testrailmock = require('./testrail-fixture.js');
 
-//var testrail
-
 var syncOptions = {
   testrail: {
     host: 'https://test.testrail.com',

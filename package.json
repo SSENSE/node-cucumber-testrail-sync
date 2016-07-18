@@ -5,10 +5,13 @@
   "bin": "./bin/testrail-sync",
   "scripts": {
     "lint": "./node_modules/.bin/eslint lib/*.js",
-    "test": "NODE_ENV=test ./node_modules/.bin/cucumberjs -r features --format summary && ./node_modules/.bin/mocha tests",
+    "test": "npm run test:unit && npm run test:bdd",
+    "test:unit": "./node_modules/.bin/mocha",
     "test:bdd": "NODE_ENV=test ./node_modules/.bin/cucumberjs -r features --format summary",
-    "test:unit": "./node_modules/.bin/mocha tests",
-    "cover": "NODE_ENV=test ./node_modules/.bin/istanbul cover ./node_modules/.bin/cucumberjs --fail-fast --report html --bail -- -r features"
+    "cover": "npm run cover:unit && npm run cover:bdd && npm run cover:merge",
+    "cover:unit": "./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha --report html --bail --dir coverage/unit",
+    "cover:bdd": "./node_modules/.bin/istanbul cover ./node_modules/.bin/cucumberjs --report html --bail --dir coverage/bdd -- -r features --format summary",
+    "cover:merge": "node ./coverage/merge.js"
   },
   "author": "SSENSE",
   "license": "MIT",
