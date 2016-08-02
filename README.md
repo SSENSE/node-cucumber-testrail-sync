@@ -35,7 +35,7 @@ module.exports = {
 
 There are other possible options:
 
-  * __overwrite__: Toggle the local .feature file overwrite OR remote test case overwrite if the local Gherkins doesn't match the TestRail Gherkins.
+  * __overwrite__: Toggle the local .feature file overwrite OR remote test case overwrite if the local Gherkins doesn't match the Gherkins from TestRail.
 
   ```js
   overwrite: {
@@ -58,13 +58,11 @@ Then you can run the `testrail-sync` command (or `./node_modules/.bin/testrail-s
 
 You will first need to create the `.testrail-sync.js` config file, as described above.
 
-------------
+Then, we have to setup the following things :
 
-Then, we have to setup the following two things :
+1. Right before running the tests, a Test Run has to be created in TestRail.
 
-1. Right before running the tests, we need to create a new Test Run in TestRail.
-
-2. After each test case has been run, we will need to send the result to TestRail (bound to the previously created Test Run).
+2. After each test case has been run, the result has to be pushed to TestRail (bound to the previously created Test Run).
 
 In order to achieve this, you will need to register some Cucumber event handlers (`features/support/hooks.js`).
 
