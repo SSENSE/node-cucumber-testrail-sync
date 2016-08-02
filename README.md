@@ -2,21 +2,21 @@
 
 This module has two main features:
 
-> It can synchronize test cases from TestRail to `.feature` files on your local filesystem.
+> It can test cases from TestRail to `.feature` files on your local filesystem.
+
+> It can automatically push test results to TestRail.
+
+## Installation
+
+> npm i cucumber-testrail-sync [-g]
+
+## Usage: *synchronize test cases from TestRail*
 
 We propose the following collaborative workflow for BDD testing:
 
 ![Synchronize test cases!](images/sync-scenarios.png)
 
 ------------
-
-> It can automatically push test results back to TestRail.
-
-## Installation
-
-> npm i cucumber-testrail-sync [-g]
-
-## Usage (test cases synchronization)
 
 At the root of your project, create the `.testrail-sync.js` file.
 
@@ -52,41 +52,34 @@ There are other possible options:
 
   * __stepDefinitionsDir__:  The directory where blank step definition files should be created  (ie. `stepDefinitionsDir: 'features/step_definitions'`)
 
-Then you can run the `testrail-sync` command (or `./node_modules/.bin/testrail-sync` if it's not installed globally).
+Then you can run the `testrail-sync` command (or `./node_modules/.bin/testrail-sync` if it's not installed globally) to fetch the test cases from TestRail.
 
-## Usage (test results synchronization)
+## Usage: *pushing test results to TestRail*
 
-You will first need to setup the `.testrail-sync.js` config file, as described above.
+You will first need to create the `.testrail-sync.js` config file, as described above.
 
-The typical flow is:
+------------
 
-1. Create a test plan in Test Rail
-2. Start Cucumber Tests
-3. Create New Test Run before executing feature files
-4. Parse the `@tcid` metatag from the feature file
-5. Update result for each scenario
+Then, we have to setup the following two things :
 
-It is recommended to use a `BeforeFeatures` hook to create the new test run like this:
-```
-this.registerHandler('BeforeFeatures', function (features, callback) {
-  testrailsync.createNewTestRun(callback);
-});
-```
-This will take care of creating a new test run attached to the TestPlanID provided in the `.testrail-sync.js` file.
+1. Right before running the tests, we need to create a new Test Run in TestRail.
 
-Next, you need a hook that will update the scenario results. You can use the `After` event to do so:
-```
-this.After(function (scenario, callback) {
-  testrailsync.updateResult(scenario, callback);
-});
-```
-### @tcid metatag
-The matching TestRail ID for each each scenario must be provided using a Cucumber metatag called `@tcid`. Here is an example:
-```
-Feature: Send result to testrail
-@tcid:2151
-Scenario: send a pass result
-Given the number "3"
-When I add the number "4"
-Then total is "7"
+2. After each test case has been run, we will need to send the result to TestRail (bound to the previously created Test Run).
+
+In order to achieve this, you will need to register some Cucumber event handlers (`features/support/hooks.js`).
+
+```js
+var testrailSync = require('cucumber-testrail-sync');
+
+module.exports = function () {
+  var testResultSync = new testrailSync.ResultSynchronizer(testrailSync.readConfig());
+
+  this.registerHandler('BeforeFeatures', function (features, callback) {
+    testResultSync.createNewTestRun(callback);
+  });
+
+  this.After(function (scenario, callback) {
+    testResultSync.pushResult(scenario, callback);
+  });
+};
 ```

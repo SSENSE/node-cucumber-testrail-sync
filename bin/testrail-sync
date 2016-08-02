@@ -1,24 +1,8 @@
 #!/usr/bin/env node
 
-var path = require('path');
-var fs = require('fs');
-var _ = require('lodash');
 var ScenarioSynchronizer = require('../lib/').ScenarioSynchronizer;
+var config = require('../lib/').readConfig();
 
-
-var dir = path.resolve(__dirname, '..');
-
-var defaultOptions = {
-  featuresDir: path.resolve(dir, 'features'),
-  stepDefinitionsDir: path.resolve(dir, 'features', 'step_definitions'),
-};
-
-var options = require(path.resolve(dir, '.testrail-sync.js'));
-if (options.featuresDir) {
-    defaultOptions.stepDefinitionsDir = path.resolve(options.featuresDir, 'step_definitions');
-}
-options = _.defaultsDeep(options, defaultOptions);
-
-new ScenarioSynchronizer(options, function (err) {
+new ScenarioSynchronizer(config, function (err) {
 
 });

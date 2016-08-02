@@ -13,7 +13,7 @@ var syncOptions = {
       plan_id: 10
     },
   },
-  sendResults: true
+  pushResults: true
 };
 
 var syncOptionsDontSend = {
@@ -25,7 +25,7 @@ var syncOptionsDontSend = {
       plan_id: 10
     },
   },
-  sendResults: false
+  pushResults: false
 };
 
 describe('Send results to TestRail', function () {
@@ -44,7 +44,7 @@ describe('Send results to TestRail', function () {
     steps: [],
   }
 
-  it('creates a new test run when sendResults is activated', function (done) {
+  it('creates a new test run when pushResults is true', function (done) {
 
     sync = new resultSynchronizer(syncOptions);
 
@@ -58,7 +58,7 @@ describe('Send results to TestRail', function () {
 
   });
 
-  it('does not create a new test run when sendResults is false', function (done) {
+  it('does not create a new test run when pushResults is false', function (done) {
 
     sync = new resultSynchronizer(syncOptionsDontSend);
 
@@ -88,7 +88,7 @@ describe('Send results to TestRail', function () {
     var scenario = Cucumber.Api.Scenario(astscenario, scenario_result);
 
     sync.createNewTestRun(function() {
-      sync.updateResult(scenario, function () {
+      sync.pushResult(scenario, function () {
         expect(testrailmock.getUpdateResultRequest().status_id).to.equal(1);
         done();
       });
@@ -112,7 +112,7 @@ describe('Send results to TestRail', function () {
     var scenario = Cucumber.Api.Scenario(astscenario, scenario_result);
 
     sync.createNewTestRun(function() {
-      sync.updateResult(scenario, function () {
+      sync.pushResult(scenario, function () {
         expect(testrailmock.getUpdateResultRequest().status_id).to.equal(5);
         done();
       });
@@ -120,7 +120,7 @@ describe('Send results to TestRail', function () {
 
   });
 
-  it('does not send results when sendResult is off', function (done) {
+  it('does not send results when pushResults is false', function (done) {
 
     sync = new resultSynchronizer(syncOptionsDontSend);
 
@@ -136,7 +136,7 @@ describe('Send results to TestRail', function () {
     scenario_result.witnessStepResult(step_result);
     var scenario = Cucumber.Api.Scenario(astscenario, scenario_result);
 
-    sync.updateResult(scenario, function () {
+    sync.pushResult(scenario, function () {
       expect(testrailmock.getUpdateResultRequest()).to.be.empty;
       done();
     });
@@ -169,7 +169,7 @@ describe('Send results to TestRail', function () {
     scenario_result.witnessStepResult(step_result);
     var scenario = Cucumber.Api.Scenario(astscenario, scenario_result);
 
-    sync.updateResult(scenario, function () {
+    sync.pushResult(scenario, function () {
       expect(testrailmock.getUpdateResultRequest()).to.be.empty;
       done();
     });
