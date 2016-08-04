@@ -64,7 +64,7 @@ Then, we have to setup the following things :
 
 2. After each test case has been run, the result has to be pushed to TestRail (bound to the previously created Test Run).
 
-In order to achieve this, you will need to register some Cucumber event handlers (`features/support/hooks.js`).
+In order to achieve this, you will need to register some Cucumber event handlers (`features/support/hooks.js`) :
 
 ```js
 var testrailSync = require('cucumber-testrail-sync');
