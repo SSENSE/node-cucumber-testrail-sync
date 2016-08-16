@@ -1,6 +1,6 @@
 {
   "name": "@ssense/cucumber-testrail-sync",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Synchronize test cases from TestRail",
   "bin": "./bin/testrail-sync",
   "main": "./lib/index.js",
@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/SSENSE/tslint-config.git"
+    "url": "git+https://github.com/Groupe-Atallah/node-cucumber-testrail-sync.git"
   },
   "author": "Mickael Burguet <mickael.burguet@ssense.com>",
   "license": "MIT",
