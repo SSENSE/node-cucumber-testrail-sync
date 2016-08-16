@@ -1,6 +1,6 @@
 {
   "name": "@ssense/cucumber-testrail-sync",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Synchronize test cases from TestRail",
   "bin": "./bin/testrail-sync",
   "main": "./lib/index.js",
@@ -13,7 +13,11 @@
     "cover:unit": "./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha --report html --bail --dir coverage/unit",
     "cover:bdd": "./node_modules/.bin/istanbul cover ./node_modules/.bin/cucumberjs --report html --bail --dir coverage/bdd -- -r features --format summary"
   },
-  "author": "SSENSE",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SSENSE/tslint-config.git"
+  },
+  "author": "Mickael Burguet <mickael.burguet@ssense.com>",
   "license": "MIT",
   "engines": {
     "node": ">= 0.12.0"

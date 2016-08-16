@@ -14,7 +14,7 @@ This module has two main features:
 
 We propose the following collaborative workflow for BDD testing:
 
-![Synchronize test cases!](images/sync-scenarios.png)
+![Synchronize test cases!](https://github.com/Groupe-Atallah/node-cucumber-testrail-sync/raw/master/images/sync-scenarios.png)
 
 ------------
 
@@ -48,15 +48,21 @@ There are other possible options:
 
   * __indent__: The indentation to use when generating `.feature` or `.js` files (ie. `indent: '    '`)
 
-  * __featuresDir__:  The directory where `.feature` files should be created (ie. `featuresDir: 'features'`)
+  * __featuresDir__: The directory where `.feature` files should be created (ie. `featuresDir: 'features'`)
 
-  * __stepDefinitionsDir__:  The directory where blank step definition files should be created  (ie. `stepDefinitionsDir: 'features/step_definitions'`)
+  * __stepDefinitionsDir__: The directory where blank step definition files should be created  (ie. `stepDefinitionsDir: 'features/step_definitions'`)
 
-Then you can run the `testrail-sync` command (or `./node_modules/.bin/testrail-sync` if it's not installed globally) to fetch the test cases from TestRail.
+  * __directoryStructure__: Used to match the TestRail sections tree with the local tests directory structure.
+
+    * __type__: The variable name to used to create the folders. Can be either `section:slug` or `section:name`
+
+    * __skipRootFolder__: The number of root sections to skip.
+
+Then you can run the `cucumber-testrail-sync` command (or `./node_modules/.bin/cucumber-testrail-sync` if it's not installed globally) to fetch the test cases from TestRail.
 
 ## Usage: *pushing test results to TestRail*
 
-You will first need to create the `.testrail-sync.js` config file, as described above.
+You will first need to create the `.testrail-sync.js` config file, as described above, and set the **pushResults** option to `true`.
 
 Then, we have to setup the following things :
 
