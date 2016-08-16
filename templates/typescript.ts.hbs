@@ -1,8 +1,8 @@
-module.exports = function () {
+module.exports = function (): void {
     {{#steps}}
-    this.{{keyword}}(/^{{{regex}}}$/, ({{params}}callback: Function) => {
+    this.{{keyword}}(/^{{{regex}}}$/, ({{params}}callback: Function): void => {
         callback(null, 'pending');
     });
-    
+
     {{/steps}}
 };

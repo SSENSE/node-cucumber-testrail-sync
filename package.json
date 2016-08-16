@@ -8,7 +8,7 @@
     "lint": "./node_modules/.bin/eslint lib/*.js",
     "test": "npm run test:unit && npm run test:bdd",
     "test:unit": "./node_modules/.bin/mocha",
-    "test:bdd": "NODE_ENV=test ./node_modules/.bin/cucumberjs -r features --format summary",
+    "test:bdd": "NODE_ENV=test ./node_modules/.bin/cucumberjs -r features --format summary --fail-fast",
     "cover": "npm run cover:unit && npm run cover:bdd",
     "cover:unit": "./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha --report html --bail --dir coverage/unit",
     "cover:bdd": "./node_modules/.bin/istanbul cover ./node_modules/.bin/cucumberjs --report html --bail --dir coverage/bdd -- -r features --format summary"
