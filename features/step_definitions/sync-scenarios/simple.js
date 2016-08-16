@@ -19,7 +19,10 @@ module.exports = function() {
       },
       featuresDir: '/feature',
       stepDefinitionsDir: '/js',
-      silent: true
+      silent: true,
+      directoryStructure: {
+        type: 'section:slug'
+      }
     };
 
     callback();

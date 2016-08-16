@@ -18,16 +18,14 @@ module.exports = function() {
       mtime: new Date(1)
     });
 
-    //console.log(this.fsMockConfig[filePath]());
-
     callback();
   }.bind(this));
 
 
   this.Given(/^I (confirm|deny) the overwrite$/, function (actionType, callback) {
     this.ScenarioSynchronizer.__set__('inquirer', {
-      prompt: function (options, callback) {
-        callback({ confirm: (actionType == 'confirm') });
+      prompt: function (options) {
+        return Promise.resolve({ confirm: (actionType == 'confirm') });
       }
     });
 
