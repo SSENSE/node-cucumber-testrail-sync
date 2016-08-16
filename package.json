@@ -1,6 +1,6 @@
 {
-  "name": "cucumber-testrail-sync",
-  "version": "0.1.0",
+  "name": "@scope/cucumber-testrail-sync",
+  "version": "1.0.0",
   "description": "",
   "bin": "./bin/testrail-sync",
   "main": "./lib/index.js",
