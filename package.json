@@ -1,5 +1,5 @@
 {
-  "name": "@scope/cucumber-testrail-sync",
+  "name": "@ssense/cucumber-testrail-sync",
   "version": "1.0.0",
   "description": "",
   "bin": "./bin/testrail-sync",
