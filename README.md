@@ -2,7 +2,7 @@
 
 This module has two main features:
 
-> It can test cases from TestRail to `.feature` files on your local filesystem.
+> It can synchronize test cases from TestRail to `.feature` files on your local filesystem.
 
 > It can automatically push test results to TestRail.
 
