@@ -8,7 +8,7 @@ This module has two main features:
 
 ## Installation
 
-> npm i cucumber-testrail-sync [-g]
+> npm i @ssense/cucumber-testrail-sync
 
 ## Usage: *synchronize test cases from TestRail*
 
@@ -58,7 +58,7 @@ There are other possible options:
 
     * __skipRootFolder__: The number of root sections to skip.
 
-Then you can run the `cucumber-testrail-sync` command (or `./node_modules/.bin/cucumber-testrail-sync` if it's not installed globally) to fetch the test cases from TestRail.
+Then you can run the `./node_modules/.bin/cucumber-testrail-sync` command to fetch the test cases from TestRail.
 
 ## Usage: *pushing test results to TestRail*
 
@@ -73,10 +73,28 @@ Then, we have to setup the following things :
 In order to achieve this, you will need to register some Cucumber event handlers (`features/support/hooks.js`) :
 
 ```js
-var testrailSync = require('cucumber-testrail-sync');
+var testrailSync = require('@ssense/cucumber-testrail-sync');
 
 module.exports = function () {
   var testResultSync = new testrailSync.ResultSynchronizer(testrailSync.readConfig());
+
+  this.registerHandler('BeforeFeatures', function (features, callback) {
+    testResultSync.createNewTestRun(callback);
+  });
+
+  this.After(function (scenario, callback) {
+    testResultSync.pushResult(scenario, callback);
+  });
+};
+```
+
+Or for TypeScript :
+
+```js
+import * as testrailSync from '@ssense/cucumber-testrail-sync';
+
+module.exports = function (): void {
+  const testResultSync = new testrailSync.ResultSynchronizer(testrailSync.readConfig());
 
   this.registerHandler('BeforeFeatures', function (features, callback) {
     testResultSync.createNewTestRun(callback);
