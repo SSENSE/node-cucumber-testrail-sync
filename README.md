@@ -108,6 +108,8 @@ module.exports = function (): void {
 
 # Change Log
 
-## [1.0.7](https://github.com/Groupe-Atallah/node-cucumber-testrail-sync/tree/1.0.7) (2016-08-18)
+## [1.0.6](https://github.com/Groupe-Atallah/node-cucumber-testrail-sync/tree/1.0.6) (2016-08-18)
 
 - When creating the blank step definitions files, avoid creating duplicate step definitions if they are implemented in other files
+
+- Add patterns/params detection when creating the step definitions files

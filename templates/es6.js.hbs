@@ -1,6 +1,6 @@
 module.exports = function () {
 	{{#steps}}
-	this.{{keyword}}(/^{{{regex}}}$/, ({{params}}callback) => {
+	this.{{keyword}}(/^{{{regex}}}$/, ({{params}}) => {
 		callback(null, 'pending');
 	});
 	
