@@ -1,6 +1,6 @@
 {
   "name": "@ssense/cucumber-testrail-sync",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Synchronize test cases from TestRail",
   "bin": "./bin/testrail-sync",
   "main": "./lib/index.js",

@@ -108,7 +108,7 @@ module.exports = function (): void {
 
 # Change Log
 
-## [1.0.8](https://github.com/Groupe-Atallah/node-cucumber-testrail-sync/tree/1.0.8) (2016-08-24)
+## [1.0.8](https://github.com/Groupe-Atallah/node-cucumber-testrail-sync/tree/v1.0.8) (2016-08-24)
 
 - Create the `step_definitions` folder if it doesn't exist
 
