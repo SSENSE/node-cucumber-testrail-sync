@@ -33,17 +33,29 @@ module.exports = function() {
   }.bind(this));
 
 
-  this.Given(/^I enable the overwrite.(.*) option$/, function (optionName, callback) {
-    this.syncOptions.overwrite = this.syncOptions.overwrite || {};
-    this.syncOptions.overwrite[optionName] = true;
+  this.Given(/^I (enable|disable) the (.*) option$/, function (action, optionName, callback) {
+    var splitted = optionName.split('.');
+    var opts = this.syncOptions;
+
+    for (var i = 0; i < splitted.length - 1; i++) {
+      opts[splitted[i]] = opts[splitted[i]] || {};
+      opts = opts[splitted[i]];
+    }
+    opts[splitted[splitted.length - 1]] = (action === 'enable');
 
     callback();
   }.bind(this));
 
 
-  this.Given(/^I set the overwrite.(.*) option to "(.*)"$/, function (optionName, optionValue, callback) {
-    this.syncOptions.overwrite = this.syncOptions.overwrite || {};
-    this.syncOptions.overwrite[optionName] = optionValue;
+  this.Given(/^I set the (.*) option to "(.*)"$/, function (optionName, optionValue, callback) {
+    var splitted = optionName.split('.');
+    var opts = this.syncOptions;
+
+    for (var i = 0; i < splitted.length - 1; i++) {
+      opts[splitted[i]] = opts[splitted[i]] || {};
+      opts = opts[splitted[i]];
+    }
+    opts[splitted[splitted.length - 1]] = optionValue;
 
     callback();
   }.bind(this));

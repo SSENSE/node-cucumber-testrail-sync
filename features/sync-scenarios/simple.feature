@@ -11,4 +11,4 @@ Feature: Simple tests
     And I want to write test stubs
     When I run the synchronization script
     Then I should have 1 feature file on the file system
-    And I should have 1 js files on the file system
+    And I should have 1 js file on the file system

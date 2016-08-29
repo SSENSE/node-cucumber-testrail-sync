@@ -1,8 +1,18 @@
 #!/usr/bin/env node
 
+var program = require('commander');
 var ScenarioSynchronizer = require('../lib/').ScenarioSynchronizer;
 var config = require('../lib/').readConfig();
 
-new ScenarioSynchronizer(config, function (err) {
+program
+  .option('--verify', 'Verify that the local features files match the test cases from TestRail')
+  .option('--silent', 'Disable output')
+  .parse(process.argv);
 
+var sync = new ScenarioSynchronizer();
+config.verify = program.verify || config.verify || false;
+config.silent = program.silent || config.silent || false;
+  
+sync.synchronize(config, function (err) {
+  process.exit(err ? 1 : 0);
 });

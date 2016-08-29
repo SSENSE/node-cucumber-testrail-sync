@@ -60,6 +60,8 @@ There are other possible options:
 
 Then you can run the `./node_modules/.bin/cucumber-testrail-sync` command to fetch the test cases from TestRail.
 
+You can use the `--verify` switch to verify that your project's features files match the test cases from TestRail.
+
 ## Usage: *pushing test results to TestRail*
 
 You will first need to create the `.testrail-sync.js` config file, as described above, and set the **pushResults** option to `true`.
@@ -107,6 +109,10 @@ module.exports = function (): void {
 ```
 
 # Change Log
+
+## [1.0.9](https://github.com/Groupe-Atallah/node-cucumber-testrail-sync/tree/v1.0.9) (2016-09-??)
+
+- Implemented `--verify` switch ([issue #3](https://github.com/Groupe-Atallah/node-cucumber-testrail-sync/issues/3))
 
 ## [1.0.8](https://github.com/Groupe-Atallah/node-cucumber-testrail-sync/tree/v1.0.8) (2016-08-24)
 
