@@ -110,6 +110,12 @@ module.exports = function (): void {
 
 # Change Log
 
+## [1.0.10](https://github.com/Groupe-Atallah/node-cucumber-testrail-sync/tree/v1.0.10) (2016-08-30)
+
+- Bugfix: sync script was creating duplicate step definitions
+
+- Add unique filename check
+
 ## [1.0.9](https://github.com/Groupe-Atallah/node-cucumber-testrail-sync/tree/v1.0.9) (2016-08-30)
 
 - Implemented `--verify` switch ([issue #3](https://github.com/Groupe-Atallah/node-cucumber-testrail-sync/issues/3))
