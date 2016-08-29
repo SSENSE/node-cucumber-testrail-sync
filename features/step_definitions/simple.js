@@ -29,12 +29,6 @@ module.exports = function() {
   }.bind(this));
 
 
-  this.When(/^I want to write test stubs$/, function (callback) {
-    this.syncOptions.stepDefinitionsTemplate = 'es6.js';
-    callback();
-  }.bind(this));
-
-
   this.When(/^I run the synchronization script$/, function (callback) {
     fsMock(this.fsMockConfig);
 

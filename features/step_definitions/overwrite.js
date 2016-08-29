@@ -8,6 +8,13 @@ module.exports = function() {
   var fsMock = require('mock-fs');
 
 
+  this.When(/^The (first|second) case contains the following gherkin$/, function (type, data, callback) {
+    var id = (type === 'first' ? 100 : 101);
+    this.testCases[id].custom_gherkin = data;
+    callback();
+  }.bind(this));
+
+
   this.When(/^There is a file named "(.*)" with the content:$/, function (filePath, fileContent, callback) {
     this.fsMockConfig['/feature/parent-section'] = {};
     this.fsMockConfig['/feature/parent-section/a-sub-section'] = {};

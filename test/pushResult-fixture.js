@@ -4,7 +4,6 @@ var newTestRunRequest;
 var updateResultRequest;
 
 exports.createNewTestRunMock = function () {
-
   newTestRunRequest = {};
 
   var testplan = {
@@ -26,8 +25,6 @@ exports.createNewTestRunMock = function () {
   };
 
   nock.disableNetConnect();
-
-  //nock.recorder.rec();
 
   nock('https://test.testrail.com')
     .persist()
@@ -56,7 +53,6 @@ exports.createNewTestRunMock = function () {
         ]
       };
     });
-
 };
 
 exports.getCreateNewTestRunRequest = function () {
@@ -64,7 +60,6 @@ exports.getCreateNewTestRunRequest = function () {
 };
 
 exports.updateResultMock = function () {
-
   updateResultRequest = {};
 
   nock.disableNetConnect();
@@ -78,7 +73,6 @@ exports.updateResultMock = function () {
         id: 1
       }
     });
-
 };
 
 exports.getUpdateResultRequest = function () {
