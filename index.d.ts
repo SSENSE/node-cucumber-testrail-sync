@@ -41,4 +41,4 @@ export class ResultSynchronizer {
   pushResult(scenario: any, callback: Function): void;
 }
 
-export function readConfig(): Object;
+export function readConfig(): ResultSynchronizerOptions;
