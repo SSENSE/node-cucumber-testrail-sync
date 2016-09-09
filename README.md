@@ -65,11 +65,19 @@ You can use the `--verify` switch to verify that your project's features files m
 
 ## Usage: *pushing test results to TestRail*
 
+![Synchronization!](https://github.com/Groupe-Atallah/node-cucumber-testrail-sync/raw/master/images/sync-flow.png)
+
+> Tests running (left) and results being pushed to Test Rail (right)
+
 We suggest enabling this option at the CI level (without the `run_id` config, so that the results from all the runs in the TestPlan will be updated).
 
-To push the results, edit the `.testrail-sync.js` config file and set the **pushResults** option to `true`.
+To push the results, you will have to either:
 
-Then, this module will need to install some Cucumber event handlers (`features/support/hooks.js`) :
+1. edit the `.testrail-sync.js` config file and set the **pushResults** option to `true` or
+
+2. set the `PUSH_RESULTS_TO_TESTRAIL` environment variable
+
+And install this module in Cucumber's context (`features/support/hooks.js`) :
 
 ```js
 var testrailSync = require('@ssense/cucumber-testrail-sync');
