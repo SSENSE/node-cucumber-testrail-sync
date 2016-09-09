@@ -41,7 +41,7 @@ describe('Scenario synchronizer', function () {
   // We have to cast it to a markdown format:
   // | row1.1 | row1.2 |
   it('getGherkinLines succeed when called with valid gherkin', function (done) {
-    var gherkin = '  Given I am a tester  \n|| name\n|| myself';
+    var gherkin = '  Given   i am a tester  \n|| name\n|| myself';
     var expected = [ 'Given I am a tester', '| name|', '| myself|'];
 
     expect(sync.getGherkinLines({ custom_gherkin: gherkin })).to.deep.equal(expected);

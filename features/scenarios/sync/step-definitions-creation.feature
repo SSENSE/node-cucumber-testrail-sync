@@ -1,6 +1,6 @@
 Feature: Step definitions file creation
   Background:
-    Given I have 1 TestCase in a TestPlan in TestRail
+    Given I use a TestPlan with 1 TestRun and 2 TestCases
     And I set the indent option to "  "
     And The first case contains the following gherkin
       """
@@ -18,7 +18,7 @@ Feature: Step definitions file creation
   Scenario: Using es5 template
     Given I set the stepDefinitionsTemplate option to "es5.js"
     When I run the synchronization script
-    Then I should have 1 js file on the file system
+    Then There should be 2 code files on the file system
     And The file "/js/parent-section/a-sub-section/my-first-test.js" should have the following content:
       """
       module.exports = function () {
@@ -49,7 +49,7 @@ Feature: Step definitions file creation
   Scenario: Using es6 template
     Given I set the stepDefinitionsTemplate option to "es6.js"
     When I run the synchronization script
-    Then I should have 1 js file on the file system
+    Then There should be 2 code files on the file system
     And The file "/js/parent-section/a-sub-section/my-first-test.js" should have the following content:
       """
       module.exports = function () {
@@ -80,7 +80,7 @@ Feature: Step definitions file creation
   Scenario: Using typescript template
     Given I set the stepDefinitionsTemplate option to "typescript.ts"
     When I run the synchronization script
-    Then I should have 1 js file on the file system
+    Then There should be 2 code files on the file system
     And The file "/js/parent-section/a-sub-section/my-first-test.ts" should have the following content:
       """
       module.exports = function (): void {
@@ -131,7 +131,7 @@ Feature: Step definitions file creation
 
       """
     When I run the synchronization script
-    Then I should have 1 js file on the file system
+    Then There should be 2 code files on the file system
     And The file "/js/parent-section/my-second-test.ts" should have the following content:
       """
       module.exports = function (): void {

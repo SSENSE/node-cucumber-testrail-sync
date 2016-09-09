@@ -5,6 +5,7 @@ interface TestrailOptions {
     password: string;
     filters: {
       plan_id: number;
+      run_id?: number;
     }
   };
 }
@@ -37,8 +38,10 @@ export class ScenarioSynchronizer {
 
 export class ResultSynchronizer {
   constructor(options: ResultSynchronizerOptions);
-  createNewTestRun(callback: Function): void;
-  pushResult(scenario: any, callback: Function): void;
+  saveTestResult(scenario: any, callback: Function): void;
+  pushTestResults(callback: Function): void;
 }
 
 export function readConfig(): ResultSynchronizerOptions;
+
+export function install(any): void;

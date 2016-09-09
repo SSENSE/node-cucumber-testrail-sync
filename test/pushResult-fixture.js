@@ -1,11 +1,8 @@
 var nock = require('nock');
 
-var newTestRunRequest;
-var updateResultRequest;
+var pushResultsMock;
 
-exports.createNewTestRunMock = function () {
-  newTestRunRequest = {};
-
+exports.setupMock = function () {
   var testplan = {
     id: 10,
     entries: [
@@ -16,6 +13,18 @@ exports.createNewTestRunMock = function () {
             tests: [
               {
                 case_id: 200
+              }
+            ]
+          }
+        ]
+      },
+      {
+        runs: [
+          {
+            id: 101,
+            tests: [
+              {
+                case_id: 201
               }
             ]
           }
@@ -42,39 +51,38 @@ exports.createNewTestRunMock = function () {
 
   nock('https://test.testrail.com')
     .persist()
-    .post('/index.php?/api/v2/add_plan_entry/10')
+    .get('/index.php?/api/v2/get_tests/101')
     .reply(200, function (uri, requestBody) {
-      newTestRunRequest = requestBody;
-      return {
-        runs: [
-          {
-            id: 400
-          }
-        ]
-      };
+      return testplan.entries[1].runs[0].tests;
     });
 };
 
-exports.getCreateNewTestRunRequest = function () {
-  return newTestRunRequest;
-};
-
-exports.updateResultMock = function () {
-  updateResultRequest = {};
+exports.pushResultsMock = function () {
+  pushResultsMock = {};
 
   nock.disableNetConnect();
 
   nock('https://test.testrail.com')
     .persist()
-    .post('/index.php?/api/v2/add_result_for_case/400/200')
+    .post('/index.php?/api/v2/add_results_for_cases/100')
     .reply(200, function (uri, requestBody) {
-      updateResultRequest = requestBody;
+      pushResultsMock[100] = requestBody;
+      return {
+        id: 1
+      }
+    });
+
+   nock('https://test.testrail.com')
+    .persist()
+    .post('/index.php?/api/v2/add_results_for_cases/101')
+    .reply(200, function (uri, requestBody) {
+      pushResultsMock[101] = requestBody;
       return {
         id: 1
       }
     });
 };
 
-exports.getUpdateResultRequest = function () {
-  return updateResultRequest;
+exports.getPushResultsRequest = function () {
+  return pushResultsMock;
 };

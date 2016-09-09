@@ -14,7 +14,7 @@ This module has two main features:
 
 We propose the following collaborative workflow for BDD testing:
 
-![Synchronize test cases!](https://github.com/Groupe-Atallah/node-cucumber-testrail-sync/raw/master/images/sync-scenarios.png)
+![Synchronization!](https://github.com/Groupe-Atallah/node-cucumber-testrail-sync/raw/master/images/sync-flow.png)
 
 ------------
 
@@ -27,7 +27,8 @@ module.exports = {
     user: '', // testrail username
     password: '', // testrail password or api key
     filters: {
-      plan_id: '', // testrail plan id
+      plan_id: '', // required testrail plan id
+      run_id: '', // optional testrail run id
     }
   },
 };
@@ -64,29 +65,17 @@ You can use the `--verify` switch to verify that your project's features files m
 
 ## Usage: *pushing test results to TestRail*
 
-You will first need to create the `.testrail-sync.js` config file, as described above, and set the **pushResults** option to `true`.
+We suggest enabling this option at the CI level (without the `run_id` config, so that the results from all the runs in the TestPlan will be updated).
 
-Then, we have to setup the following things :
+To push the results, edit the `.testrail-sync.js` config file and set the **pushResults** option to `true`.
 
-1. Right before running the tests, a Test Run has to be created in TestRail.
-
-2. After each test case has been run, the result has to be pushed to TestRail (bound to the previously created Test Run).
-
-In order to achieve this, you will need to register some Cucumber event handlers (`features/support/hooks.js`) :
+Then, this module will need to install some Cucumber event handlers (`features/support/hooks.js`) :
 
 ```js
 var testrailSync = require('@ssense/cucumber-testrail-sync');
 
 module.exports = function () {
-  var testResultSync = new testrailSync.ResultSynchronizer(testrailSync.readConfig());
-
-  this.registerHandler('BeforeFeatures', function (features, callback) {
-    testResultSync.createNewTestRun(callback);
-  });
-
-  this.After(function (scenario, callback) {
-    testResultSync.pushResult(scenario, callback);
-  });
+  testrailSync.install(this);
 };
 ```
 
@@ -96,19 +85,19 @@ Or for TypeScript :
 import * as testrailSync from '@ssense/cucumber-testrail-sync';
 
 module.exports = function (): void {
-  const testResultSync = new testrailSync.ResultSynchronizer(testrailSync.readConfig());
-
-  this.registerHandler('BeforeFeatures', function (features, callback) {
-    testResultSync.createNewTestRun(callback);
-  });
-
-  this.After(function (scenario, callback) {
-    testResultSync.pushResult(scenario, callback);
-  });
+  testrailSync.install(this);
 };
 ```
 
 # Change Log
+
+## [2.0.0](https://github.com/Groupe-Atallah/node-cucumber-testrail-sync/tree/v2.0.0) (2016-??-??)
+
+- Ability to specify a custom run_id (if not, every run in the Test Plan will be used)
+
+- Update the original TestRun results rather than creating a new one every time
+
+- Various improvements
 
 ## [1.0.10](https://github.com/Groupe-Atallah/node-cucumber-testrail-sync/tree/v1.0.10) (2016-08-30)
 

@@ -1,15 +1,19 @@
 Feature: Remote overwrite tests
+  Background:
+    Given I use a TestPlan with 1 TestRun and 2 TestCases
 
   Scenario: Don't overwrite remote Gherkins if overwrite.remote is not set
-    Given I have 1 TestCase in a TestPlan in TestRail
-    And There is a file named "/feature/parent-section/a-sub-section/my-first-test.feature" with the content:
+    Given There is a file named "/feature/parent-section/a-sub-section/my-first-test.feature" with the content:
       """
-      Some content
+      Feature: a sub section
+        @tcid:100
+        Scenario: my first test
+        Given That I am a tester
       """
     When I run the synchronization script
     Then The TestCase should have the following Gherkins:
       """
-      Given that I am a tester
+      Given That I am a tester
       When I am testing
       Then I should see test results
       And I should be satified
@@ -17,13 +21,12 @@ Feature: Remote overwrite tests
 
 
   Scenario: Overwrite remote Gherkins if overwrite.remote = True
-    Given I have 1 TestCase in a TestPlan in TestRail
-    And There is a file named "/feature/parent-section/a-sub-section/my-first-test.feature" with the content:
+    Given There is a file named "/feature/parent-section/a-sub-section/my-first-test.feature" with the content:
       """
       Feature: a sub section
         @tcid:100
         Scenario: my first test
-          Given that I am a tester #1
+          Given That I am a tester #1
           When I am testing #2
           Then I should see test results #3
           And I should be satified #4
@@ -32,7 +35,7 @@ Feature: Remote overwrite tests
     When I run the synchronization script
     Then The TestCase should have the following Gherkins:
       """
-      Given that I am a tester #1
+      Given That I am a tester #1
       When I am testing #2
       Then I should see test results #3
       And I should be satified #4
@@ -40,13 +43,12 @@ Feature: Remote overwrite tests
 
 
   Scenario: Overwrite remote Gherkins if overwrite.remote = 'ask' and the user confirms the overwrite
-    Given I have 1 TestCase in a TestPlan in TestRail
-    And There is a file named "/feature/parent-section/a-sub-section/my-first-test.feature" with the content:
+    Given There is a file named "/feature/parent-section/a-sub-section/my-first-test.feature" with the content:
       """
       Feature: a sub section
         @tcid:100
         Scenario: my first test
-          Given that I am a tester #1
+          Given That I am a tester #1
           When I am testing #2
           Then I should see test results #3
           And I should be satified #4
@@ -56,7 +58,7 @@ Feature: Remote overwrite tests
     When I run the synchronization script
     Then The TestCase should have the following Gherkins:
       """
-      Given that I am a tester #1
+      Given That I am a tester #1
       When I am testing #2
       Then I should see test results #3
       And I should be satified #4
@@ -64,13 +66,12 @@ Feature: Remote overwrite tests
 
 
   Scenario: Don't overwrite remote Gherkins if overwrite.remote = 'ask' and the user denies the overwrite
-    Given I have 1 TestCase in a TestPlan in TestRail
-    And There is a file named "/feature/parent-section/a-sub-section/my-first-test.feature" with the content:
+    Given There is a file named "/feature/parent-section/a-sub-section/my-first-test.feature" with the content:
       """
       Feature: a sub section
         @tcid:100
         Scenario: my first test
-          Given that I am a tester #1
+          Given That I am a tester #1
           When I am testing #2
           Then I should see test results #3
           And I should be satified #4
@@ -80,7 +81,7 @@ Feature: Remote overwrite tests
     When I run the synchronization script
     Then The TestCase should have the following Gherkins:
       """
-      Given that I am a tester
+      Given That I am a tester
       When I am testing
       Then I should see test results
       And I should be satified
