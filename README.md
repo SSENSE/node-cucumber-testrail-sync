@@ -65,7 +65,7 @@ You can use the `--verify` switch to verify that your project's features files m
 
 ## Usage: *pushing test results to TestRail*
 
-![Synchronization!](https://github.com/Groupe-Atallah/node-cucumber-testrail-sync/raw/master/images/sync-flow.png)
+![Synchronization!](https://github.com/Groupe-Atallah/node-cucumber-testrail-sync/raw/master/images/push-results.jpg)
 
 > Tests running (left) and results being pushed to Test Rail (right)
 
