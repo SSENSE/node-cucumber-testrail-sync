@@ -46,6 +46,10 @@ describe('Scenario synchronizer', function () {
 
     expect(sync.getGherkinLines({ custom_gherkin: gherkin })).to.deep.equal(expected);
 
+    gherkinTriplePipes = '  Given   i am a tester  \n||| name\n|| myself';
+
+    expect(sync.getGherkinLines({ custom_gherkin: gherkinTriplePipes })).to.deep.equal(expected);
+
     done();
   });
 });

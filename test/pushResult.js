@@ -120,6 +120,26 @@ describe('Send results to TestRail', function () {
   });
 
 
+  it('send results when pushResults is not true but env.PUSH_RESULTS_TO_TESTRAIL is set', function (done) {
+    var scenarios = [
+      { scenariodata: scenariodata, status: Cucumber.Status.FAILED }
+    ];
+    process.env.PUSH_RESULTS_TO_TESTRAIL = '1';
+    pushTestResults(syncOptionsNoPush, scenarios, function (err, updateRequests) {
+      delete process.env.PUSH_RESULTS_TO_TESTRAIL;
+
+      expect(Object.keys(updateRequests)).to.have.lengthOf(1);
+      expect(updateRequests).to.have.property('100');
+      expect(updateRequests['100']).to.deep.equal({ results: [{ case_id: "200", status_id: sync.FAILED_STATUS_ID }] });
+
+      done();
+    });
+  });
+
+
+  /* syncOptionsNoPush */
+
+
   it('does not send results if @tcid metatag is not present', function (done) {
     var scenariodata_notag = {
       name: 'test scenario',    
