@@ -101,6 +101,14 @@ module.exports = function (): void {
 
 # Change Log
 
+## [2.0.2](https://github.com/Groupe-Atallah/node-cucumber-testrail-sync/tree/v2.0.2) (2016-09-12)
+
+- Fix tables import containing three pipes or more ([issue #5](https://github.com/Groupe-Atallah/node-cucumber-testrail-sync/issues/5))
+
+- Fix TestRail vs Local .feature diff output not showing
+
+- Colored TestRail vs Local .feature diff output
+
 ## [2.0.0](https://github.com/Groupe-Atallah/node-cucumber-testrail-sync/tree/v2.0.0) (2016-09-12)
 
 - Ability to specify a custom run_id (if not, every run in the Test Plan will be used)
