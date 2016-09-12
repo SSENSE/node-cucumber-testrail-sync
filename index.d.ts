@@ -44,4 +44,4 @@ export class ResultSynchronizer {
 
 export function readConfig(): ResultSynchronizerOptions;
 
-export function install(any): void;
+export function install(cucumber: any): void;
