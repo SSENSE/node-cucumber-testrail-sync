@@ -16,6 +16,8 @@ We propose the following collaborative workflow for BDD testing:
 
 ![Synchronization!](https://github.com/Groupe-Atallah/node-cucumber-testrail-sync/raw/master/images/sync-flow.png)
 
+An application should only have one TestPlan, with each features having their own Test Run.
+
 ------------
 
 At the root of your project, create the `.testrail-sync.js` file.
@@ -99,7 +101,7 @@ module.exports = function (): void {
 
 # Change Log
 
-## [2.0.0](https://github.com/Groupe-Atallah/node-cucumber-testrail-sync/tree/v2.0.0) (2016-??-??)
+## [2.0.0](https://github.com/Groupe-Atallah/node-cucumber-testrail-sync/tree/v2.0.0) (2016-09-12)
 
 - Ability to specify a custom run_id (if not, every run in the Test Plan will be used)
 
