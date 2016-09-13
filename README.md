@@ -55,6 +55,8 @@ There are other possible options:
 
   * __stepDefinitionsDir__: The directory where blank step definition files should be created  (ie. `stepDefinitionsDir: 'features/step_definitions'`)
 
+  * __stepDefinitionsStringPatterns__: If set to `true`, use [Strings patterns](https://github.com/cucumber/cucumber-js/blob/master/docs/support_files/string_patterns.md) to write step definitions.
+
   * __directoryStructure__: Used to match the TestRail sections tree with the local tests directory structure.
 
     * __type__: The variable name to used to create the folders. Can be either `section:slug` or `section:name`
@@ -100,6 +102,12 @@ module.exports = function (): void {
 ```
 
 # Change Log
+
+## [2.0.5](https://github.com/Groupe-Atallah/node-cucumber-testrail-sync/tree/v2.0.2) (2016-09-13)
+
+- Support Scenario Outlines ([issue #6](https://github.com/Groupe-Atallah/node-cucumber-testrail-sync/issues/6))
+
+- Support Cucumber String Patterns (`stepDefinitionsStringPatterns` option) ([issue #8](https://github.com/Groupe-Atallah/node-cucumber-testrail-sync/issues/8))
 
 ## [2.0.2](https://github.com/Groupe-Atallah/node-cucumber-testrail-sync/tree/v2.0.2) (2016-09-12)
 

@@ -1,5 +1,5 @@
 module.exports = function () {
-{{#steps}}	this.{{keyword}}(/^{{{regex}}}$/, function ({{params}}) {
+{{#steps}}	this.{{keyword}}({{{pattern}}}, function ({{params}}) {
 		callback(null, 'pending');
 	}.bind(this));
 

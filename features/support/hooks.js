@@ -50,7 +50,7 @@ var myHooks = function () {
 
     nock.disableNetConnect();
 
-    // Plan 1: a single test run
+    // Plan 1: a single test run with 2 test cases
     nock('https://test.testrail.com')
       .get('/index.php?/api/v2/get_plan/1')
       .reply(200, {
@@ -77,7 +77,33 @@ var myHooks = function () {
         ]];
       }.bind(this));
 
-    // Plan 2: two test runs
+     // Plan 2: a single test run with 2 test cases
+    nock('https://test.testrail.com')
+      .get('/index.php?/api/v2/get_plan/2')
+      .reply(200, {
+        "project_id": "98",
+        "entries": [
+          {
+            "id": "3933d74b-4282-4c1f-be62-a641ab427063",
+            "name": "My template",
+            "suite_id": "99",
+            "runs": [
+              { "id": "2" }
+            ]
+          }
+        ]
+      });
+
+    // Get tests of the run
+    nock('https://test.testrail.com')
+      .get('/index.php?/api/v2/get_tests/2')
+      .reply(function (uri, requestBody) {
+        return [200, [
+          this.testCases[100]
+        ]];
+      }.bind(this));
+
+    // Plan 3: two test runs
     nock('https://test.testrail.com')
       .persist()
       .get('/index.php?/api/v2/get_plan/55')

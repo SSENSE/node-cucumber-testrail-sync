@@ -14,6 +14,14 @@ module.exports = function() {
   }.bind(this));
 
 
+  this.Given(/^I use a TestPlan with 1 TestRun and 1 TestCase$/, function (callback) {
+    this.syncOptions.testrail.filters.plan_id = 2;
+    this.syncOptions.testrail.filters.run_id = 2;
+
+    callback();
+  }.bind(this));
+
+
   this.Given(/^I use a TestPlan with 2 TestRuns with 1 TestCase in each$/, function (callback) {
     this.syncOptions.testrail.filters.plan_id = 55;
 
