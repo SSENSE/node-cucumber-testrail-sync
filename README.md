@@ -103,7 +103,11 @@ module.exports = function (): void {
 
 # Change Log
 
-## [2.0.5](https://github.com/Groupe-Atallah/node-cucumber-testrail-sync/tree/v2.0.2) (2016-09-13)
+## [2.0.6](https://github.com/Groupe-Atallah/node-cucumber-testrail-sync/tree/v2.0.6) (2016-09-15)
+
+- Support regex flags when parsing step_definitions files
+
+## [2.0.5](https://github.com/Groupe-Atallah/node-cucumber-testrail-sync/tree/v2.0.5) (2016-09-13)
 
 - Support Scenario Outlines ([issue #6](https://github.com/Groupe-Atallah/node-cucumber-testrail-sync/issues/6))
 

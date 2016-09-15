@@ -119,7 +119,7 @@ Feature: Step definitions file creation
           callback(null, 'pending');
         });
 
-        this.When(/^I remove (\d+) apples$/, (arg1: string, callback: Function): void => {
+        this.When(/i remove (\d+) apples/i, (arg1: string, callback: Function): void => {
           callback(null, 'pending');
         });
 
