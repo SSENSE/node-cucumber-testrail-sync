@@ -115,6 +115,10 @@ Feature: Step definitions file creation
     And There is a file named "/js/parent-section/a-sub-section/my-first-test.ts" with the content:
       """
       module.exports = function (): void {
+        this.Given(/^.* url ([&=\?\/\w]+)$/, (url: string, callback: Function) => {
+          callback(null, 'pending');
+        });
+
         this.Given(/^I have a list of (\d+) apples$/, (arg1: string, callback: Function): void => {
           callback(null, 'pending');
         });
