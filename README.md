@@ -75,13 +75,9 @@ You can use the `--verify` switch to verify that your project's features files m
 
 We suggest enabling this option at the CI level (without the `run_id` config, so that the results from all the runs in the TestPlan will be updated).
 
-To push the results, you will have to either:
+To push the results, you will have to do the following two things:
 
-1. edit the `.testrail-sync.js` config file and set the **pushResults** option to `true` or
-
-2. set the `PUSH_RESULTS_TO_TESTRAIL` environment variable
-
-And install this module in Cucumber's context (`features/support/hooks.js`) :
+1. Install this module in Cucumber's context (`features/support/hooks.js`) :
 
 ```js
 var testrailSync = require('@ssense/cucumber-testrail-sync');
@@ -101,7 +97,31 @@ module.exports = function (): void {
 };
 ```
 
+2. set the `PUSH_RESULTS_TO_TESTRAIL` environment variable
+
+### Integration with Travis CI
+
+Here at SSENSE, we wanted to push the results only when the tests were being run against the `develop` branch.
+
+To do so, we set up the `.travis.yml` to run a shell script: `script: ./scripts/run-ci-tests.sh`
+
+```bash
+#!/bin/bash
+set -ev
+if [[ ${TRAVIS_BRANCH} == "develop" ]] && [[ ${TRAVIS_PULL_REQUEST} == "false" ]]; then
+  docker run my_app /bin/sh -c "export PUSH_RESULTS_TO_TESTRAIL=1; cd /app; npm test"
+else
+  docker run my_app /bin/sh -c "cd /app; npm test"
+fi
+```
+
 # Change Log
+
+## [2.0.8](https://github.com/Groupe-Atallah/node-cucumber-testrail-sync/tree/v2.0.8) (2016-09-20)
+
+- Allow comments in the gherkin
+
+- Update README: Add Travis CI example
 
 ## [2.0.6](https://github.com/Groupe-Atallah/node-cucumber-testrail-sync/tree/v2.0.6) (2016-09-15)
 

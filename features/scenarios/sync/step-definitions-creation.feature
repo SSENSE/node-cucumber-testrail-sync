@@ -7,6 +7,7 @@ Feature: Step definitions file creation
       Given I have a list of 10 apples
       When I remove 1 apples
       Then I should have 9 apples
+      # a comment
       """
     And The second case contains the following gherkin
       """
