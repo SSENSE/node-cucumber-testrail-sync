@@ -5,7 +5,7 @@ Feature: Scenario Outline Step Definitions
     And The first case contains the following gherkin
       """
       Given I have a list of <start> apples
-      When I remove <removed> apples
+      When I remove **<removed>** apples
       Then I should have <left> apples in my <container>
       Examples:
       | start | removed | left | container |
@@ -33,7 +33,7 @@ Feature: Scenario Outline Step Definitions
           callback(null, 'pending');
         }.bind(this));
 
-        this.When('I remove $removed apples', function (removed, callback) {
+        this.When('I remove \*\*$removed\*\* apples', function (removed, callback) {
           callback(null, 'pending');
         }.bind(this));
 
@@ -67,7 +67,7 @@ Feature: Scenario Outline Step Definitions
           callback(null, 'pending');
         }.bind(this));
 
-        this.When('I remove $removed apples', function (removed, callback) {
+        this.When('I remove \*\*$removed\*\* apples', function (removed, callback) {
           callback(null, 'pending');
         }.bind(this));
 

@@ -5,14 +5,14 @@ Feature: Step definitions file creation
     And The first case contains the following gherkin
       """
       Given I have a list of 10 apples
-      When I remove 1 apples
+      When I remove **1** apples
       Then I should have 9 apples
       # a comment
       """
     And The second case contains the following gherkin
       """
       Given I have a list of 20 apples
-      When I remove 5 apples
+      When I remove **5** apples
       Then I should have 15 "apples"
       """
 
@@ -27,7 +27,7 @@ Feature: Step definitions file creation
           callback(null, 'pending');
         }.bind(this));
 
-        this.When(/^I remove (\d+) apples$/, function (arg1, callback) {
+        this.When(/^I remove \*\*(\d+)\*\* apples$/, function (arg1, callback) {
           callback(null, 'pending');
         }.bind(this));
 
@@ -58,7 +58,7 @@ Feature: Step definitions file creation
           callback(null, 'pending');
         });
 
-        this.When(/^I remove (\d+) apples$/, (arg1, callback) => {
+        this.When(/^I remove \*\*(\d+)\*\* apples$/, (arg1, callback) => {
           callback(null, 'pending');
         });
 
@@ -89,7 +89,7 @@ Feature: Step definitions file creation
           callback(null, 'pending');
         });
 
-        this.When(/^I remove (\d+) apples$/, (arg1: string, callback: Function): void => {
+        this.When(/^I remove \*\*(\d+)\*\* apples$/, (arg1: string, callback: Function): void => {
           callback(null, 'pending');
         });
 
@@ -124,7 +124,7 @@ Feature: Step definitions file creation
           callback(null, 'pending');
         });
 
-        this.When(/i remove (\d+) apples/i, (arg1: string, callback: Function): void => {
+        this.When(/i remove \*\*(\d+)\*\* apples/i, (arg1: string, callback: Function): void => {
           callback(null, 'pending');
         });
 
