@@ -108,8 +108,13 @@ To do so, we set up the `.travis.yml` to run a shell script: `script: ./scripts/
 ```bash
 #!/bin/bash
 set -ev
+
+GITHUB_LINK="https://github.com/${TRAVIS_REPO_SLUG}/commit/${TRAVIS_COMMIT}"
+COMMIT_MSG=`git log -n 1 --pretty="format:%an committed %s" $TRAVIS_COMMIT`
+COMMIT_LOG="<a href='${GITHUB_LINK}'>${COMMIT_MSG}</a>"
+
 if [[ ${TRAVIS_BRANCH} == "develop" ]] && [[ ${TRAVIS_PULL_REQUEST} == "false" ]]; then
-  docker run my_app /bin/sh -c "export PUSH_RESULTS_TO_TESTRAIL=1; cd /app; npm test"
+  docker run my_app /bin/sh -c "export PUSH_RESULTS_TO_TESTRAIL=1; export TESTRAIL_RESULTS_COMMENT=$COMMIT_LOG; cd /app; npm test"
 else
   docker run my_app /bin/sh -c "cd /app; npm test"
 fi
