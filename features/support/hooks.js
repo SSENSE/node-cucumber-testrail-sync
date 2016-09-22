@@ -39,13 +39,15 @@ var myHooks = function () {
       "id": "1",
       "title": "my first test",
       "custom_gherkin": "Given That I am a tester\nWhen I am testing\nThen I should see test results\nAnd I should be satified",
-      "case_id": "100"
+      "case_id": "100",
+      "custom_status": 4
     };
     this.testCases[101] = {
       "id": "1",
       "title": "my second test",
       "custom_gherkin": "Given That I am a tester <name>\n| name |\n| tester 1 |\n| tester 2 |\nWhen I am testing\nThen I should see test results\nAnd I should be satified",
-      "case_id": "101"
+      "case_id": "101",
+      "custom_status": 5
     };
 
     nock.disableNetConnect();

@@ -31,6 +31,7 @@ module.exports = {
     filters: {
       plan_id: '', // required testrail plan id
       run_id: '', // optional testrail run id
+      custom_status: [4] // optional list of whitelisted status (testcases that don't have 1 of thoses statuses won't be synced)
     }
   },
 };
@@ -111,16 +112,24 @@ set -ev
 
 GITHUB_LINK="https://github.com/${TRAVIS_REPO_SLUG}/commit/${TRAVIS_COMMIT}"
 COMMIT_MSG=`git log -n 1 --pretty="format:%an committed %s" $TRAVIS_COMMIT`
-COMMIT_LOG="<a href='${GITHUB_LINK}'>${COMMIT_MSG}</a>"
+COMMIT_LOG="[${COMMIT_MSG}](${GITHUB_LINK})"
 
 if [[ ${TRAVIS_BRANCH} == "develop" ]] && [[ ${TRAVIS_PULL_REQUEST} == "false" ]]; then
-  docker run my_app /bin/sh -c "export PUSH_RESULTS_TO_TESTRAIL=1; export TESTRAIL_RESULTS_COMMENT=$COMMIT_LOG; cd /app; npm test"
+  docker run my_app /bin/sh -c "export PUSH_RESULTS_TO_TESTRAIL=1; export TESTRAIL_RESULTS_COMMENT=\"$COMMIT_LOG\"; cd /app; npm test"
 else
   docker run my_app /bin/sh -c "cd /app; npm test"
 fi
 ```
 
+AS you can see, we're also setting the `TESTRAIL_RESULTS_COMMENT` env variable to push a comment (containing the commit author and message) along with the test results.
+
 # Change Log
+
+## [2.0.11](https://github.com/Groupe-Atallah/node-cucumber-testrail-sync/tree/v2.0.11) (2016-09-22)
+
+- Allow syncing only TestCases with a certain custom_status
+
+- Fixed step_definitions creation bug when mixing regexp with string patterns
 
 ## [2.0.8](https://github.com/Groupe-Atallah/node-cucumber-testrail-sync/tree/v2.0.8) (2016-09-20)
 

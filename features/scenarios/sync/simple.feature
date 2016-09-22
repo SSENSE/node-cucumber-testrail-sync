@@ -12,3 +12,8 @@ Feature: Simple sync tests
     When I run the synchronization script
     Then There should be 2 feature file on the file system
     And There should be 2 code file on the file system
+
+  Scenario: Should only import cases with a certain status
+    Given I set the testrail.filters.custom_status option to "[4]"
+    When I run the synchronization script
+    Then There should be 1 feature file on the file system

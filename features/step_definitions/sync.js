@@ -37,6 +37,10 @@ module.exports = function() {
       opts[splitted[i]] = opts[splitted[i]] || {};
       opts = opts[splitted[i]];
     }
+    // convert string to array
+    if (optionName === 'testrail.filters.custom_status') {
+      optionValue = eval(optionValue);
+    }
     opts[splitted[splitted.length - 1]] = optionValue;
 
     callback();
