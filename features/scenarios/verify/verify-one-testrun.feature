@@ -77,3 +77,19 @@ Feature: Verify tests in 1 testrun
     And I enable the verify option
     When I run the synchronization script
     Then It should succeed
+
+  Scenario: Should only verify cases with a certain status
+    Given There is a file named "/feature/parent-section/a-sub-section/my-first-test.feature" with the content:
+      """
+      Feature: a sub section
+        @tcid:100
+        Scenario: my first test
+          Given That I am a tester
+          When I am testing
+          Then I should see test results
+          And I should be satified
+      """
+    And I set the testrail.verifyFilters.custom_status option to "[4]"
+    And I enable the verify option
+    When I run the synchronization script
+    Then It should succeed

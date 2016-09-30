@@ -7,6 +7,9 @@ interface TestrailOptions {
       plan_id: number;
       run_id?: number;
       custom_status?: [number];
+    };
+    verifyFilters: {
+      custom_status?: [number];
     }
   };
 }

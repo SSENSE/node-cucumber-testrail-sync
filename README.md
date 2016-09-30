@@ -125,13 +125,17 @@ AS you can see, we're also setting the `TESTRAIL_RESULTS_COMMENT` env variable t
 
 # Change Log
 
-## [2.0.11](https://github.com/Groupe-Atallah/node-cucumber-testrail-sync/tree/v2.0.11) (2016-09-22)
+## [2.0.15](https://github.com/Groupe-Atallah/node-cucumber-testrail-sync/tree/v2.0.15) (2016-09-30)
+
+- Allow verifying only TestCases with a certain custom_status
+
+## 2.0.11 (2016-09-22)
 
 - Allow syncing only TestCases with a certain custom_status
 
 - Fixed step_definitions creation bug when mixing regexp with string patterns
 
-## [2.0.8](https://github.com/Groupe-Atallah/node-cucumber-testrail-sync/tree/v2.0.8) (2016-09-20)
+## 2.0.8 (2016-09-20)
 
 - Allow comments in the gherkin
 
