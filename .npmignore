@@ -1,0 +1,10 @@
+src
+images
+tests
+tsconfig.json
+tslint.json
+typings.json
+typings.d.ts
+.gitignore
+.travis.yml
+.publishrc

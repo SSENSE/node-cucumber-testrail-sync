@@ -1,0 +1,12 @@
+{
+    "extends": "@ssense/tslint-config",
+    "rules": {
+        "chai-vague-errors": false,
+        "no-any": false,
+        "no-backbone-get-set-outside-model": false,
+        "no-increment-decrement": false,
+        "no-require-imports": false,
+        "no-reserved-keywords": false,
+        "promise-must-complete": false
+    }
+}

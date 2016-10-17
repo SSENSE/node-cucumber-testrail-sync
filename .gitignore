@@ -1,6 +1,6 @@
 node_modules
 npm-debug.log
 .idea/
-.testrail-sync.js
-coverage
 .nyc_output
+typings
+dist

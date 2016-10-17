@@ -1,6 +1,6 @@
 # cucumber-testrail-sync
 
-This module has two main features:
+This module has three main features:
 
 > It can synchronize test cases from TestRail to `.feature` files on your local filesystem.
 
@@ -78,7 +78,7 @@ We suggest enabling this option at the CI level (without the `run_id` config, so
 
 To push the results, you will have to do the following two things:
 
-1. Install this module in Cucumber's context (`features/support/hooks.js`) :
+* Install this module in Cucumber's context (`features/support/hooks.js`) :
 
 ```js
 var testrailSync = require('@ssense/cucumber-testrail-sync');
@@ -98,7 +98,7 @@ module.exports = function (): void {
 };
 ```
 
-2. set the `PUSH_RESULTS_TO_TESTRAIL` environment variable
+* set the `PUSH_RESULTS_TO_TESTRAIL` environment variable
 
 ### Integration with Travis CI
 
@@ -124,6 +124,10 @@ fi
 AS you can see, we're also setting the `TESTRAIL_RESULTS_COMMENT` env variable to push a comment (containing the commit author and message) along with the test results.
 
 # Change Log
+
+## [2.1.0](https://github.com/Groupe-Atallah/node-cucumber-testrail-sync/tree/v2.1.0) (2016-10-17)
+
+- Migration to TypeScript
 
 ## [2.0.15](https://github.com/Groupe-Atallah/node-cucumber-testrail-sync/tree/v2.0.15) (2016-09-30)
 

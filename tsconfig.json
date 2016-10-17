@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "module": "commonjs",
+    "outDir": "./dist/",
+    "sourceMap": true,
+    "inlineSourceMap": false,
+    "inlineSources": false,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "forceConsistentCasingInFileNames": true,
+    "removeComments": true
+  },
+  "exclude": [
+    "node_modules",
+    "typings/globals",
+    "tests"
+  ]
+}

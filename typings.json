@@ -1,0 +1,25 @@
+{
+  "globalDependencies": {
+    "chalk": "registry:dt/chalk#0.4.0+20160317120654",
+    "commander": "registry:dt/commander#2.3.0+20160317120654",
+    "diff": "registry:dt/diff#0.0.0+20160809232139",
+    "glob": "registry:dt/glob#5.0.10+20160317120654",
+    "handlebars": "registry:dt/handlebars#4.0.5+20160804082238",
+    "joi": "registry:dt/joi#9.0.0+20160906140128",
+    "minimatch": "registry:dt/minimatch#2.0.8+20160317120654",
+    "mkdirp": "registry:dt/mkdirp#0.3.0+20160317120654",
+    "mock-fs": "registry:dt/mock-fs#3.6.0+20160317120654",
+    "node": "registry:dt/node#6.0.0+20161014191813",
+    "string": "registry:dt/string#0.0.0+20160316155526"
+  },
+  "dependencies": {
+    "inquirer": "registry:npm/inquirer#1.0.0+20160723033700",
+    "lodash": "registry:npm/lodash#4.0.0+20161015015725"
+  },
+  "globalDevDependencies": {
+    "chai": "registry:dt/chai#3.4.0+20160601211834",
+    "cucumber": "registry:dt/cucumber#0.0.0+20161013070212",
+    "mocha": "registry:dt/mocha#2.2.5+20160720003353",
+    "nock": "registry:dt/nock#8.0.0+20160909083304"
+  }
+}

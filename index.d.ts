@@ -8,7 +8,7 @@ interface TestrailOptions {
       run_id?: number;
       custom_status?: [number];
     };
-    verifyFilters: {
+    verifyFilters?: {
       custom_status?: [number];
     }
   };
@@ -30,9 +30,6 @@ interface ScenarioSynchronizerOptions extends TestrailOptions {
     skipRootFolder?: number;
   };
   verify?: boolean;
-}
-
-interface ResultSynchronizerOptions extends TestrailOptions {
   pushResults?: boolean;
 }
 
@@ -42,11 +39,11 @@ export class ScenarioSynchronizer {
 }
 
 export class ResultSynchronizer {
-  constructor(options: ResultSynchronizerOptions);
+  constructor(options: ScenarioSynchronizerOptions);
   saveTestResult(scenario: any, callback: Function): void;
   pushTestResults(callback: Function): void;
 }
 
-export function readConfig(): ResultSynchronizerOptions;
+export function readConfig(): ScenarioSynchronizerOptions;
 
 export function install(cucumber: any): void;
