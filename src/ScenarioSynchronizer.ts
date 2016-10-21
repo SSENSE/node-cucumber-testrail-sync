@@ -440,16 +440,23 @@ export class ScenarioSynchronizer {
         if (process.env.SILENT === undefined || Boolean(process.env.SILENT) !== true) {
             console.log('  ' + chalk.yellow(basename + ' is not up to date with TestRail'));
 
-            const diff = jsdiff.diffChars(oldStr, newStr);
+            const diffs = jsdiff.diffLines(oldStr, newStr);
 
-            diff.forEach((part: any) => {
-                if (part.added) {
-                    process.stdout.write(chalk.green(part.value));
-                } else if (part.removed) {
-                    process.stdout.write(chalk.red(part.value));
-                } else {
-                    process.stdout.write(part.value);
-                }
+            diffs.forEach((part: any) => {
+                const leadChar = (part.removed ? '-' : (part.added ? '+' : ' '));
+                const lines = part.value.split('\n')
+                                .map(Function.prototype.call, String.prototype.trim)
+                                .filter((line: string) => line.length > 0);
+
+                lines.forEach((line: any) => {
+                    if (part.added) {
+                        console.log(chalk.green(`${leadChar}${line}`));
+                    } else if (part.removed) {
+                        console.log(chalk.red(`${leadChar}${line}`));
+                    } else {
+                        console.log(`${leadChar}${line}`);
+                    }
+                });
             });
 
             console.log('');
