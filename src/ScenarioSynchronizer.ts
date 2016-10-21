@@ -664,7 +664,7 @@ export class ScenarioSynchronizer {
             const featurePath = this.testFiles[testcase.case_id];
             const localFileContent = fs.readFileSync(featurePath).toString().trim();
 
-            if (localFileContent !== remoteFileContent) {
+            if (this.hasGherkinContentChanged(localFileContent, remoteFileContent, false)) {
                 errors.push('Local test case "' + testcase.title + '" is outdated');
             }
         }
@@ -713,6 +713,26 @@ export class ScenarioSynchronizer {
         this.forcedPrompt = confirm;
     }
 
+    protected hasGherkinContentChanged(fileContent1: string, fileContent2: string, considerScenarioNameChange :boolean): boolean {
+        if (considerScenarioNameChange) {
+            return fileContent1 !== fileContent2;
+        }
+
+        const gherkinContent1 = fileContent1.split('\n')
+            .filter((line: string) => {
+                return ! /^\s*(Feature: |@tcid:|Scenario( Outline)?: )/.test(line);
+            })
+            .join('\n');
+
+        const gherkinContent2 = fileContent2.split('\n')
+            .filter((line: string) => {
+                return ! /^\s*(Feature: |@tcid:|Scenario( Outline)?: )/.test(line);
+            })
+            .join('\n');
+
+        return gherkinContent1 !== gherkinContent2;
+    }
+
     /**
      * Synchronize a test case from TestRail to the local filesystem
      */
@@ -753,7 +773,7 @@ export class ScenarioSynchronizer {
         } else {
             featurePath = this.testFiles[testcase.case_id];
             const localFileContent = fs.readFileSync(featurePath).toString().trim();
-            const fileChanged = (localFileContent !== remoteFileContent);
+            const fileChanged = this.hasGherkinContentChanged(localFileContent, remoteFileContent, true);
 
             if (!fileChanged) {
                 this.skippedCount = this.skippedCount + 1;

@@ -16,7 +16,7 @@ Module to use [Cucumber](https://github.com/cucumber/cucumber-js) in conjunction
 
 We propose the following collaborative workflow for BDD testing:
 
-![Synchronization!](https://github.com/Groupe-Atallah/node-cucumber-testrail-sync/raw/master/images/sync-flow.png)
+![Synchronization!](https://github.com/Groupe-Atallah/node-cucumber-testrail-sync/raw/master/docs/img/sync-flow.png)
 
 ## Installation
 

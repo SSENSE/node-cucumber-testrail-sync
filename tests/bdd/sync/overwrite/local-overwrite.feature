@@ -131,3 +131,28 @@ Feature: Local overwrite tests
           And I should be satified
       """
     And The file "/feature/parent-section/a-sub-section/my-first-test.feature" should not have been modified
+
+  Scenario: Overwrite local .feature file if only the name of the feature/scenario changed
+    Given There is a file named "/feature/parent-section/a-sub-section/my-first-test.feature" with the content:
+      """
+      Feature: whatever
+        @tcid:100
+        Scenario: whatever
+          Given That I am a tester
+          When I am testing
+          Then I should see test results
+          And I should be satified
+      """
+    And I enable the overwrite.local option
+    When I run the synchronization script
+    Then There should be 2 feature files on the file system
+    And The file "/feature/parent-section/a-sub-section/my-first-test.feature" should have the following content:
+      """
+      Feature: a sub section
+        @tcid:100
+        Scenario: my first test
+          Given That I am a tester
+          When I am testing
+          Then I should see test results
+          And I should be satified
+      """

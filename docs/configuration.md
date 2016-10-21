@@ -49,5 +49,6 @@ There are other possible options:
 
     * __skipRootFolder__: The number of root sections to skip.
 
+---
 
 > Next: [Synchronization of test cases from/to TestRail](/docs/synchronization.md)

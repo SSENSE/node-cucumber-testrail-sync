@@ -2,7 +2,7 @@ import {expect} from 'chai';
 import {ScenarioSynchronizer} from '../../src/index';
 
 /* tslint:disable:max-line-length */
-describe('Scenario synchronizer', () => {
+describe('Scenario synchronizer helper functions', () => {
     const sync = new ScenarioSynchronizer();
 
     it('isValidGherkin fails when called with invalid gherkin', () => {

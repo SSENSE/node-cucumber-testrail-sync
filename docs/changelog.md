@@ -1,5 +1,11 @@
 # Change Log
 
+## [2.1.1](https://github.com/Groupe-Atallah/node-cucumber-testrail-sync/tree/v2.1.1) (2016-10-??)
+
+- Better documentation
+
+- `--verify` won't fail anymore if only the scenario name of a testcase has been changed
+
 ## [2.1.0](https://github.com/Groupe-Atallah/node-cucumber-testrail-sync/tree/v2.1.0) (2016-10-17)
 
 - Migration to TypeScript

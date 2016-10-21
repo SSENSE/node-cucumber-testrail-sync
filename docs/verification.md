@@ -33,4 +33,6 @@ testrail: {
 }
 ```
 
+---
+
 > Next: [Pushing test results to TestRail](/docs/pushing_results.md)
