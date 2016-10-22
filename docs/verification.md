@@ -1,6 +1,6 @@
 # Synchronization verification
 
-You can use the `--verify` switch to verify that your project's features files match the test cases from TestRail.
+You can use the `--verify` switch to verify that your project's `.feature` files match the Gherkin of the test cases from TestRail.
 
 Furthermore, you could add it to your Continuous Integration workflow by using it in the `pretest` script section of your `package.json` file:
 
@@ -12,11 +12,11 @@ Furthermore, you could add it to your Continuous Integration workflow by using i
 
 ---
 
-The verification script can be run against a subset of the Test Cases - based on their status.
+The verification script can be run against a subset of the test cases - based on their statuses.
 
-For example, if a QA analyst changes the content of a test case - but doesn't want the changes to affect the CI build until a developer updated the test code - he/she can change the status of that test case so that the verification script overlook that TestCase.
+For example, if a QA analyst changes the Gherkin of a test case on TestRail - but doesn't want the changes to affect the CI build until a developer updates the test code - he/she can change the status of that test case so that the verification script overlook that specific test case.
 
-At [SSENSE](https://github.com/SSENSE), we use the **Approved** and **Approved to automate** statuses - TestCases with thoses statuses are sync'ed but only TestCases with the **Approved** status are verified.
+At [SSENSE](https://github.com/SSENSE), we use the **Approved** and **Approved to automate** statuses - test cases with thoses statuses are sync'ed but only test cases with the **Approved** status are verified.
 
 Here's our configuration:
 
@@ -25,7 +25,7 @@ testrail: {
   // ...
   filters: {
     // ...
-    custom_status: [3, 4] // Approved && Approved to automate
+    custom_status: [3, 4] // Approved || Approved to automate
   },
   verifyFilters: {
     custom_status: [3] // Approved

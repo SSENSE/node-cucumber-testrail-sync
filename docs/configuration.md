@@ -24,7 +24,7 @@ module.exports = {
 
 There are other possible options:
 
-  * __overwrite__: Toggle the local .feature file overwrite OR remote test case overwrite if the local Gherkins doesn't match the Gherkins from TestRail.
+  * __overwrite__: Toggle the local .feature file overwrite _OR_ remote test case overwrite if the local Gherkin doesn't match the Gherkin from TestRail.
 
   ```js
   overwrite: {

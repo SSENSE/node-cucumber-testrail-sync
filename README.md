@@ -8,7 +8,9 @@ Module to use [Cucumber](https://github.com/cucumber/cucumber-js) in conjunction
 
 ## Philosophy
 
-`Cucumber TestRail Sync` has been developed with 2 main goals:
+At [SSENSE](https://github.com/SSENSE), we strive to deliver high quality on every project.
+
+With that perspective, `Cucumber TestRail Sync` has been developed with 2 main goals:
 
 1. Have a single source of truth for test cases (TestRail)
 

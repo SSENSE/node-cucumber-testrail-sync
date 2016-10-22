@@ -28,9 +28,9 @@ module.exports = function (): void {
 };
 ```
 
-* Set the `pushResults` set the `PUSH_RESULTS_TO_TESTRAIL` environment variable
+* Either set the `pushResults` to `true` in the configuration file or set the `PUSH_RESULTS_TO_TESTRAIL` environment variable
 
-* The results will now be pushed everytime you run the tests (`./node_modules/.bin/cucumberjs`)
+* The results will now be pushed everytime you run the tests with Cucumber
 
 ## Integration with Travis CI
 
