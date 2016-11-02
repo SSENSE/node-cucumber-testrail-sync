@@ -39,12 +39,12 @@ describe('Scenario synchronizer helper functions', () => {
     // | header1 | header2 |
     // | row1.1 | row1.2 |
     it('getGherkinLines succeed when called with valid gherkin with tables', () => {
-        const gherkin = '  Given   i am a tester  \n||: name |: occupation\n|| myself | developer\n # a comment';
-        const expected = [ 'Given I am a tester', '| name | occupation|', '| myself | developer|', '# a comment'];
+        const gherkin = '  Given   i am a tester  \n||: name |: occupation\n|| myself | developer\n|| someone else |\n# a comment';
+        const expected = [ 'Given I am a tester', '| name | occupation|', '| myself | developer|', '| someone else ||', '# a comment'];
 
         expect(sync.getGherkinLines({ custom_gherkin: gherkin })).to.deep.equal(expected);
 
-        const gherkinTriplePipes = '  Given   i am a tester  \n|||: name |: occupation\n|| myself | developer\n # a comment';
+        const gherkinTriplePipes = '  Given   i am a tester  \n|||: name |: occupation\n|| myself | developer\n|| someone else |\n # a comment';
 
         expect(sync.getGherkinLines({ custom_gherkin: gherkinTriplePipes })).to.deep.equal(expected);
     });

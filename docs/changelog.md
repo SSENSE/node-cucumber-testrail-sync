@@ -1,6 +1,10 @@
 # Change Log
 
-## [2.1.1](https://github.com/Groupe-Atallah/node-cucumber-testrail-sync/tree/v2.1.1) (2016-10-24)
+## [2.1.2](https://github.com/Groupe-Atallah/node-cucumber-testrail-sync/tree/v2.1.2) (2016-11-02)
+
+- Fix Scenario Outline bug: Synchronization was hanging when a variable was used in the steps but not defined in the Examples table
+
+## [2.1.1](https://github.com/Groupe-Atallah/node-cucumber-testrail-sync/tree/v2.1.1) (2016-11-02)
 
 - Better documentation
 

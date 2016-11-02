@@ -377,7 +377,7 @@ export class ScenarioSynchronizer {
           })
           .filter((line: string) => line.length > 0 && line.indexOf('Scenario:') !== 0)
           // replace line like: ||value1|value2 by |value1|value2|
-          .map((line: string) => line.replace(/^(\|{2,})(.*)([^\|])$/, '|$2$3|'))
+          .map((line: string) => line.replace(/^(\|{2,})(.*)$/, '|$2|'))
           // replace line like: |:header1|:header2| by |header1|header2|
           .map((line: string) => {
             if (line[0] !== '|') {
@@ -530,6 +530,35 @@ export class ScenarioSynchronizer {
         const QUOTED_STRING_PATTERN = /"[^"]*"/gi;
         const QUOTED_STRING_MATCHING_GROUP = '"([^"]*)"';
 
+        const examples: any = {};
+        if (isScenarioOutline) {
+            let headerVars: any = {};
+            // Find example values for each variables
+            for (let j = 0; j < gherkinSteps.length; j++) {
+                if (gherkinSteps[j].indexOf('Examples') === 0) {
+                    headerVars = gherkinSteps[j + 1].trim().split('|')
+                        .map(Function.prototype.call, String.prototype.trim);
+
+                    for (let lineIndex = j + 2; lineIndex < gherkinSteps.length; lineIndex++) {
+                        const exampleValues = gherkinSteps[lineIndex].trim().split('|')
+                            .map(Function.prototype.call, String.prototype.trim);
+
+                        for (let k = 0; k < headerVars.length; k++) {
+                            if (examples[headerVars[k]] === undefined && exampleValues[k].length > 0) {
+                                examples[headerVars[k]] = exampleValues[k];
+                            }
+                        }
+
+                        if (Object.keys(examples).length === headerVars.length)   {
+                            break;
+                        }
+                    }
+
+                    break;
+                }
+            }
+        }
+
         for (let i = 0; i < gherkinSteps.length; i++) {
             const gherkinsStep = gherkinSteps[i];
             // an example table or a comment
@@ -571,27 +600,9 @@ export class ScenarioSynchronizer {
             // stepLine[0] will be something such as "I have <count> apples"
             const stepLine = [regex];
 
-            // Replace <variable> by the values of the first row of the examples table
+            // Replace <variable> by the values of data located in the examples table
             // stepLine[1] will be something such as "I have 10 apples"
             if (isScenarioOutline) {
-                const examples: any = {};
-
-                for (let j = 0; j < gherkinSteps.length; j++) {
-                    if (gherkinSteps[j].indexOf('Examples') === 0) {
-                        const header = gherkinSteps[j + 1].trim().split('|')
-                            .map(Function.prototype.call, String.prototype.trim)
-                            .filter((line: string) => line.length > 0);
-                        const firstExampleRow = gherkinSteps[j + 2].trim().split('|')
-                            .map(Function.prototype.call, String.prototype.trim)
-                            .filter((line: string) => line.length > 0);
-
-                        for (let k = 0; k < header.length; k++) {
-                            examples[header[k]] = firstExampleRow[k];
-                        }
-                        break;
-                    }
-                }
-
                 stepLine[1] = regex;
                 let matchVar: any;
                 do {
@@ -601,6 +612,10 @@ export class ScenarioSynchronizer {
                         if (examples[varName] !== undefined) {
                             stepLine[1] = stepLine[1].substring(0, matchVar.index) +
                                 examples[varName] +
+                                stepLine[1].substring(matchVar.index + matchVar[0].length);
+                        } else {
+                            stepLine[1] = stepLine[1].substring(0, matchVar.index) +
+                                'anything' +
                                 stepLine[1].substring(matchVar.index + matchVar[0].length);
                         }
                     }
