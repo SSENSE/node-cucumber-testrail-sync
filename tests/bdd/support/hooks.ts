@@ -26,7 +26,7 @@ const myHooks = function (): void {
             }
         };
 
-        this.verifyError = null;
+        this.scriptError = null;
 
         this.fsMockConfig = {
             templates: duplicateFSInMemory(path.resolve('templates')),

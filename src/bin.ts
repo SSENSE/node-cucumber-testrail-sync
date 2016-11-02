@@ -8,6 +8,7 @@ const pkg = require('../package.json');
 program
   .version(pkg.version)
   .option('--verify', 'Verify that the local features files match the test cases from TestRail')
+  .option('--unused', 'Find unused step definitions')
   .option('--silent', 'Disable output')
   .parse(process.argv);
 
@@ -15,6 +16,7 @@ const sync = new ScenarioSynchronizer();
 
 const config = readConfig();
 config.verify = (<any> program).verify || config.verify || false;
+config.findUnused = (<any> program).unused || config.findUnused || false;
 config.silent = (<any> program).silent || config.silent || false;
 
 sync.synchronize(config, (err: any): void => {

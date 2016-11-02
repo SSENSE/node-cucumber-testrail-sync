@@ -20,6 +20,7 @@
     "chai": "registry:dt/chai#3.4.0+20160601211834",
     "cucumber": "registry:dt/cucumber#0.0.0+20161013070212",
     "mocha": "registry:dt/mocha#2.2.5+20160720003353",
-    "nock": "registry:dt/nock#8.0.0+20160909083304"
+    "nock": "registry:dt/nock#8.0.0+20160909083304",
+    "sleep": "registry:dt/sleep#0.0.0+20160728152313"
   }
 }

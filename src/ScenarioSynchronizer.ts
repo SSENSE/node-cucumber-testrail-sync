@@ -18,6 +18,9 @@ interface Step {
     regex: string;
     isStringPattern?: boolean;
     regexFlags?: string;
+    used?: boolean;
+    filename?: string;
+    pattern?: string;
 }
 
 interface TestRun {
@@ -82,6 +85,7 @@ export class ScenarioSynchronizer {
                 skipRootFolder: Joi.number().default(0)
             },
             verify: Joi.boolean().default(false),
+            findUnused: Joi.boolean().default(false),
             pushResults: Joi.boolean().default(false)
         });
 
@@ -91,11 +95,19 @@ export class ScenarioSynchronizer {
 
         try {
             await this.validateConfig(schema);
-            await this.fetchTestPlanAndSections();
-            await this.findImportedTestcases();
-            await this.findImplementedStepDefinitions();
 
-            if (this.config.verify === true) {
+            if (this.config.findUnused === true) {
+                await this.findImplementedStepDefinitions();
+                const errors = await this.findUnusedStepDefinitions();
+
+                if (errors.length) {
+                    throw new Error(errors.join('\n'));
+                } else {
+                    this.output(chalk.green('OK'));
+                }
+            } else if (this.config.verify === true) {
+                await this.fetchTestPlanAndSections();
+                await this.findImportedTestcases();
                 const errors = await this.verifySync();
 
                 if (errors.length) {
@@ -104,12 +116,15 @@ export class ScenarioSynchronizer {
                     this.output(chalk.green('OK'));
                 }
             } else {
+                await this.fetchTestPlanAndSections();
+                await this.findImportedTestcases();
+                await this.findImplementedStepDefinitions();
                 await this.synchronizePlan();
             }
 
             callback();
         } catch (err) {
-            this.output(chalk.red('Synchronization error:'));
+            this.output(chalk.red('Error:'));
             const errorMessage = err.message || err;
             if (_.isString(errorMessage)) {
                 this.output(chalk.red(errorMessage));
@@ -229,41 +244,63 @@ export class ScenarioSynchronizer {
 
     protected async findImplementedStepDefinitions(): Promise<any> {
         this.implementedSteps = [];
-        const re = /^this\.(Given|When|Then)\((\/|')(.+)(\/|')(\w*)/;
+        const re = /^this\.(Given|When|Then|defineStep)\((\/|')(.+)(\/|')(\w*)/;
 
         mkdirp.sync(this.config.stepDefinitionsDir);
 
-        walk.sync(this.config.stepDefinitionsDir, (filePath: string) => {
-            if (!fs.lstatSync(filePath).isDirectory()) {
-                const fileContent = fs.readFileSync(filePath).toString();
+        const foldersToScan = [
+            path.resolve(this.config.stepDefinitionsDir),
+            path.resolve(this.config.stepDefinitionsDir, '..', 'support')
+        ];
 
-                const stepDefinitions = fileContent.split('\n').map(Function.prototype.call, String.prototype.trim)
-                    .filter((line: string) => re.test(line))
-                    .map((line: string) => {
-                        const matches = re.exec(line);
-
-                        const keyword = matches[1];
-                        let pattern = matches[3];
-                        let isStringPattern = false;
-
-                        // String Pattern
-                        if (matches[2] === '\'') {
-                          isStringPattern = true;
-                          pattern = pattern.replace(/\$\w+/g, '<\\w+>');
-                        }
-
-                        const step: Step = { keyword: keyword, regex: pattern, isStringPattern: isStringPattern };
-
-                        if (matches[5].length) {
-                          step.regexFlags = matches[5];
-                        }
-
-                        return step;
-                    });
-
-                this.implementedSteps = this.implementedSteps.concat(stepDefinitions);
+        for (const folder of foldersToScan) {
+            try {
+                if (!fs.lstatSync(folder).isDirectory()) {
+                    continue;
+                }
+            } catch (err) {
+                continue;
             }
-        });
+
+            walk.sync(folder, (filePath: string) => {
+                if (!fs.lstatSync(filePath).isDirectory()) {
+                    const fileContent = fs.readFileSync(filePath).toString();
+
+                    const stepDefinitions = fileContent.split('\n').map(Function.prototype.call, String.prototype.trim)
+                        .filter((line: string) => re.test(line))
+                        .map((line: string) => {
+                            const matches = re.exec(line);
+
+                            const keyword = matches[1];
+                            const patternInCode = matches[3];
+                            let pattern = matches[3];
+                            let isStringPattern = false;
+
+                            // String Pattern
+                            if (matches[2] === '\'') {
+                              isStringPattern = true;
+                              pattern = pattern.replace(/\$\w+/g, '<\\w+>');
+                            }
+
+                            const step: Step = {
+                                filename: filePath.substr(folder.length + 1),
+                                keyword,
+                                regex: pattern,
+                                pattern: patternInCode,
+                                isStringPattern
+                            };
+
+                            if (matches[5].length) {
+                              step.regexFlags = matches[5];
+                            }
+
+                            return step;
+                        });
+
+                    this.implementedSteps = this.implementedSteps.concat(stepDefinitions);
+                }
+            });
+        }
     }
 
     /**
@@ -340,7 +377,14 @@ export class ScenarioSynchronizer {
           })
           .filter((line: string) => line.length > 0 && line.indexOf('Scenario:') !== 0)
           // replace line like: ||value1|value2 by |value1|value2|
-          .map((line: string) => line.replace(/^(\|{2,})(.*)([^\|])$/, '|$2$3|'));
+          .map((line: string) => line.replace(/^(\|{2,})(.*)([^\|])$/, '|$2$3|'))
+          // replace line like: |:header1|:header2| by |header1|header2|
+          .map((line: string) => {
+            if (line[0] !== '|') {
+                return line;
+            }
+            return line.replace(/\|:/g, '|');
+          });
 
         // insert a blank line before Examples
         for (let i = arr.length - 1; i > 0; i--) {
@@ -438,7 +482,7 @@ export class ScenarioSynchronizer {
     protected showDiff(basename: string, oldStr: string, newStr: string): void {
         /* istanbul ignore next */
         if (process.env.SILENT === undefined || Boolean(process.env.SILENT) !== true) {
-            console.log('  ' + chalk.yellow(basename + ' is not up to date with TestRail'));
+            console.log('  ' + chalk.yellow(`${basename} is not up to date with TestRail`));
 
             const diffs = jsdiff.diffLines(oldStr, newStr);
 
@@ -654,7 +698,7 @@ export class ScenarioSynchronizer {
         const errors: string[] = [];
         for (const testcase of testcases) {
             if (this.testFiles[testcase.case_id] === undefined) {
-                errors.push('"' + testcase.title + '" not found locally');
+                errors.push(`"${testcase.title}" not found locally`);
                 continue;
             }
 
@@ -665,11 +709,60 @@ export class ScenarioSynchronizer {
             const localFileContent = fs.readFileSync(featurePath).toString().trim();
 
             if (this.hasGherkinContentChanged(localFileContent, remoteFileContent, false)) {
-                errors.push('Local test case "' + testcase.title + '" is outdated');
+                errors.push(`Local test case "${testcase.title}" is outdated`);
             }
         }
 
         return Promise.resolve(errors);
+    }
+
+    protected async findUnusedStepDefinitions(): Promise<any> {
+        this.output(chalk.green('Searching for unused step definitions ...'));
+        this.output('');
+
+        this.testFiles = {};
+
+        return new Promise((resolve, reject) => {
+            let implementedSteps: Step[] = this.implementedSteps.map((s: any) => {
+                s.used = false;
+                return s;
+            });
+
+            walk.sync(this.config.featuresDir, (filePath: string) => {
+                if (/\.feature$/.test(filePath)) {
+                    const fileContent = fs.readFileSync(filePath).toString();
+
+                    const re = new RegExp('^(Given|When|And|Then)', 'i');
+                    const lines = fileContent.split('\n').map(Function.prototype.call, String.prototype.trim)
+                                    .filter((line: string) => re.test(line));
+
+                    for (let line of lines) {
+                        const words = line.split(' ');
+                        words.shift();
+                        line = words.join(' ');
+
+                        for (let m = 0; m < implementedSteps.length; m++) {
+                            if (implementedSteps[m].used === true) {
+                                continue;
+                            }
+                            const re = new RegExp(implementedSteps[m].regex, implementedSteps[m].regexFlags);
+                            if (re.test(line)) {
+                                implementedSteps[m].used = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    implementedSteps = implementedSteps.filter((s: any) => s.used === false);
+                }
+            });
+
+            return resolve(
+                implementedSteps.map((s: any) => {
+                    return `Step "${s.pattern}" (${s.filename}) is not used`;
+                })
+            );
+        });
     }
 
     protected async synchronizePlan(): Promise<any> {
@@ -683,14 +776,16 @@ export class ScenarioSynchronizer {
             if (this.isValidGherkin(testcase.custom_gherkin)) {
                 await this.synchronizeCase(testcase, this.getRelativePath(testcase.case_id));
             } else {
-                const log = 'Invalid gherkin content for TestCase #' + testcase.case_id + '-' + S(testcase.title).slugify().s;
+                const slug = S(testcase.title).slugify().s;
+                const log = `Invalid gherkin content for TestCase #${testcase.case_id}-${slug}`;
                 this.output(chalk.yellow(log));
                 this.output(chalk.yellow(testcase.custom_gherkin));
             }
         }
 
         if (this.skippedCount > 0) {
-            const log = 'Skipped ' + this.skippedCount + ' test case' + (this.skippedCount > 1 ? 's' : '') + ' (no changes)';
+            const plural = this.skippedCount > 1 ? 's' : '';
+            const log = `Skipped ${this.skippedCount} test case${plural} (no changes)`;
             this.output('  ' + chalk.yellow(log));
         }
     }
@@ -713,7 +808,7 @@ export class ScenarioSynchronizer {
         this.forcedPrompt = confirm;
     }
 
-    protected hasGherkinContentChanged(fileContent1: string, fileContent2: string, considerScenarioNameChange :boolean): boolean {
+    protected hasGherkinContentChanged(fileContent1: string, fileContent2: string, considerScenarioNameChange: boolean): boolean {
         if (considerScenarioNameChange) {
             return fileContent1 !== fileContent2;
         }
@@ -768,7 +863,7 @@ export class ScenarioSynchronizer {
                     mkdirp.sync(this.config.stepDefinitionsDir + '/' + relativePath);
                     fs.writeFileSync(stepDefinitionsPath, content);
                 }
-                this.output('  ' + chalk.green('Creating ' + basename));
+                this.output('  ' + chalk.green(`Creating ${basename}`));
             }
         } else {
             featurePath = this.testFiles[testcase.case_id];
@@ -779,7 +874,7 @@ export class ScenarioSynchronizer {
                 this.skippedCount = this.skippedCount + 1;
                 return Promise.resolve();
             } else if (this.config.overwrite.local === true) {
-                this.output('  ' + chalk.green('Overwriting ' + basename));
+                this.output('  ' + chalk.green(`Overwriting ${basename}`));
                 fs.writeFileSync(featurePath, remoteFileContent);
                 return Promise.resolve();
             } else if (this.config.overwrite.local === 'ask') {
@@ -787,24 +882,24 @@ export class ScenarioSynchronizer {
 
                 if (await this.promptForConfirmation('Do you want to overwrite the local version ?') === true) {
                     fs.writeFileSync(featurePath, remoteFileContent);
-                    this.output('  ' + chalk.green('Updated ' + basename));
+                    this.output('  ' + chalk.green(`Updated ${basename}`));
                 } else {
-                    this.output('  ' + chalk.yellow('Skipping ' + basename));
+                    this.output('  ' + chalk.yellow(`Skipping ${basename}`));
                 }
             } else if (this.config.overwrite.remote === true) {
-                this.output('  ' + chalk.green('Pushing ' + basename + ' to TestRail'));
+                this.output('  ' + chalk.green(`Pushing ${basename} to TestRail`));
                 await this.pushTestCaseToTestRail(testcase, localFileContent);
             } else if (this.config.overwrite.remote === 'ask') {
                 this.showDiff(basename, remoteFileContent, localFileContent);
 
                 if (await this.promptForConfirmation('Do you want to override the TestRail version ?') === true) {
-                    this.output('  ' + chalk.green('Pushing ' + basename + ' to TestRail'));
+                    this.output('  ' + chalk.green(`Pushing ${basename} to TestRail`));
                     await this.pushTestCaseToTestRail(testcase, localFileContent);
                 } else {
-                    this.output('  ' + chalk.yellow('Skipping ' + basename));
+                    this.output('  ' + chalk.yellow(`Skipping ${basename}`));
                 }
             } else {
-                this.output('  ' + chalk.yellow('Skipping ' + basename));
+                this.output('  ' + chalk.yellow(`Skipping ${basename}`));
                 return Promise.resolve();
             }
         }

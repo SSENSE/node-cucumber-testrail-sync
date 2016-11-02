@@ -17,7 +17,7 @@ Feature: Step definitions file creation
 
   Scenario: Don't create duplicate step definitions
     Given I set the stepDefinitionsTemplate option to "typescript.ts"
-    And There is a file named "/js/common.ts" with the content:
+    And There is a file named "/support/common.ts" with the content:
       """
       module.exports = function (): void {
         this.When(/^.* request method ([\w]+)$/, (method: string, callback: Function) => {
@@ -32,7 +32,7 @@ Feature: Step definitions file creation
 
       """
     When I run the synchronization script
-    Then There should be 2 code files on the file system
+    Then There should be 1 code files on the file system
     And The file "/js/parent-section/a-sub-section/my-first-test.ts" should have the following content:
       """
       module.exports = function (): void {

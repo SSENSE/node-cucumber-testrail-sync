@@ -1,10 +1,16 @@
 # Change Log
 
-## [2.1.1](https://github.com/Groupe-Atallah/node-cucumber-testrail-sync/tree/v2.1.1) (2016-10-??)
+## [2.1.1](https://github.com/Groupe-Atallah/node-cucumber-testrail-sync/tree/v2.1.1) (2016-10-24)
 
 - Better documentation
 
 - `--verify` won't fail anymore if only the scenario name of a testcase has been changed
+
+- Better Gherkin diff output (similar to `git diff`)
+
+- Scan the `support` folder for steps definitions
+
+- Implemented `--unused` switch to find unused steps definitions
 
 ## [2.1.0](https://github.com/Groupe-Atallah/node-cucumber-testrail-sync/tree/v2.1.0) (2016-10-17)
 

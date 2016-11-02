@@ -64,8 +64,8 @@ module.exports = function (): void {
 
         const sync = new this.ScenarioSynchronizer();
         sync.synchronize(this.syncOptions, (err: any) => {
-            if (this.syncOptions.verify === true) {
-                this.verifyError = err || null;
+            if (this.syncOptions.verify === true || this.syncOptions.findUnused === true) {
+                this.scriptError = err || null;
                 return callback();
             }
             callback(err);

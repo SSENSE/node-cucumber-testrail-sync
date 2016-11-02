@@ -24,7 +24,7 @@ describe('Scenario synchronizer helper functions', () => {
             'Given I am a tester\n\tWhen I am testing\nAnd The test should pass\nThen The test passes',
             'Given I am a tester\n| name |\n| myself |\nWhen I am testing\nAnd The test should pass\nThen The test passes',
             'Given I am a tester\n| name |\n| myself |\nWhen I am testing\nAnd The test should pass\nThen The test passes\n"""\ndata\n"""\nAnd something else',
-            'Given I am a tester <name>\nWhen I am testing\nAnd The test should pass\nThen The test passes\n\nExamples:\n| name |\n| myself |\n'
+            'Given I am a tester <name>\nWhen I am testing\nAnd The test should pass\nThen The test passes\n\nExamples:\n|: name |\n| myself |\n'
         ];
 
         for (let i = 0; i < gherkin.length; i++) {
@@ -33,16 +33,18 @@ describe('Scenario synchronizer helper functions', () => {
     });
 
     // TestRail returns tables in a format such as:
+    // ||: header1 | header2
     // || row1.1 | row1.2
     // We have to cast it to a markdown format:
+    // | header1 | header2 |
     // | row1.1 | row1.2 |
     it('getGherkinLines succeed when called with valid gherkin with tables', () => {
-        const gherkin = '  Given   i am a tester  \n|| name\n|| myself\n # a comment';
-        const expected = [ 'Given I am a tester', '| name|', '| myself|', '# a comment'];
+        const gherkin = '  Given   i am a tester  \n||: name |: occupation\n|| myself | developer\n # a comment';
+        const expected = [ 'Given I am a tester', '| name | occupation|', '| myself | developer|', '# a comment'];
 
         expect(sync.getGherkinLines({ custom_gherkin: gherkin })).to.deep.equal(expected);
 
-        const gherkinTriplePipes = '  Given   i am a tester  \n||| name\n|| myself\n # a comment';
+        const gherkinTriplePipes = '  Given   i am a tester  \n|||: name |: occupation\n|| myself | developer\n # a comment';
 
         expect(sync.getGherkinLines({ custom_gherkin: gherkinTriplePipes })).to.deep.equal(expected);
     });

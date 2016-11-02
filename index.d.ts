@@ -30,6 +30,7 @@ interface ScenarioSynchronizerOptions extends TestrailOptions {
     skipRootFolder?: number;
   };
   verify?: boolean;
+  findUnused?: boolean;
   pushResults?: boolean;
 }
 

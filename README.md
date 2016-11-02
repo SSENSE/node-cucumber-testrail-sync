@@ -4,7 +4,7 @@ Module to use [Cucumber](https://github.com/cucumber/cucumber-js) in conjunction
 
 * It can synchronize test cases from TestRail to `.feature` files on your local filesystem.
 
-* It can automatically push test results to TestRail - after they've been ran.
+* It can automatically push test results to TestRail - after they've been run.
 
 ## Philosophy
 
