@@ -38,15 +38,28 @@ describe('Scenario synchronizer helper functions', () => {
     // We have to cast it to a markdown format:
     // | header1 | header2 |
     // | row1.1 | row1.2 |
-    it('getGherkinLines succeed when called with valid gherkin with tables', () => {
+    it('getGherkinLines succeed when called with valid gherkin with tables #1', () => {
         const gherkin = '  Given   i am a tester  \n||: name |: occupation\n|| myself | developer\n|| someone else |\n# a comment';
         const expected = [ 'Given I am a tester', '| name | occupation|', '| myself | developer|', '| someone else ||', '# a comment'];
 
         expect(sync.getGherkinLines({ custom_gherkin: gherkin })).to.deep.equal(expected);
+    });
 
-        const gherkinTriplePipes = '  Given   i am a tester  \n|||: name |: occupation\n|| myself | developer\n|| someone else |\n # a comment';
+    it('getGherkinLines succeed when called with valid gherkin with tables #2', () => {
+        const gherkin = '|||:Header 1|:Header 2\n|| Line 1.1 | Line 1.2\n|| Line 2.1 |';
+        const expected = [ '|Header 1|Header 2|', '| Line 1.1 | Line 1.2|', '| Line 2.1 ||'];
 
-        expect(sync.getGherkinLines({ custom_gherkin: gherkinTriplePipes })).to.deep.equal(expected);
+        expect(sync.getGherkinLines({ custom_gherkin: gherkin })).to.deep.equal(expected);
+    });
+
+    // In case of a hardcoded table, rows should end by a |
+    // | header1 | header2 |
+    // || value |
+    it('getGherkinLines succeed when called with valid gherkin with tables #3', () => {
+        const gherkin = 'Given I am a tester\n| header1 | header2 |\n|| value |';
+        const expected = [ 'Given I am a tester', '| header1 | header2 |', '|| value |'];
+
+        expect(sync.getGherkinLines({ custom_gherkin: gherkin })).to.deep.equal(expected);
     });
 
     it('getGherkinLines succeed when called with valid gherkin (Scenario Outline)', () => {

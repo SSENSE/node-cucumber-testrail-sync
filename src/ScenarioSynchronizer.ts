@@ -376,8 +376,6 @@ export class ScenarioSynchronizer {
             });
           })
           .filter((line: string) => line.length > 0 && line.indexOf('Scenario:') !== 0)
-          // replace line like: ||value1|value2 by |value1|value2|
-          .map((line: string) => line.replace(/^(\|{2,})(.*)$/, '|$2|'))
           // replace line like: |:header1|:header2| by |header1|header2|
           .map((line: string) => {
             if (line[0] !== '|') {
@@ -390,6 +388,43 @@ export class ScenarioSynchronizer {
         for (let i = arr.length - 1; i > 0; i--) {
             if (arr[i].indexOf('Examples') === 0) {
                 arr.splice(i, 0, '');
+            }
+        }
+
+        return this.replaceMultiPipesTables(arr);
+    }
+
+    protected replaceMultiPipesTables(arr: string[]): string[] {
+        let tableStart = -1;
+        for (let i = 0; i < arr.length; i++) {
+            if (arr[i][0] === '|' && i + 1 < arr.length) {
+                if (tableStart === -1) {
+                    tableStart = i;
+                }
+            } else if (tableStart !== -1) {
+                let tableEnd = i;
+                if (arr[i][0] === '|' && i + 1 === arr.length) {
+                    tableEnd = tableEnd + 1;
+                }
+
+                // Replace tables like: ||value1|value2 by |value1|value2|
+                // All rows of the table should start with ||'s - or ||| for the first one
+                const len = tableEnd - tableStart;
+                const multiPipesLines = arr.filter((value: string, index: Number): boolean => {
+                    return index >= tableStart && index < tableEnd;
+                }).filter((value: string): boolean => {
+                    return value.substr(0, 2) === '||';
+                }).length;
+
+                if (len === multiPipesLines) {
+                    arr.splice.apply(arr, (<any[]> [ tableStart, len ]).concat(
+                         arr.filter((value: string, index: Number): boolean => {
+                            return index >= tableStart && index < tableEnd;
+                        }).map((line: string) => line.replace(/^(\|{2,})(.*)$/, '|$2|'))
+                    ));
+                }
+
+                tableStart = -1;
             }
         }
 
