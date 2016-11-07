@@ -1,6 +1,6 @@
 # Change Log
 
-## [2.1.3](https://github.com/Groupe-Atallah/node-cucumber-testrail-sync/tree/v2.1.2) (2016-11-02)
+## [2.1.3](https://github.com/Groupe-Atallah/node-cucumber-testrail-sync/tree/v2.1.3) (2016-11-07)
 
 - Fix examples tables casting bug
 
