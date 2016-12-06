@@ -1,21 +1,21 @@
 {
   "name": "@ssense/cucumber-testrail-sync",
-  "version": "2.1.3",
+  "version": "2.1.4",
   "description": "Synchronize test cases from TestRail",
   "bin": {
     "cucumber-testrail-sync": "./dist/bin.js"
   },
   "main": "./dist/index.js",
   "scripts": {
-    "postinstall": "./node_modules/.bin/typings install",
-    "compile": "rm -rf dist/* && ./node_modules/.bin/tsc",
-    "lint": "./node_modules/.bin/tslint ./src/{,**/}*.ts ./tests/{,**/}*.ts --format verbose",
+    "install-typings": "typings install",
+    "compile": "rm -rf dist/* && tsc",
+    "lint": "tslint ./src/{,**/}*.ts ./tests/{,**/}*.ts --format verbose",
     "test": "npm run test:unit && npm run test:bdd",
-    "test:unit": "NODE_ENV=test ./node_modules/.bin/mocha tests/unit --recursive --compilers ts:ts-node/register --bail",
-    "test:bdd": "NODE_ENV=test ./node_modules/.bin/cucumberjs tests/bdd -r tests/bdd --compiler ts:ts-node/register --format summary --fail-fast",
+    "test:unit": "NODE_ENV=test mocha tests/unit --recursive --compilers ts:ts-node/register --bail",
+    "test:bdd": "NODE_ENV=test cucumberjs tests/bdd -r tests/bdd --compiler ts:ts-node/register --format summary --fail-fast",
     "cover": "npm run cover:unit && npm run cover:bdd && npm run cover:merge",
-    "cover:unit": "NODE_ENV=test ./node_modules/.bin/nyc --report-dir tests/coverage/unit npm run test:unit",
-    "cover:bdd": "NODE_ENV=test ./node_modules/.bin/nyc --report-dir tests/coverage/bdd npm run test:bdd",
+    "cover:unit": "NODE_ENV=test nyc --report-dir tests/coverage/unit npm run test:unit",
+    "cover:bdd": "NODE_ENV=test nyc --report-dir tests/coverage/bdd npm run test:bdd",
     "cover:merge": "rm -rf ./tests/coverage/final && node ./tests/coverage/merge.js",
     "publish-please": "publish-please",
     "prepublish": "publish-please guard"
@@ -52,6 +52,7 @@
   "devDependencies": {
     "@ssense/tslint-config": "^1.0.1",
     "chai": "^3.5.0",
+    "coveralls": "^2.11.14",
     "cucumber": "^1.2.2",
     "glob": "^7.0.6",
     "mocha": "^2.5.3",
@@ -83,7 +84,8 @@
     ],
     "reporter": [
       "json",
-      "html"
+      "html",
+      "lcov"
     ],
     "all": true
   }
