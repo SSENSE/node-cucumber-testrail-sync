@@ -1,7 +1,6 @@
 # Cucumber TestRail Sync
 
 [![Latest Stable Version](https://img.shields.io/npm/v/@ssense/node-cucumber-testrail-sync.svg)](https://www.npmjs.com/package/@ssense/node-cucumber-testrail-sync)
-[![Known Vulnerabilities](https://snyk.io/test/npm/@ssense/node-cucumber-testrail-sync/badge.svg)](https://snyk.io/test/npm/@ssense/node-cucumber-testrail-sync)
 
 Module to use [Cucumber](https://github.com/cucumber/cucumber-js) in conjunction with [TestRail](http://www.gurock.com/testrail/).
 
