@@ -1,7 +1,5 @@
 # Cucumber TestRail Sync
 
-[![Build Status](https://travis-ci.org/SSENSE/node-cucumber-testrail-sync.svg?branch=master)](https://travis-ci.org/SSENSE/node-cucumber-testrail-sync)
-[![Coverage Status](https://coveralls.io/repos/github/SSENSE/node-cucumber-testrail-sync/badge.svg?branch=master)](https://coveralls.io/github/SSENSE/node-cucumber-testrail-sync?branch=master)
 [![Latest Stable Version](https://img.shields.io/npm/v/@ssense/node-cucumber-testrail-sync.svg)](https://www.npmjs.com/package/@ssense/node-cucumber-testrail-sync)
 [![Known Vulnerabilities](https://snyk.io/test/npm/@ssense/node-cucumber-testrail-sync/badge.svg)](https://snyk.io/test/npm/@ssense/node-cucumber-testrail-sync)
 
