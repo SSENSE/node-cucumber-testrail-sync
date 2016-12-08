@@ -29,6 +29,7 @@ export class ResultSynchronizer {
         if (this.config.pushResults === true) {
             this.testruns = await this.getAllTestRuns();
         }
+        /* istanbul ignore next */
         if (typeof callback === 'function') {
             return callback();
         }
@@ -78,6 +79,7 @@ export class ResultSynchronizer {
                 this.testresults[testcaseId] = result;
             }
         }
+        /* istanbul ignore next */
         if (typeof callback === 'function') {
             return callback();
         }
@@ -95,6 +97,7 @@ export class ResultSynchronizer {
                 }
             }
         }
+        /* istanbul ignore next */
         if (typeof callback === 'function') {
             return callback();
         }

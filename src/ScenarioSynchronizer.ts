@@ -198,7 +198,7 @@ export class ScenarioSynchronizer {
         this.plan = await this.testrailClient.getPlan(this.config.testrail.filters.plan_id);
 
         if (!this.plan.entries || this.plan.entries.length === 0 || !this.plan.entries[0].runs || this.plan.entries[0].runs.length === 0) {
-            return Promise.reject('You must add Test Runs to your Test Plan in TestRail');
+            return Promise.reject(new Error('The Test Plan should contain at least one Test Run.'));
         }
 
         const cases = await this.testrailClient.getCases(this.plan.project_id, { suite_id: this.plan.entries[0].suite_id });
@@ -676,41 +676,60 @@ export class ScenarioSynchronizer {
                     let match: any;
                     pattern = regex.replace(/\*/g, '\\*');
 
-                    do {
-                        match = /<(\w+)>/.exec(pattern);
-                        if (match) {
-                            pattern = pattern.substring(0, match.index) + '$' + match[1] + pattern.substring(match.index + match[0].length);
+                    if (isScenarioOutline) {
+                        do {
+                            match = /<(\w+)>/.exec(pattern);
+                            if (match) {
+                                pattern = pattern.substring(0, match.index) + '$' + match[1] + pattern.substring(match.index + match[0].length);
 
-                            params.push(template === 'typescript.ts' ? match[1] + ': any' : match[1]);
-                        }
-                    } while (match);
+                                params.push(template === 'typescript.ts' ? match[1] + ': any' : match[1]);
+                            }
+                        } while (match);
+                    }
 
                     pattern = '\'' + pattern + '\'';
 
                     step.regex = step.regex.replace(/\*/g, '\\*').replace(/<(\w+)>/g, '<\\w+>');
                 } else {
                     regex = this.escapeStringRegexp(regex).replace(/\//g, '\\/');
-                    // ------------
-                    // add some pattern to our step definition
-                    // code borrowed from lib/cucumber/support_code/step_definition_snippet_builder.js
-                    step.regex = regex
-                        .replace(QUOTED_STRING_PATTERN, QUOTED_STRING_MATCHING_GROUP)
-                        .replace(NUMBER_PATTERN, NUMBER_MATCHING_GROUP);
 
-                    const match1 = regex.match(QUOTED_STRING_MATCHING_GROUP);
-                    const match2 = regex.replace(QUOTED_STRING_PATTERN, QUOTED_STRING_MATCHING_GROUP).match(NUMBER_MATCHING_GROUP);
+                    if (isScenarioOutline) {
+                        let match: any;
+                        pattern = regex.replace(/\*/g, '\\*');
 
-                    let paramCount = match1 === null ? 0 : (match1.length - 1);
-                    paramCount += match2 === null ? 0 : (match2.length - 1);
+                        do {
+                            match = /<(\w+)>/.exec(pattern);
+                            if (match) {
+                                pattern = pattern.substring(0, match.index) + '(\\w+)' + pattern.substring(match.index + match[0].length);
+                                params.push(template === 'typescript.ts' ? match[1] + ': any' : match[1]);
+                            }
+                        } while (match);
 
-                    for (let n = 0; n < paramCount; n++) {
-                      const argName = 'arg' + (n + 1);
-
-                      params.push(template === 'typescript.ts' ? argName + ': string' : argName);
+                        step.regex = step.regex.replace(/\*/g, '\\*').replace(/<(\w+)>/g, '(\\w+)');
                     }
+                    else {
+                        // ------------
+                        // add some pattern to our step definition
+                        // code borrowed from lib/cucumber/support_code/step_definition_snippet_builder.js
+                        step.regex = regex
+                            .replace(QUOTED_STRING_PATTERN, QUOTED_STRING_MATCHING_GROUP)
+                            .replace(NUMBER_PATTERN, NUMBER_MATCHING_GROUP);
 
-                    if (tableParam.length) {
-                      params.push(tableParam);
+                        const match1 = regex.match(QUOTED_STRING_MATCHING_GROUP);
+                        const match2 = regex.replace(QUOTED_STRING_PATTERN, QUOTED_STRING_MATCHING_GROUP).match(NUMBER_MATCHING_GROUP);
+
+                        let paramCount = match1 === null ? 0 : (match1.length - 1);
+                        paramCount += match2 === null ? 0 : (match2.length - 1);
+
+                        for (let n = 0; n < paramCount; n++) {
+                          const argName = 'arg' + (n + 1);
+
+                          params.push(template === 'typescript.ts' ? argName + ': string' : argName);
+                        }
+
+                        if (tableParam.length) {
+                          params.push(tableParam);
+                        }
                     }
 
                     step.regex = '^' + step.regex + '$';
@@ -844,6 +863,7 @@ export class ScenarioSynchronizer {
         if (ScenarioSynchronizer.forcedPrompt !== undefined) {
             return Promise.resolve(ScenarioSynchronizer.forcedPrompt);
         }
+        /* istanbul ignore next */
         return inquirer.prompt({
             type: 'confirm',
             name: 'confirm',

@@ -1,7 +1,7 @@
 {
   "name": "@ssense/cucumber-testrail-sync",
-  "version": "2.1.4",
-  "description": "Synchronize test cases from TestRail",
+  "version": "2.1.5",
+  "description": "Synchronize test cases from TestRail & pushes Cucumber results",
   "bin": {
     "cucumber-testrail-sync": "./dist/bin.js"
   },
@@ -22,14 +22,18 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Groupe-Atallah/node-cucumber-testrail-sync.git"
+    "url": "git+https://github.com/SSENSE/node-cucumber-testrail-sync.git"
   },
   "keywords": [
     "cucumber",
     "testrail",
-    "bdd"
+    "bdd",
+    "qa"
   ],
   "author": "Mickael Burguet <www.rundef.com>",
+  "publishConfig": {
+    "access": "public"
+  },
   "license": "MIT",
   "engines": {
     "node": ">= 6.2.0",

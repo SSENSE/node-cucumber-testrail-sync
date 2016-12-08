@@ -1,6 +1,6 @@
 # Pushing results to TestRail
 
-![Pushing results!](https://github.com/Groupe-Atallah/node-cucumber-testrail-sync/raw/master/docs/img/push-results.jpg)
+![Pushing results!](https://github.com/SSENSE/node-cucumber-testrail-sync/raw/master/docs/img/push-results.jpg)
 
 > Tests running (left) and results being pushed to Test Rail (right)
 

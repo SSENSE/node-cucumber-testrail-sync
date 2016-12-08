@@ -9,10 +9,10 @@ var mergeIntoFolder = 'final';
 var files = fs.readdirSync(rootFolder);
 var mergedCoverageMap = null;
 
-for(var i = 0; i < files.length; i++) {
+for (var i = 0; i < files.length; i++) {
     var fullPath = path.resolve(rootFolder, files[i]);
 
-    if(files[i] !== mergeIntoFolder && fs.statSync(fullPath).isDirectory()) {
+    if (files[i] !== mergeIntoFolder && fs.statSync(fullPath).isDirectory()) {
         fullPath = path.resolve(fullPath, 'coverage-final.json');
 
         var map = libCoverage.createCoverageMap(JSON.parse(fs.readFileSync(fullPath, 'utf8')));
@@ -37,5 +37,6 @@ var context = libReport.createContext({
 tree = libReport.summarizers.pkg(mergedCoverageMap);
 
 tree.visit(reports.create('html'), context);
+tree.visit(reports.create('lcov'), context);
 
-fs.writeFileSync(path.join(rootFolder, mergeIntoFolder, 'coverage-final.json'), JSON.stringify(mergedCoverageMap.toJSON()));
+fs.writeFileSync(path.join(rootFolder, '..', '..', '.nyc_output', 'coverage-final.json'), JSON.stringify(mergedCoverageMap.toJSON()));

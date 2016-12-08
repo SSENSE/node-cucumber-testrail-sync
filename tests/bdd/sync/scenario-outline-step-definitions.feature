@@ -23,6 +23,41 @@ Feature: Scenario Outline Step Definitions
 
   Scenario: Using es5 template
     Given I set the stepDefinitionsTemplate option to "es5.js"
+    When I run the synchronization script
+    Then There should be 2 code files on the file system
+    And The file "/js/parent-section/a-sub-section/my-first-test.js" should have the following content:
+      """
+      module.exports = function () {
+        this.Given(/^I have a list of (\w+) apples$/, function (start, callback) {
+          callback(null, 'pending');
+        }.bind(this));
+
+        this.When(/^I remove \*\*(\w+)\*\* apples$/, function (removed, callback) {
+          callback(null, 'pending');
+        }.bind(this));
+
+        this.Then(/^I should have (\w+) apples in my (\w+)$/, function (left, container, callback) {
+          callback(null, 'pending');
+        }.bind(this));
+
+      };
+      """
+    And The file "/js/parent-section/my-second-test.js" should have the following content:
+      """
+      module.exports = function () {
+        this.When(/^I eat (\w+) apples$/, function (eaten, callback) {
+          callback(null, 'pending');
+        }.bind(this));
+
+        this.Then(/^I should have (\w+) apples$/, function (left, callback) {
+          callback(null, 'pending');
+        }.bind(this));
+
+      };
+      """
+
+  Scenario: Using es5 template - String patterns
+    Given I set the stepDefinitionsTemplate option to "es5.js"
     And I enable the stepDefinitionsStringPatterns option
     When I run the synchronization script
     Then There should be 2 code files on the file system
