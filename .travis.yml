@@ -3,7 +3,7 @@ language: node_js
 node_js:
   - 4
   - 5
-  - "stable"
+  - stable
 
 before_install:
   - npm config set progress=false
@@ -15,4 +15,13 @@ before_script:
 script: npm run cover
 
 after_script:
-  - "cat ./tests/coverage/final/lcov.info | ./node_modules/.bin/coveralls"
+  - cat ./tests/coverage/final/lcov.info | ./node_modules/.bin/coveralls
+
+before_deploy: npm run compile
+deploy:
+  provider: npm
+  skip_cleanup: true
+  on:
+    tags: true
+  api_key:
+    secure: L45BtYhVG0IOgdUJ4w/bIbHl9RxUe0Nz0rHQqyDA8tgMd73iT0sbhoLjxSKhdBi4zzAZtQ8TLZNG9XmysEH+IJTlNKmcUkJKkBIz3auqMBKOEGX5X5vdJzHijdU/3GrHcyOQ6ZQ0p2Gp/bSto2eu5FsTH8hl0M24tU+rWBaLCPQylt4cSy9QyvPgRrOQKkaWFzVtU7t8IW2+NuSZmdvARYl8l5uG1giqW8foeUvUtZaFqotGBMQTWJnrhnrpXfQfWSHwX0rMRLgoZVMIab1/BtHD020FK0zaiynoQFlw6ybwkWSgR3yfoLoycTevZNJO1xZQ85rANdj9mC+l0S9BaCrFgRwKOgZ6YeO1lRGuQHLchFCKhdS3OYjjJzYc6EC5W+wR2kBr1U9CIL3imXCt+5/KMLM85ssH3UJlbUBx+rEdEzwkfPr+Jwd8622GYsBWwjYK589UHqBsnHQdDuUgI3XSXgZk3FJ+vlz6YA28z8OZnCJQix0U5vG7I27NWx/Fxo2woqFmM9yETENI1YMHtWMfyfapoe4G/2ZEHP0sr5KghvKnqbzwjieS2AJXpCoXCPhiImXYIwEDDJgsCirUeOewQ6ibEOi2ekj3Q7nc7Ou467X9HYYzu46IR1RhUN+TVjLoTta9fj6uZb5/22f+fRT2isiIIlh85dNXewXGJ6Q=

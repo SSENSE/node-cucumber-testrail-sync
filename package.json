@@ -1,6 +1,6 @@
 {
   "name": "@ssense/cucumber-testrail-sync",
-  "version": "2.1.8",
+  "version": "2.1.9",
   "description": "Synchronize test cases from TestRail & pushes Cucumber results",
   "bin": {
     "cucumber-testrail-sync": "./dist/bin.js"
@@ -16,9 +16,7 @@
     "cover": "npm run cover:unit && npm run cover:bdd && npm run cover:merge",
     "cover:unit": "NODE_ENV=test nyc --report-dir tests/coverage/unit npm run test:unit",
     "cover:bdd": "NODE_ENV=test nyc --report-dir tests/coverage/bdd npm run test:bdd",
-    "cover:merge": "rm -rf ./tests/coverage/final && node ./tests/coverage/merge.js",
-    "publish-please": "publish-please",
-    "prepublish": "publish-please guard"
+    "cover:merge": "rm -rf ./tests/coverage/final && node ./tests/coverage/merge.js"
   },
   "repository": {
     "type": "git",
