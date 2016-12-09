@@ -680,7 +680,8 @@ export class ScenarioSynchronizer {
                         do {
                             match = /<(\w+)>/.exec(pattern);
                             if (match) {
-                                pattern = pattern.substring(0, match.index) + '$' + match[1] + pattern.substring(match.index + match[0].length);
+                                pattern = pattern.substring(0, match.index) + '$' + match[1] +
+                                    pattern.substring(match.index + match[0].length);
 
                                 params.push(template === 'typescript.ts' ? match[1] + ': any' : match[1]);
                             }
@@ -706,8 +707,7 @@ export class ScenarioSynchronizer {
                         } while (match);
 
                         step.regex = step.regex.replace(/\*/g, '\\*').replace(/<(\w+)>/g, '(\\w+)');
-                    }
-                    else {
+                    } else {
                         // ------------
                         // add some pattern to our step definition
                         // code borrowed from lib/cucumber/support_code/step_definition_snippet_builder.js
@@ -874,6 +874,7 @@ export class ScenarioSynchronizer {
         });
     }
 
+    // tslint:disable-next-line:function-name
     public static FORCE_CONFIRMATION_PROMPT(confirm: boolean): void {
         this.forcedPrompt = confirm;
     }
