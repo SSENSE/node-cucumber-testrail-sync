@@ -1,5 +1,7 @@
 # Cucumber TestRail Sync
 
+[![Build Status](https://travis-ci.org/SSENSE/node-cucumber-testrail-sync.svg?branch=master)](https://travis-ci.org/SSENSE/node-cucumber-testrail-sync)
+[![Coverage Status](https://coveralls.io/repos/github/SSENSE/node-cucumber-testrail-sync/badge.svg?branch=master)](https://coveralls.io/github/SSENSE/node-cucumber-testrail-sync?branch=master)
 [![Latest Stable Version](https://img.shields.io/npm/v/@ssense/cucumber-testrail-sync.svg)](https://www.npmjs.com/package/@ssense/cucumber-testrail-sync)
 [![Known Vulnerabilities](https://snyk.io/test/npm/@ssense/cucumber-testrail-sync/badge.svg)](https://snyk.io/test/npm/@ssense/cucumber-testrail-sync)
 
@@ -8,6 +10,8 @@ Module to use [Cucumber](https://github.com/cucumber/cucumber-js) in conjunction
 * It can synchronize test cases from TestRail to `.feature` files on your local filesystem.
 
 * It can automatically push test results to TestRail - after they've been run.
+
+![Synchronization!](https://github.com/SSENSE/node-cucumber-testrail-sync/raw/master/docs/img/sync.gif)
 
 ## Philosophy
 

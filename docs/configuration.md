@@ -7,7 +7,7 @@ To get started, create the `.testrail-sync.js` file at the root of your project 
 ```js
 module.exports = {
   testrail: {
-    host: 'https://YOURACOUNT.testrail.com',
+    host: 'https://YOURACCOUNT.testrail.com',
     user: '',
     password: '',  // password or api key
     filters: {
@@ -47,7 +47,7 @@ There are other possible options:
 
     * __type__: The variable name to used to create the folders - Possible values: `section:slug` or `section:name`
 
-    * __skipRootFolder__: The number of root sections to skip.
+    * __skipRootFolder__: The number of TestRail root sections to skip when creating the local tests directory structure.
 
 ---
 
