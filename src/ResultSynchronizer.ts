@@ -51,11 +51,12 @@ export class ResultSynchronizer {
                     comment: ''
                 };
 
+                /* istanbul ignore next */
                 if (process.env.TESTRAIL_RESULTS_COMMENT !== undefined) {
                     result.comment = process.env.TESTRAIL_RESULTS_COMMENT;
                 }
 
-                if (scenario.isPending()) {
+                if (scenario.isPending() || scenario.isUndefined() || scenario.isSkipped()) {
                     result.status_id = this.BLOCKED_STATUS_ID;
                 } else if (!scenario.isSuccessful()) {
                     result.status_id = this.FAILED_STATUS_ID;
@@ -63,7 +64,7 @@ export class ResultSynchronizer {
 
                     if (typeof exception === 'string') {
                         result.comment += (result.comment.length ? '\n\n' : '') + exception;
-                    } else if (typeof exception === 'object') {
+                    } else if (typeof exception === 'object' && exception !== null) {
                         result.comment += (result.comment.length ? '\n\n' : '') + exception.toString();
 
                         if (exception.stack) {

@@ -1,5 +1,9 @@
 # Change Log
 
+## [2.1.8](https://github.com/SSENSE/node-cucumber-testrail-sync/tree/v2.1.8) (2016-12-09)
+
+- Handle undefined/skipped scenarios when pushing results to TestRail
+
 ## [2.1.5](https://github.com/SSENSE/node-cucumber-testrail-sync/tree/v2.1.5) (2016-12-08)
 
 - Initial open-source release

@@ -35,10 +35,14 @@ const pushTestResults = async (options: any, scenarios: any, callback: Function)
         const astscenario = Cucumber.Ast.Scenario(scenarioContent.scenariodata);
         const scenarioResult = Cucumber.Runtime.ScenarioResult(astscenario);
         const step = Cucumber.Ast.Step({});
-        const stepResult = Cucumber.Runtime.StepResult({
+        const stepResultData = {
             status: scenarioContent.status,
             step: step
-        });
+        };
+        if (scenarioContent.failureException) {
+            (<any> stepResultData).failureException = scenarioContent.failureException;
+        }
+        const stepResult = Cucumber.Runtime.StepResult(stepResultData);
         scenarioResult.witnessStepResult(stepResult);
         const scenario = Cucumber.Api.Scenario(astscenario, scenarioResult);
 
@@ -83,6 +87,29 @@ describe('Send results to TestRail', () => {
             expect(Object.keys(updateRequests)).to.have.lengthOf(1);
             expect(updateRequests).to.have.property('100');
             expect(updateRequests['100']).to.deep.equal({ results: [{ case_id: '200', status_id: sync.FAILED_STATUS_ID }] });
+            done();
+        });
+    });
+
+    it('sends FAILED when scenario is failed with exception', (done: Function) => {
+        const error = new Error('An error');
+        error.stack = 'A stack trace';
+        const scenarios = [
+            {
+                scenariodata: scenariodata,
+                status: Cucumber.Status.FAILED,
+                failureException: error
+            }
+        ];
+
+        pushTestResults(syncOptions, scenarios, (err: any, updateRequests: any) => {
+            expect(Object.keys(updateRequests)).to.have.lengthOf(1);
+            expect(updateRequests).to.have.property('100');
+            expect(updateRequests['100']).to.deep.equal({ results: [{
+                case_id: '200',
+                status_id: sync.FAILED_STATUS_ID,
+                comment: 'Error: An error\n\nA stack trace'
+            }] });
             done();
         });
     });
