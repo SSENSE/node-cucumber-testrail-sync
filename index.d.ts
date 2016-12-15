@@ -32,6 +32,7 @@ interface ScenarioSynchronizerOptions extends TestrailOptions {
   verify?: boolean;
   findUnused?: boolean;
   pushResults?: boolean;
+  debug?: boolean;
 }
 
 export class ScenarioSynchronizer {

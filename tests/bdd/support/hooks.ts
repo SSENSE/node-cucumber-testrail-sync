@@ -38,7 +38,20 @@ const myHooks = function (): void {
         this.testCases[100] = {
             'id': '1',
             'title': 'my first test',
-            'custom_gherkin': 'Given That I am a tester\nWhen I am testing\nThen I should see test results\nAnd I should be satified',
+            'custom_steps_separated': [
+                {
+                    "content": "Given That I am a tester"
+                },
+                {
+                    "content": "When I am testing"
+                },
+                {
+                    "content": "Then I should see test results"
+                },
+                {
+                    "content": "And I should be satified"
+                }
+            ],
             'case_id': '100',
             'custom_status': 4
         };

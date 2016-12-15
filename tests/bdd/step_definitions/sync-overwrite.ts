@@ -38,8 +38,15 @@ module.exports = function (): void {
 
         testrail.getCase(100, (err: any, testcase: any) => {
             expect(testcase).to.be.an('object');
-            expect(testcase).to.have.property('custom_gherkin');
-            expect(testcase.custom_gherkin).to.be.equal(gherkins);
+
+            if (testcase.custom_gherkin) {
+                expect(testcase.custom_gherkin).to.be.equal(gherkins);
+            } else if (testcase.custom_steps) {
+                expect(testcase.custom_steps).to.be.equal(gherkins);
+            } else if (testcase.custom_steps_separated) {
+                const steps_separated = gherkins.split('\n').map((s: string) => { return { content: s }; });
+                expect(testcase.custom_steps_separated).to.deep.equal(steps_separated);
+            }
 
             callback();
         });

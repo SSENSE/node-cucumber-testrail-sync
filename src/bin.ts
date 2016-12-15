@@ -10,6 +10,7 @@ program
   .option('--verify', 'Verify that the local features files match the test cases from TestRail')
   .option('--unused', 'Find unused step definitions')
   .option('--silent', 'Disable output')
+  .option('--debug', 'Debug')
   .parse(process.argv);
 
 const sync = new ScenarioSynchronizer();
@@ -18,6 +19,7 @@ const config = readConfig();
 config.verify = (<any> program).verify || config.verify || false;
 config.findUnused = (<any> program).unused || config.findUnused || false;
 config.silent = (<any> program).silent || config.silent || false;
+config.debug = (<any> program).debug || config.debug || false;
 
 sync.synchronize(config, (err: any): void => {
   process.exit(err ? 1 : 0);

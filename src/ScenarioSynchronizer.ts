@@ -86,7 +86,8 @@ export class ScenarioSynchronizer {
             },
             verify: Joi.boolean().default(false),
             findUnused: Joi.boolean().default(false),
-            pushResults: Joi.boolean().default(false)
+            pushResults: Joi.boolean().default(false),
+            debug: Joi.boolean().default(false)
         });
 
         this.config = <ScenarioSynchronizerOptions> _.defaultsDeep(config, defaultConfig);
@@ -140,6 +141,13 @@ export class ScenarioSynchronizer {
         /* istanbul ignore next */
         if (!this.config.silent) {
             console.log(s);
+        }
+    }
+
+    protected debug(s: any): void {
+        /* istanbul ignore next */
+        if (this.config.debug) {
+            console.log(chalk.inverse(s));
         }
     }
 
@@ -331,6 +339,17 @@ export class ScenarioSynchronizer {
         return testcases.filter((t: any) => !statuses || statuses.indexOf(t.custom_status) !== -1);
     }
 
+    protected getGherkinFromTestcase(testcase: any): string {
+        if (testcase.custom_gherkin && testcase.custom_gherkin.length > 0) {
+            return testcase.custom_gherkin;
+        } else if (testcase.custom_steps && testcase.custom_steps.length > 0) {
+            return testcase.custom_steps;
+        } else if (testcase.custom_steps_separated && testcase.custom_steps_separated.length > 0) {
+            return testcase.custom_steps_separated.map((s: any) => s.content).join('\n');
+        }
+        return '';
+    }
+
     /**
      * Verify that each line is valid gherkin syntax
      */
@@ -367,7 +386,7 @@ export class ScenarioSynchronizer {
      * Split the gherkin content from TestRail into lines
      */
     public getGherkinLines(testcase: any): string[] {
-        const arr = testcase.custom_gherkin.replace(/[\r]/g, '').split('\n').map(Function.prototype.call, String.prototype.trim)
+        const arr = this.getGherkinFromTestcase(testcase).replace(/[\r]/g, '').split('\n').map(Function.prototype.call, String.prototype.trim)
           .map((line: string) => {
             // remove extra spaces
             // convert the first character to uppercase
@@ -841,14 +860,19 @@ export class ScenarioSynchronizer {
 
         const testcases = await this.getTests();
         for (const testcase of testcases) {
+            const slug = S(testcase.title).slugify().s;
+            const gherkin = this.getGherkinFromTestcase(testcase);
             /* istanbul ignore else: isValidGherkin function covered in unit test */
-            if (this.isValidGherkin(testcase.custom_gherkin)) {
+            if (gherkin.length === 0) {
+                const log = `Empty gherkin content for TestCase #${testcase.case_id}-${slug}`;
+                this.output(chalk.yellow(log));
+            } else if (this.isValidGherkin(gherkin)) {
+                this.debug(`Valid gherkin for TestCase #${testcase.case_id}-${slug}`);
                 await this.synchronizeCase(testcase, this.getRelativePath(testcase.case_id));
             } else {
-                const slug = S(testcase.title).slugify().s;
                 const log = `Invalid gherkin content for TestCase #${testcase.case_id}-${slug}`;
                 this.output(chalk.yellow(log));
-                this.output(chalk.yellow(testcase.custom_gherkin));
+                this.output(chalk.yellow(gherkin));
             }
         }
 
@@ -927,6 +951,7 @@ export class ScenarioSynchronizer {
 
         if (!exists) {
             fs.writeFileSync(featurePath, remoteFileContent);
+            this.debug('Wrote .feature file');
 
             if (this.config.stepDefinitionsTemplate) {
                 const content = this.getTestFileContent(gherkin, this.config.stepDefinitionsTemplate);
@@ -940,6 +965,7 @@ export class ScenarioSynchronizer {
             featurePath = this.testFiles[testcase.case_id];
             const localFileContent = fs.readFileSync(featurePath).toString().trim();
             const fileChanged = this.hasGherkinContentChanged(localFileContent, remoteFileContent, true);
+            this.debug(`Existing .feature file ${fileChanged ? chalk.underline('is different') + ' than' : 'is the same as'} the TestRail version`);
 
             if (!fileChanged) {
                 this.skippedCount = this.skippedCount + 1;
