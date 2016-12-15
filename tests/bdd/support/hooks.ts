@@ -40,16 +40,16 @@ const myHooks = function (): void {
             'title': 'my first test',
             'custom_steps_separated': [
                 {
-                    "content": "Given That I am a tester"
+                    'content': 'Given That I am a tester'
                 },
                 {
-                    "content": "When I am testing"
+                    'content': 'When I am testing'
                 },
                 {
-                    "content": "Then I should see test results"
+                    'content': 'Then I should see test results'
                 },
                 {
-                    "content": "And I should be satified"
+                    'content': 'And I should be satified'
                 }
             ],
             'case_id': '100',

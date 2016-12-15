@@ -386,7 +386,8 @@ export class ScenarioSynchronizer {
      * Split the gherkin content from TestRail into lines
      */
     public getGherkinLines(testcase: any): string[] {
-        const arr = this.getGherkinFromTestcase(testcase).replace(/[\r]/g, '').split('\n').map(Function.prototype.call, String.prototype.trim)
+        const arr = this.getGherkinFromTestcase(testcase).replace(/[\r]/g, '').split('\n')
+          .map(Function.prototype.call, String.prototype.trim)
           .map((line: string) => {
             // remove extra spaces
             // convert the first character to uppercase
@@ -965,7 +966,8 @@ export class ScenarioSynchronizer {
             featurePath = this.testFiles[testcase.case_id];
             const localFileContent = fs.readFileSync(featurePath).toString().trim();
             const fileChanged = this.hasGherkinContentChanged(localFileContent, remoteFileContent, true);
-            this.debug(`Existing .feature file ${fileChanged ? chalk.underline('is different') + ' than' : 'is the same as'} the TestRail version`);
+            const diffDescription = fileChanged ? chalk.underline('is different') + ' than' : 'is the same as';
+            this.debug(`Existing .feature file ${diffDescription} the TestRail version`);
 
             if (!fileChanged) {
                 this.skippedCount = this.skippedCount + 1;

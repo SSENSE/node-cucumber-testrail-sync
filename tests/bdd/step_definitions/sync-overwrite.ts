@@ -44,8 +44,8 @@ module.exports = function (): void {
             } else if (testcase.custom_steps) {
                 expect(testcase.custom_steps).to.be.equal(gherkins);
             } else if (testcase.custom_steps_separated) {
-                const steps_separated = gherkins.split('\n').map((s: string) => { return { content: s }; });
-                expect(testcase.custom_steps_separated).to.deep.equal(steps_separated);
+                const stepsSeparated = gherkins.split('\n').map((s: string) => { return { content: s }; });
+                expect(testcase.custom_steps_separated).to.deep.equal(stepsSeparated);
             }
 
             callback();
