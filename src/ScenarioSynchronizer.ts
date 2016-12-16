@@ -251,8 +251,15 @@ export class ScenarioSynchronizer {
     }
 
     protected async findImplementedStepDefinitions(): Promise<any> {
+        if (this.config.stepDefinitionsTemplate === 'ruby.rb') {
+            return this.findImplementedStepDefinitionsRuby();
+        }
+
+        return this.findImplementedStepDefinitionsJS();
+    }
+
+    protected async findImplementedStepDefinitionsJS(): Promise<any> {
         this.implementedSteps = [];
-        const re = /^this\.(Given|When|Then|defineStep)\((\/|')(.+)(\/|')(\w*)/;
 
         mkdirp.sync(this.config.stepDefinitionsDir);
 
@@ -261,6 +268,7 @@ export class ScenarioSynchronizer {
             path.resolve(this.config.stepDefinitionsDir, '..', 'support')
         ];
 
+        const re = /^this\.(Given|When|Then|defineStep)\((\/|')(.+)(\/|')(\w*)/;
         for (const folder of foldersToScan) {
             try {
                 if (!fs.lstatSync(folder).isDirectory()) {
@@ -296,6 +304,58 @@ export class ScenarioSynchronizer {
                                 regex: pattern,
                                 pattern: patternInCode,
                                 isStringPattern
+                            };
+
+                            if (matches[5].length) {
+                              step.regexFlags = matches[5];
+                            }
+
+                            return step;
+                        });
+
+                    this.implementedSteps = this.implementedSteps.concat(stepDefinitions);
+                }
+            });
+        }
+    }
+
+    protected async findImplementedStepDefinitionsRuby(): Promise<any> {
+        this.implementedSteps = [];
+
+        mkdirp.sync(this.config.stepDefinitionsDir);
+
+        const foldersToScan = [
+            path.resolve(this.config.stepDefinitionsDir),
+            path.resolve(this.config.stepDefinitionsDir, '..', 'support')
+        ];
+
+        const re = /^(Given|When|Then)\((\/)(.+)(\/)(\w*)\)/;
+        for (const folder of foldersToScan) {
+            try {
+                if (!fs.lstatSync(folder).isDirectory()) {
+                    continue;
+                }
+            } catch (err) {
+                continue;
+            }
+
+            walk.sync(folder, (filePath: string) => {
+                if (!fs.lstatSync(filePath).isDirectory()) {
+                    const fileContent = fs.readFileSync(filePath).toString();
+
+                    const stepDefinitions = fileContent.split('\n').map(Function.prototype.call, String.prototype.trim)
+                        .filter((line: string) => re.test(line))
+                        .map((line: string) => {
+                            const matches = re.exec(line);
+
+                            const keyword = matches[1];
+                            const pattern = matches[3];
+
+                            const step: Step = {
+                                filename: filePath.substr(folder.length + 1),
+                                keyword,
+                                regex: pattern,
+                                pattern
                             };
 
                             if (matches[5].length) {
@@ -756,7 +816,11 @@ export class ScenarioSynchronizer {
                     pattern = '/' + step.regex + '/';
                 }
 
-                params.push(template === 'typescript.ts' ? 'callback: Function' : 'callback');
+                if (template === 'typescript.ts') {
+                    params.push('callback: Function');
+                } else if (template === 'es5.js' || template === 'es6.js') {
+                    params.push('callback');
+                }
 
                 // ------------
 

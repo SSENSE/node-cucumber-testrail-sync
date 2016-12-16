@@ -1,5 +1,11 @@
 # Change Log
 
+## [2.1.11](https://github.com/SSENSE/node-cucumber-testrail-sync/tree/2.1.11) (2016-12-16)
+
+- Add ruby.rb template for step definitions
+
+- Support for TestRail's steps field when pushing Gherkin content to TestRail
+
 ## [2.1.10](https://github.com/SSENSE/node-cucumber-testrail-sync/tree/2.1.10) (2016-12-15)
 
 - Add debug flag when running the synchronization script
