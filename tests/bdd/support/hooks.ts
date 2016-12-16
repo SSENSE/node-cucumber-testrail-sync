@@ -40,10 +40,12 @@ const myHooks = function (): void {
             'title': 'my first test',
             'custom_steps_separated': [
                 {
-                    'content': 'Given That I am a tester'
+                    'content': 'Given That I am a tester',
+                    'expected': 'Expected Result 1'
                 },
                 {
-                    'content': 'When I am testing'
+                    'content': 'When I am testing',
+                    'expected': 'Expected Result 2'
                 },
                 {
                     'content': 'Then I should see test results'
@@ -159,7 +161,13 @@ const myHooks = function (): void {
         nock('https://test.testrail.com')
         .post('/index.php?/api/v2/update_case/100')
         .reply(200, (uri: any, requestBody: any) => {
-            this.testCases[100].custom_gherkin = requestBody.custom_gherkin;
+            if (requestBody.custom_gherkin) {
+                this.testCases[100].custom_gherkin = requestBody.custom_gherkin;
+            } else if (requestBody.custom_steps) {
+                this.testCases[100].custom_steps = requestBody.custom_steps;
+            } else if (requestBody.custom_steps_separated) {
+                this.testCases[100].custom_steps_separated = requestBody.custom_steps_separated;
+            }
 
             return [200, this.testCases[100]];
         });
@@ -171,7 +179,13 @@ const myHooks = function (): void {
         nock('https://test.testrail.com')
         .post('/index.php?/api/v2/update_case/101')
         .reply(200, (uri: any, requestBody: any) => {
-            this.testCases[101].custom_gherkin = requestBody.custom_gherkin;
+            if (requestBody.custom_gherkin) {
+                this.testCases[101].custom_gherkin = requestBody.custom_gherkin;
+            } else if (requestBody.custom_steps) {
+                this.testCases[101].custom_steps = requestBody.custom_steps;
+            } else if (requestBody.custom_steps_separated) {
+                this.testCases[101].custom_steps_separated = requestBody.custom_steps_separated;
+            }
 
             return [200, this.testCases[101]];
         });

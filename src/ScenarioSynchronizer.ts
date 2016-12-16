@@ -586,10 +586,31 @@ export class ScenarioSynchronizer {
      * Updates a test case gherkin content on TestRail
      */
     protected pushTestCaseToTestRail(testcase: any, gherkin: string): Promise<any> {
-        const customGherkin = gherkin.split('\n')
+        const gherkinSteps = gherkin.split('\n')
             .slice(3)
-            .map(Function.prototype.call, String.prototype.trim)
-            .join('\n');
+            .map(Function.prototype.call, String.prototype.trim);
+
+        const customGherkin = gherkinSteps.join('\n');
+
+        if (testcase.custom_steps && testcase.custom_steps.length > 0) {
+            return this.testrailClient.updateCase(testcase.case_id, { custom_steps: customGherkin });
+        } else if (testcase.custom_steps_separated && testcase.custom_steps_separated.length > 0) {
+            const stepsSeparated = gherkinSteps.map((s: string, index: number) => {
+                const step = {
+                    content: s
+                };
+
+                if (index < testcase.custom_steps_separated.length) {
+                    if (testcase.custom_steps_separated[index].expected) {
+                        (<any> step).expected = testcase.custom_steps_separated[index].expected;
+                    }
+                }
+
+                return step;
+            });
+
+            return this.testrailClient.updateCase(testcase.case_id, { custom_steps_separated: stepsSeparated });
+        }
 
         return this.testrailClient.updateCase(testcase.case_id, { custom_gherkin: customGherkin });
     }
