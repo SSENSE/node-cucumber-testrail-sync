@@ -189,7 +189,9 @@ describe('Send results to TestRail', () => {
     it('pushTestResult function', async (): Promise<void> => {
         testrailmock.pushResultsMock();
 
-        await ResultSynchronizer.pushTestResult(<ScenarioSynchronizerOptions> syncOptions, 201, ResultSynchronizer.FAILED_STATUS_ID);
+        const syncOptionsNoRunId = _.clone(syncOptions);
+        delete syncOptionsNoRunId.testrail.filters.run_id;
+        await ResultSynchronizer.pushTestResult(<ScenarioSynchronizerOptions> syncOptionsNoRunId, 201, ResultSynchronizer.FAILED_STATUS_ID);
 
         const updateRequests = testrailmock.getPushResultsRequest();
 
