@@ -6,12 +6,12 @@ import {ScenarioSynchronizer, readConfig} from './index';
 const pkg = require('../package.json');
 
 program
-  .version(pkg.version)
-  .option('--verify', 'Verify that the local features files match the test cases from TestRail')
-  .option('--unused', 'Find unused step definitions')
-  .option('--silent', 'Disable output')
-  .option('--debug', 'Debug')
-  .parse(process.argv);
+    .version(pkg.version)
+    .option('--verify', 'Verify that the local features files match the test cases from TestRail')
+    .option('--unused', 'Find unused step definitions')
+    .option('--silent', 'Disable output')
+    .option('--debug', 'Debug')
+    .parse(process.argv);
 
 const sync = new ScenarioSynchronizer();
 
@@ -22,5 +22,5 @@ config.silent = (<any> program).silent || config.silent || false;
 config.debug = (<any> program).debug || config.debug || false;
 
 sync.synchronize(config, (err: any): void => {
-  process.exit(err ? 1 : 0);
+    process.exit(err ? 1 : 0);
 });

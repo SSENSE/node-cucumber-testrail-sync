@@ -61,6 +61,16 @@ export const pushResultsMock = () => {
             id: 1
         };
     });
+
+    nock('https://test.testrail.com')
+    .persist()
+    .post('/index.php?/api/v2/add_result_for_case/101/201')
+    .reply(200, (uri: any, requestBody: any) => {
+        results[101] = requestBody;
+        return {
+            id: 1
+        };
+    });
 };
 
 export const getPushResultsRequest = () => results;

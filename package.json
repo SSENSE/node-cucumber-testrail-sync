@@ -1,9 +1,10 @@
 {
   "name": "@ssense/cucumber-testrail-sync",
-  "version": "2.1.11",
+  "version": "2.1.12",
   "description": "Synchronize test cases from TestRail & pushes Cucumber results",
   "bin": {
-    "cucumber-testrail-sync": "./dist/bin.js"
+    "cucumber-testrail-sync": "./dist/bin.js",
+    "push-result-to-testrail": "./dist/push-test-result.js"
   },
   "main": "./dist/index.js",
   "scripts": {

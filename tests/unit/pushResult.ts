@@ -54,8 +54,6 @@ const pushTestResults = async (options: any, scenarios: any, callback: Function)
 };
 
 describe('Send results to TestRail', () => {
-    const sync = new ResultSynchronizer(<ScenarioSynchronizerOptions> syncOptions);
-
     const scenariodata: any = {
         name: 'test scenario',
         tags: [{ name: '@tcid:200' }],
@@ -74,7 +72,7 @@ describe('Send results to TestRail', () => {
         pushTestResults(syncOptions, scenarios, (err: any, updateRequests: any) => {
             expect(Object.keys(updateRequests)).to.have.lengthOf(1);
             expect(updateRequests).to.have.property('100');
-            expect(updateRequests['100']).to.deep.equal({ results: [{ case_id: '200', status_id: sync.PASSED_STATUS_ID }] });
+            expect(updateRequests['100']).to.deep.equal({ results: [{ case_id: '200', status_id: ResultSynchronizer.PASSED_STATUS_ID }] });
             done();
         });
     });
@@ -86,7 +84,7 @@ describe('Send results to TestRail', () => {
         pushTestResults(syncOptions, scenarios, (err: any, updateRequests: any) => {
             expect(Object.keys(updateRequests)).to.have.lengthOf(1);
             expect(updateRequests).to.have.property('100');
-            expect(updateRequests['100']).to.deep.equal({ results: [{ case_id: '200', status_id: sync.FAILED_STATUS_ID }] });
+            expect(updateRequests['100']).to.deep.equal({ results: [{ case_id: '200', status_id: ResultSynchronizer.FAILED_STATUS_ID }] });
             done();
         });
     });
@@ -107,7 +105,7 @@ describe('Send results to TestRail', () => {
             expect(updateRequests).to.have.property('100');
             expect(updateRequests['100']).to.deep.equal({ results: [{
                 case_id: '200',
-                status_id: sync.FAILED_STATUS_ID,
+                status_id: ResultSynchronizer.FAILED_STATUS_ID,
                 comment: 'Error: An error\n\nA stack trace'
             }] });
             done();
@@ -121,7 +119,7 @@ describe('Send results to TestRail', () => {
         pushTestResults(syncOptions, scenarios, (err: any, updateRequests: any) => {
             expect(Object.keys(updateRequests)).to.have.lengthOf(1);
             expect(updateRequests).to.have.property('100');
-            expect(updateRequests['100']).to.deep.equal({ results: [{ case_id: '200', status_id: sync.BLOCKED_STATUS_ID }] });
+            expect(updateRequests['100']).to.deep.equal({ results: [{ case_id: '200', status_id: ResultSynchronizer.BLOCKED_STATUS_ID }] });
             done();
         });
     });
@@ -146,7 +144,7 @@ describe('Send results to TestRail', () => {
 
             expect(Object.keys(updateRequests)).to.have.lengthOf(1);
             expect(updateRequests).to.have.property('100');
-            expect(updateRequests['100']).to.deep.equal({ results: [{ case_id: '200', status_id: sync.FAILED_STATUS_ID }] });
+            expect(updateRequests['100']).to.deep.equal({ results: [{ case_id: '200', status_id: ResultSynchronizer.FAILED_STATUS_ID }] });
 
             done();
         });
@@ -181,10 +179,22 @@ describe('Send results to TestRail', () => {
         pushTestResults(options, scenarios, (err: any, updateRequests: any) => {
             expect(Object.keys(updateRequests)).to.have.lengthOf(2);
             expect(updateRequests).to.have.property('100');
-            expect(updateRequests['100']).to.deep.equal({ results: [{ case_id: '200', status_id: sync.FAILED_STATUS_ID }] });
+            expect(updateRequests['100']).to.deep.equal({ results: [{ case_id: '200', status_id: ResultSynchronizer.FAILED_STATUS_ID }] });
             expect(updateRequests).to.have.property('101');
-            expect(updateRequests['101']).to.deep.equal({ results: [{ case_id: '201', status_id: sync.PASSED_STATUS_ID }] });
+            expect(updateRequests['101']).to.deep.equal({ results: [{ case_id: '201', status_id: ResultSynchronizer.PASSED_STATUS_ID }] });
             done();
         });
+    });
+
+    it('pushTestResult function', async (): Promise<void> => {
+        testrailmock.pushResultsMock();
+
+        await ResultSynchronizer.pushTestResult(<ScenarioSynchronizerOptions> syncOptions, 201, ResultSynchronizer.FAILED_STATUS_ID);
+
+        const updateRequests = testrailmock.getPushResultsRequest();
+
+        expect(Object.keys(updateRequests)).to.have.lengthOf(1);
+        expect(updateRequests).to.have.property('101');
+        expect(updateRequests['101']).to.deep.equal({ status_id: ResultSynchronizer.FAILED_STATUS_ID });
     });
 });

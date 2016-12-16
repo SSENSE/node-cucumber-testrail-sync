@@ -5,9 +5,9 @@ import {HookScenario} from 'cucumber';
 
 export class ResultSynchronizer {
     protected config: ScenarioSynchronizerOptions;
-    public PASSED_STATUS_ID: number = 1;
-    public BLOCKED_STATUS_ID: number = 2;
-    public FAILED_STATUS_ID: number = 5;
+    public static PASSED_STATUS_ID: number = 1;
+    public static BLOCKED_STATUS_ID: number = 2;
+    public static FAILED_STATUS_ID: number = 5;
 
     protected testrailClient: any;
     protected testruns: any;
@@ -47,7 +47,7 @@ export class ResultSynchronizer {
 
                 const result = {
                     case_id: testcaseId,
-                    status_id: this.PASSED_STATUS_ID,
+                    status_id: ResultSynchronizer.PASSED_STATUS_ID,
                     comment: ''
                 };
 
@@ -57,9 +57,9 @@ export class ResultSynchronizer {
                 }
 
                 if (scenario.isPending() || scenario.isUndefined() || scenario.isSkipped()) {
-                    result.status_id = this.BLOCKED_STATUS_ID;
+                    result.status_id = ResultSynchronizer.BLOCKED_STATUS_ID;
                 } else if (!scenario.isSuccessful()) {
-                    result.status_id = this.FAILED_STATUS_ID;
+                    result.status_id = ResultSynchronizer.FAILED_STATUS_ID;
                     const exception = scenario.getException();
 
                     if (typeof exception === 'string') {
@@ -103,6 +103,42 @@ export class ResultSynchronizer {
             return callback();
         }
         return Promise.resolve();
+    }
+
+    public static async pushTestResult(config: ScenarioSynchronizerOptions, testcaseId: number, statusId: number): Promise<any> {
+        const testrailClient = new TestrailApiClient(config.testrail);
+        const plan = await testrailClient.getPlan(config.testrail.filters.plan_id);
+        let runId = 0;
+
+        if (config.testrail.filters.run_id) {
+            runId = config.testrail.filters.run_id;
+        } else {
+            let doBreak = false;
+            for (const planentry of plan.entries) {
+                for (const run of planentry.runs) {
+                    const testcases = await testrailClient.getTests(run.id);
+                    const cases = testcases.filter((t: any) => {
+                        return t.case_id === testcaseId;
+                    });
+
+                    if (cases.length) {
+                        runId = run.id;
+                        doBreak = true;
+                    }
+                    if (doBreak) {
+                        break;
+                    }
+                }
+                if (doBreak) {
+                    break;
+                }
+            }
+        }
+
+        if (runId === 0) {
+            return Promise.reject(new Error('Case ID not found in the Test Plan'));
+        }
+        return testrailClient.addResultForCase(runId, testcaseId, { status_id: statusId });
     }
 
     protected async getAllTestRuns(): Promise<any> {

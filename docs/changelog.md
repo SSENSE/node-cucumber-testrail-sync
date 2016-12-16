@@ -1,5 +1,9 @@
 # Change Log
 
+## [2.1.12](https://github.com/SSENSE/node-cucumber-testrail-sync/tree/2.1.11) (2016-12-16)
+
+- Add __push-test-result__ binary to push test results to TestRail (i.e. from a language other than JavaScript)
+
 ## [2.1.11](https://github.com/SSENSE/node-cucumber-testrail-sync/tree/2.1.11) (2016-12-16)
 
 - Add ruby.rb template for step definitions
