@@ -87,7 +87,8 @@ export class ScenarioSynchronizer {
             verify: Joi.boolean().default(false),
             findUnused: Joi.boolean().default(false),
             pushResults: Joi.boolean().default(false),
-            debug: Joi.boolean().default(false)
+            debug: Joi.boolean().default(false),
+            newTestCase: Joi.object()
         });
 
         this.config = <ScenarioSynchronizerOptions> _.defaultsDeep(config, defaultConfig);
@@ -399,6 +400,59 @@ export class ScenarioSynchronizer {
         return testcases.filter((t: any) => !statuses || statuses.indexOf(t.custom_status) !== -1);
     }
 
+    /**
+     * Gets new local testcases
+     */
+    protected async getNewLocalTests(): Promise<any> {
+        const re = /@tcid:(\d+)$/;
+        const reScenario = /^\s*Scenario(?: Outline)?\s*:(.*?)$/;
+        const testcases: any[] = [];
+
+        walk.sync(this.config.featuresDir, (filePath: string) => {
+            if (/\.feature$/.test(filePath)) {
+                const fileContent = fs.readFileSync(filePath).toString();
+
+                const ids = fileContent.split('\n')
+                                .filter((line: string) => re.test(line));
+
+                const scenarios = fileContent.split('\n')
+                                .filter((line: string) => reScenario.test(line));
+
+                if (ids.length === 0 && scenarios.length === 1) {
+                    testcases.push({
+                        title: reScenario.exec(scenarios[0])[1].trim(),
+                        file_path: filePath,
+                        file_content: fileContent,
+                        custom_gherkin: fileContent
+                    });
+                }
+            }
+        });
+        return testcases;
+    }
+
+    protected async addTestCase(testcase: any): Promise<any> {
+        const sectionId = this.config.newTestCase.section_id;
+        const props: any = _.omit(this.config.newTestCase, 'section_id');
+        props.title = testcase.title;
+        props.custom_gherkin = testcase.custom_gherkin;
+        return this.testrailClient.addCase(sectionId, props);
+    }
+
+    protected async addToTestPlan(tcid: number): Promise<any> {
+        const runId: string = this.config.testrail.filters.run_id || this.plan.entries[0].runs[0].id;
+
+        const testcasesOfRun = await this.testrailClient.getTests(runId);
+        const caseIds = testcasesOfRun.map((t: any) => t.case_id);
+
+        const content = {
+            case_ids: caseIds.concat(tcid),
+            include_all: false
+        };
+
+        return this.testrailClient.updateRun(runId, content);
+    }
+
     protected getGherkinFromTestcase(testcase: any): string {
         if (testcase.custom_gherkin && testcase.custom_gherkin.length > 0) {
             return testcase.custom_gherkin;
@@ -420,7 +474,7 @@ export class ScenarioSynchronizer {
 
         const lines = gherkin.split('\n')
             .map(Function.prototype.call, String.prototype.trim)
-            .filter((line: string) => line.length > 0 && line.indexOf('Scenario:') !== 0);
+            .filter((line: string) => line.length > 0 && line.indexOf('Feature:') !== 0 && line.indexOf('Scenario:') !== 0);
 
         const re = new RegExp('^(Given|When|And|Then|Examples|\\||#)', 'i');
         const validLines = lines.filter((line: string) => re.test(line));
@@ -959,6 +1013,40 @@ export class ScenarioSynchronizer {
                 const log = `Invalid gherkin content for TestCase #${testcase.case_id}-${slug}`;
                 this.output(chalk.yellow(log));
                 this.output(chalk.yellow(gherkin));
+            }
+        }
+
+        if (this.config.newTestCase) {
+            const newLocalTestcases = await this.getNewLocalTests();
+            for (const localTestcase of newLocalTestcases) {
+                const gherkin = this.getGherkinFromTestcase(localTestcase);
+                if (this.isValidGherkin(gherkin)) {
+                    this.output('  ' + chalk.green(`Pushing ${localTestcase.title} to TestRail`));
+
+                    localTestcase.custom_gherkin = gherkin.split('\n')
+                        .map(Function.prototype.call, String.prototype.trim)
+                        .filter((line: string) => line.indexOf('Feature:') !== 0 && line.indexOf('Scenario:') !== 0)
+                        .join('\n');
+
+                    const testcase = await this.addTestCase(localTestcase);
+                    await this.addToTestPlan(testcase.id);
+
+                    const modifiedGherkin = gherkin.split('\n');
+                    for (let index = 0; index < modifiedGherkin.length; index = index + 1) {
+                        const line = modifiedGherkin[index];
+                        const position = line.indexOf('Scenario:');
+                        if (position >= 0) {
+                            const tag = `${line.substr(0, position)}@tcid:${testcase.id}`;
+                            modifiedGherkin.splice(index, 0, tag);
+                            break;
+                        }
+                    }
+                    fs.writeFileSync(localTestcase.file_path, modifiedGherkin.join('\n'));
+                } else {
+                    const log = `Invalid gherkin content for TestCase #${localTestcase.title}`;
+                    this.output(chalk.yellow(log));
+                    this.output(chalk.yellow(gherkin));
+                }
             }
         }
 

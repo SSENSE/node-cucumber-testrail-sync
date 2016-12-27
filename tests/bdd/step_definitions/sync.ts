@@ -22,6 +22,11 @@ module.exports = function (): void {
         callback();
     });
 
+    this.Given(/^I use a TestPlan with 1 TestRun and 0 TestCase$/, (callback: Function) => {
+        this.syncOptions.testrail.filters.plan_id = 3;
+        callback();
+    });
+
     this.Given(/^I set the (.*) option to "(.*)"$/, (optionName: string, optionValue: string, callback: Function) => {
         const splitted = optionName.split('.');
         let opts = this.syncOptions;

@@ -23,6 +23,14 @@ const myHooks = function (): void {
             silent: true,
             directoryStructure: {
                 type: 'section:slug'
+            },
+            newTestCase: {
+                section_id: 1,
+                template_id: 1,
+                type_id: 6,
+                priority_id: 2,
+                estimate: '0m',
+                custom_status: 4
             }
         };
 
@@ -193,6 +201,42 @@ const myHooks = function (): void {
         nock('https://test.testrail.com')
             .get('/index.php?/api/v2/get_case/101')
             .reply(200, (uri: any, requestBody: any) => [200, this.testCases[101]]);
+
+        // Plan 4: 1 test run, to test case
+        nock('https://test.testrail.com')
+        .persist()
+        .get('/index.php?/api/v2/get_plan/3')
+        .reply(200, {
+            'project_id': '98',
+            'entries': [
+                {
+                    'id': '3933d74b-4282-4c1f-be62-a641ab427063',
+                    'name': 'My template',
+                    'suite_id': '99',
+                    'runs': [
+                        { 'id': '30' }
+                    ]
+                }
+            ]
+        });
+
+        nock('https://test.testrail.com')
+        .get('/index.php?/api/v2/get_tests/30')
+        .reply(200, (uri: any, requestBody: any): any => [200, []]);
+
+        nock('https://test.testrail.com')
+        .post('/index.php?/api/v2/add_case/1')
+        .reply(200, (uri: any, requestBody: any) => {
+            requestBody.id = 9900;
+
+            return [200, requestBody];
+        });
+
+        nock('https://test.testrail.com')
+        .post('/index.php?/api/v2/update_run/30')
+        .reply(200, (uri: any, requestBody: any) => {
+            return [200, {}];
+        });
 
         this.ScenarioSynchronizer = ScenarioSynchronizer;
         callback();

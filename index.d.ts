@@ -33,6 +33,10 @@ interface ScenarioSynchronizerOptions extends TestrailOptions {
   findUnused?: boolean;
   pushResults?: boolean;
   debug?: boolean;
+  newTestCase?: {
+    section_id: number;
+    [key: string]: any;
+  };
 }
 
 export class ScenarioSynchronizer {

@@ -1,6 +1,12 @@
 # Change Log
 
-## [2.1.12](https://github.com/SSENSE/node-cucumber-testrail-sync/tree/2.1.11) (2016-12-16)
+## [2.1.13](https://github.com/SSENSE/node-cucumber-testrail-sync/tree/2.1.13) (2016-12-28)
+
+- Add __--pull__ and __--push__ command line options
+
+- Add ability to push new test cases on TestRail
+
+## [2.1.12](https://github.com/SSENSE/node-cucumber-testrail-sync/tree/2.1.12) (2016-12-16)
 
 - Add __push-test-result__ binary to push test results to TestRail (i.e. from a language other than JavaScript)
 
