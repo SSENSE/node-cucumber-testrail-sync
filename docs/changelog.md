@@ -1,6 +1,6 @@
 # Change Log
 
-## [2.1.13](https://github.com/SSENSE/node-cucumber-testrail-sync/tree/2.1.13) (2016-12-28)
+## [2.1.13](https://github.com/SSENSE/node-cucumber-testrail-sync/tree/2.1.13) (2016-12-29)
 
 - Add __--pull__ and __--push__ command line options
 

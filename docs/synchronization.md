@@ -4,6 +4,8 @@ Now that you've configured your application, you can run the `./node_modules/.bi
 
 By default, the .feature files (containing the Gherkin) will be located in the `features` folder - unless you changed this configuration.
 
+You can use the `--pull` or `--push` flags to either pull TestCases from TestRail or push them to TestRail.
+
 ---
 
 > Next: [Synchronization verification](/docs/verification.md)

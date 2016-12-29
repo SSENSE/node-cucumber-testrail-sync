@@ -233,7 +233,7 @@ const myHooks = function (): void {
         });
 
         nock('https://test.testrail.com')
-        .post('/index.php?/api/v2/update_run/30')
+        .post('/index.php?/api/v2/update_plan_entry/3/3933d74b-4282-4c1f-be62-a641ab427063')
         .reply(200, (uri: any, requestBody: any) => {
             return [200, {}];
         });

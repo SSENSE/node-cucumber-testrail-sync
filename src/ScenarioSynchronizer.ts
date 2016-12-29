@@ -440,17 +440,31 @@ export class ScenarioSynchronizer {
     }
 
     protected async addToTestPlan(tcid: number): Promise<any> {
-        const runId: string = this.config.testrail.filters.run_id || this.plan.entries[0].runs[0].id;
+        const planId = this.config.testrail.filters.plan_id;
+        let planEntry = this.plan.entries[0];
+        let caseIds: any[] = [];
+        if (this.config.testrail.filters.run_id) {
+            for (const pe of this.plan.entries) {
+                for (const run of pe.runs) {
+                    if (run.id === this.config.testrail.filters.run_id) {
+                        planEntry = pe;
+                        break;
+                    }
+                }
+            }
+        }
 
-        const testcasesOfRun = await this.testrailClient.getTests(runId);
-        const caseIds = testcasesOfRun.map((t: any) => t.case_id);
+        for (const run of planEntry.runs) {
+            const testcasesOfRun = await this.testrailClient.getTests(run.id);
+            caseIds = caseIds.concat(testcasesOfRun.map((t: any) => t.case_id));
+        }
 
         const content = {
-            case_ids: caseIds.concat(tcid),
+            case_ids: _.uniq(caseIds.concat(tcid)),
             include_all: false
         };
 
-        return this.testrailClient.updateRun(runId, content);
+        return this.testrailClient.updatePlanEntry(planId, planEntry.id, content);
     }
 
     protected getGherkinFromTestcase(testcase: any): string {
@@ -1021,7 +1035,7 @@ export class ScenarioSynchronizer {
             for (const localTestcase of newLocalTestcases) {
                 const gherkin = this.getGherkinFromTestcase(localTestcase);
                 if (this.isValidGherkin(gherkin)) {
-                    this.output('  ' + chalk.green(`Pushing ${localTestcase.title} to TestRail`));
+                    this.output('  ' + chalk.green(`Pushing new testcase "${localTestcase.title}" to TestRail`));
 
                     localTestcase.custom_gherkin = gherkin.split('\n')
                         .map(Function.prototype.call, String.prototype.trim)

@@ -19,6 +19,16 @@ module.exports = {
                      // 4 = Approved to automate
     }
   },
+  /* Optional: default testcase attributes when pushing new testcases to TestRail
+  newTestCase: {
+    section_id: 1,
+    template_id: 1,
+    type_id: 6,
+    priority_id: 2,
+    estimate: '0m',
+    custom_status: 4
+  }
+  */
 };
 ```
 
@@ -48,6 +58,20 @@ There are other possible options:
     * __type__: The variable name to used to create the folders - Possible values: `section:slug` or `section:name`
 
     * __skipRootFolder__: The number of TestRail root sections to skip when creating the local tests directory structure.
+
+
+
+
+newTestCase: {
+    section_id: 1,
+    template_id: 1,
+    type_id: 6,
+    priority_id: 2,
+    estimate: '0m',
+    custom_status: 4
+}
+
+
 
 ---
 
