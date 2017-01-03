@@ -1030,7 +1030,9 @@ export class ScenarioSynchronizer {
             }
         }
 
-        if (this.config.newTestCase) {
+        if (this.config.overwrite.remote !== undefined &&
+            this.config.overwrite.remote !== false &&
+            this.config.newTestCase !== undefined) {
             const newLocalTestcases = await this.getNewLocalTests();
             for (const localTestcase of newLocalTestcases) {
                 const gherkin = this.getGherkinFromTestcase(localTestcase);
