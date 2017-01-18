@@ -16,7 +16,7 @@ Feature: Step definitions file creation
       """
 
   Scenario: Don't create duplicate step definitions
-    Given I set the stepDefinitionsTemplate option to "typescript.ts"
+    Given I set the stepDefinitionsTemplate option to "typescript.legacy.ts"
     And There is a file named "/support/common.ts" with the content:
       """
       module.exports = function (): void {

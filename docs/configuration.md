@@ -43,7 +43,7 @@ There are other possible options:
   }
   ```
 
-  * __stepDefinitionsTemplate__:  The template to use to generate blank step definition files - Possible values: `es5.js`, `es6.js`, `typescript.ts`
+  * __stepDefinitionsTemplate__:  The template to use to generate blank step definition files - Possible values: `ruby.rb`, [`es5.js`, `es6.js`, `typescript.ts` => for cucumber-js >= 2.x], [`es5.legacy.js`, `es6.legacy.js`, `typescript.legacy.ts` => for cucumber-js 1.x]
 
   * __indent__: The indentation character(s) to use when generating `.feature` or `.js` files (ie. `indent: '    '`, default: 2 spaces)
 

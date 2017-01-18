@@ -10,23 +10,24 @@ To push the test results manually, you will have to do the following:
 
 * Install this module in Cucumber's context (`features/support/hooks.js`) :
 
-```js
-var testrailSync = require('@ssense/cucumber-testrail-sync');
+  - If you are using cucumber-js 1.x
 
-module.exports = function () {
-  testrailSync.install(this);
-};
-```
+    ```js
+    var testrailSync = require('@ssense/cucumber-testrail-sync');
 
-Or for TypeScript :
+    module.exports = function () {
+      testrailSync.legacyInstall(this);
+    };
+    ```
 
-```js
-import * as testrailSync from '@ssense/cucumber-testrail-sync';
+  - If you are using cucumber-js >= 2.x
 
-module.exports = function (): void {
-  testrailSync.install(this);
-};
-```
+    ```js
+    var cucumber = require('cucumber');
+    var testrailSync = require('@ssense/cucumber-testrail-sync');
+
+    testrailSync.install(cucumber);
+    ```
 
 * Either set the `pushResults` to `true` in the configuration file or set the `PUSH_RESULTS_TO_TESTRAIL` environment variable
 

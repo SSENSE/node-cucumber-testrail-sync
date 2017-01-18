@@ -4,7 +4,7 @@ Feature: Simple sync tests, multiple test runs
 
   Scenario: Single run
     Given I set the testrail.filters.run_id option to "56"
-    And I set the stepDefinitionsTemplate option to "es6.js"
+    And I set the stepDefinitionsTemplate option to "es6.legacy.js"
     When I run the synchronization script
     Then There should be 1 feature file on the file system
     And There should be 1 code file on the file system
@@ -38,7 +38,7 @@ Feature: Simple sync tests, multiple test runs
       """
 
   Scenario: Should write code file
-    Given I set the stepDefinitionsTemplate option to "es6.js"
+    Given I set the stepDefinitionsTemplate option to "es6.legacy.js"
     When I run the synchronization script
     Then There should be 2 feature file on the file system
     And There should be 2 code file on the file system

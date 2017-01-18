@@ -1,5 +1,11 @@
 # Change Log
 
+## [3.0.0](https://github.com/SSENSE/node-cucumber-testrail-sync/tree/3.0.0) (2017-01-?)
+
+- Replace word accents (replace ” by ") when importing from TestRail
+
+- Add support for cucumber-js 2.x
+
 ## [2.1.13](https://github.com/SSENSE/node-cucumber-testrail-sync/tree/2.1.13) (2016-12-29)
 
 - Add __--pull__ and __--push__ command line options

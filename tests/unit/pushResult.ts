@@ -1,8 +1,6 @@
 import * as _ from 'lodash';
-// tslint:disable-next-line:no-var-requires variable-name
-const Cucumber = require('cucumber');
 import {expect} from 'chai';
-import {ResultSynchronizer} from '../../src/index';
+import {ResultSynchronizer, Scenario} from '../../src/index';
 import * as testrailmock from './pushResult-fixture';
 import {ScenarioSynchronizerOptions} from '../../index.d';
 
@@ -31,21 +29,7 @@ const pushTestResults = async (options: any, scenarios: any, callback: Function)
 
     await sync.readRemoteTestRuns();
 
-    for (const scenarioContent of scenarios) {
-        const astscenario = Cucumber.Ast.Scenario(scenarioContent.scenariodata);
-        const scenarioResult = Cucumber.Runtime.ScenarioResult(astscenario);
-        const step = Cucumber.Ast.Step({});
-        const stepResultData = {
-            status: scenarioContent.status,
-            step: step
-        };
-        if (scenarioContent.failureException) {
-            (<any> stepResultData).failureException = scenarioContent.failureException;
-        }
-        const stepResult = Cucumber.Runtime.StepResult(stepResultData);
-        scenarioResult.witnessStepResult(stepResult);
-        const scenario = Cucumber.Api.Scenario(astscenario, scenarioResult);
-
+    for (const scenario of scenarios) {
         await sync.saveTestResult(scenario);
     }
 
@@ -54,12 +38,6 @@ const pushTestResults = async (options: any, scenarios: any, callback: Function)
 };
 
 describe('Send results to TestRail', () => {
-    const scenariodata: any = {
-        name: 'test scenario',
-        tags: [{ name: '@tcid:200' }],
-        steps: []
-    };
-
     before((done: Function) => {
         testrailmock.setupMock();
         done();
@@ -67,7 +45,13 @@ describe('Send results to TestRail', () => {
 
     it('sends PASSED when scenario is successful', (done: Function) => {
         const scenarios = [
-            { scenariodata: scenariodata, status: Cucumber.Status.PASSED }
+            <Scenario> {
+                tags: ['@tcid:200'],
+                isPending: false,
+                isUndefined: false,
+                isSkipped: false,
+                isSuccessful: true
+            }
         ];
         pushTestResults(syncOptions, scenarios, (err: any, updateRequests: any) => {
             expect(Object.keys(updateRequests)).to.have.lengthOf(1);
@@ -79,7 +63,13 @@ describe('Send results to TestRail', () => {
 
     it('sends FAILED when scenario is failed', (done: Function) => {
         const scenarios = [
-            { scenariodata: scenariodata, status: Cucumber.Status.FAILED }
+            <Scenario> {
+                tags: ['@tcid:200'],
+                isPending: false,
+                isUndefined: false,
+                isSkipped: false,
+                isSuccessful: false
+            }
         ];
         pushTestResults(syncOptions, scenarios, (err: any, updateRequests: any) => {
             expect(Object.keys(updateRequests)).to.have.lengthOf(1);
@@ -93,10 +83,13 @@ describe('Send results to TestRail', () => {
         const error = new Error('An error');
         error.stack = 'A stack trace';
         const scenarios = [
-            {
-                scenariodata: scenariodata,
-                status: Cucumber.Status.FAILED,
-                failureException: error
+            <Scenario> {
+                tags: ['@tcid:200'],
+                isPending: false,
+                isUndefined: false,
+                isSkipped: false,
+                isSuccessful: false,
+                exception: error
             }
         ];
 
@@ -114,7 +107,13 @@ describe('Send results to TestRail', () => {
 
     it('sends BLOCKED when scenario is pending', (done: Function) => {
         const scenarios = [
-            { scenariodata: scenariodata, status: Cucumber.Status.PENDING }
+            <Scenario> {
+                tags: ['@tcid:200'],
+                isPending: true,
+                isUndefined: false,
+                isSkipped: false,
+                isSuccessful: false
+            }
         ];
         pushTestResults(syncOptions, scenarios, (err: any, updateRequests: any) => {
             expect(Object.keys(updateRequests)).to.have.lengthOf(1);
@@ -126,7 +125,13 @@ describe('Send results to TestRail', () => {
 
     it('does not send results when pushResults is not true', (done: Function) => {
         const scenarios = [
-            { scenariodata: scenariodata, status: Cucumber.Status.FAILED }
+            <Scenario> {
+                tags: ['@tcid:200'],
+                isPending: false,
+                isUndefined: false,
+                isSkipped: false,
+                isSuccessful: false
+            }
         ];
         pushTestResults(syncOptionsNoPush, scenarios, (err: any, updateRequests: any) => {
             expect(updateRequests).to.be.empty;
@@ -136,7 +141,13 @@ describe('Send results to TestRail', () => {
 
     it('send results when pushResults is not true but env.PUSH_RESULTS_TO_TESTRAIL is set', (done: Function) => {
         const scenarios = [
-            { scenariodata: scenariodata, status: Cucumber.Status.FAILED }
+            <Scenario> {
+                tags: ['@tcid:200'],
+                isPending: false,
+                isUndefined: false,
+                isSkipped: false,
+                isSuccessful: false
+            }
         ];
         process.env.PUSH_RESULTS_TO_TESTRAIL = '1';
         pushTestResults(syncOptionsNoPush, scenarios, (err: any, updateRequests: any) => {
@@ -151,12 +162,14 @@ describe('Send results to TestRail', () => {
     });
 
     it('does not send results if @tcid metatag is not present', (done: Function) => {
-        const scenariodataNotag: any = {
-            name: 'test scenario'
-        };
-        scenariodataNotag.steps = [];
         const scenarios = [
-            { scenariodata: scenariodataNotag, status: Cucumber.Status.FAILED }
+            <Scenario> {
+                tags: [],
+                isPending: false,
+                isUndefined: false,
+                isSkipped: false,
+                isSuccessful: false
+            }
         ];
         pushTestResults(syncOptions, scenarios, (err: any, updateRequests: any) => {
             expect(updateRequests).to.be.empty;
@@ -165,14 +178,21 @@ describe('Send results to TestRail', () => {
     });
 
     it('send results to multiple runs', (done: Function) => {
-        const scenariodata201: any = {
-            name: 'test scenario',
-            tags: [{ name: '@tcid:201' }]
-        };
-        scenariodata201.steps = [];
         const scenarios = [
-            { scenariodata: scenariodata, status: Cucumber.Status.FAILED },
-            { scenariodata: scenariodata201, status: Cucumber.Status.PASSED }
+            <Scenario> {
+                tags: ['@tcid:200'],
+                isPending: false,
+                isUndefined: false,
+                isSkipped: false,
+                isSuccessful: false
+            },
+            <Scenario> {
+                tags: ['@tcid:201'],
+                isPending: false,
+                isUndefined: false,
+                isSkipped: false,
+                isSuccessful: true
+            }
         ];
         const options = _.cloneDeep(syncOptions);
         delete options.testrail.filters.run_id;

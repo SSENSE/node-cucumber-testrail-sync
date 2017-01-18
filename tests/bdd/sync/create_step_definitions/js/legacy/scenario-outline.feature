@@ -13,7 +13,7 @@ Feature: Scenario Outline
       """
 
   Scenario: Using es5 template
-    Given I set the stepDefinitionsTemplate option to "es5.js"
+    Given I set the stepDefinitionsTemplate option to "es5.legacy.js"
     And I enable the stepDefinitionsStringPatterns option
     When I run the synchronization script
     Then There should be 1 feature file on the file system

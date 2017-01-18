@@ -3,4 +3,13 @@
 export {ScenarioSynchronizer} from './ScenarioSynchronizer';
 export {ResultSynchronizer} from './ResultSynchronizer';
 export {readConfig} from './readConfig';
-export {install} from './install';
+export {install, legacyInstall} from './install';
+
+export interface Scenario {
+    tags: string[];
+    isPending: boolean;
+    isUndefined: boolean;
+    isSkipped: boolean;
+    isSuccessful: boolean;
+    exception: Error;
+}

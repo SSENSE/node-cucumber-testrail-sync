@@ -1,0 +1,7 @@
+module.exports = function () {
+{{#steps}}	this.{{keyword}}({{{pattern}}}, ({{params}}) => {
+		callback(null, 'pending');
+	});
+
+{{/steps}}
+};

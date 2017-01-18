@@ -22,7 +22,7 @@ Feature: Scenario Outline Step Definitions
       """
 
   Scenario: Using es5 template
-    Given I set the stepDefinitionsTemplate option to "es5.js"
+    Given I set the stepDefinitionsTemplate option to "es5.legacy.js"
     When I run the synchronization script
     Then There should be 2 code files on the file system
     And The file "/js/parent-section/a-sub-section/my-first-test.js" should have the following content:
@@ -57,7 +57,7 @@ Feature: Scenario Outline Step Definitions
       """
 
   Scenario: Using es5 template - String patterns
-    Given I set the stepDefinitionsTemplate option to "es5.js"
+    Given I set the stepDefinitionsTemplate option to "es5.legacy.js"
     And I enable the stepDefinitionsStringPatterns option
     When I run the synchronization script
     Then There should be 2 code files on the file system
@@ -93,7 +93,7 @@ Feature: Scenario Outline Step Definitions
       """
 
   Scenario: Don't create duplicate step definitions
-    Given I set the stepDefinitionsTemplate option to "es5.js"
+    Given I set the stepDefinitionsTemplate option to "es5.legacy.js"
     And I enable the stepDefinitionsStringPatterns option
     And There is a file named "/js/parent-section/a-sub-section/my-first-test.js" with the content:
       """

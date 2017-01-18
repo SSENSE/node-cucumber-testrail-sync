@@ -20,7 +20,7 @@ Feature: Step definitions file creation - Scenarios mixed with Scenario outlines
       """
 
   Scenario: Don't create step definitions if they are already implemented
-    Given I set the stepDefinitionsTemplate option to "typescript.ts"
+    Given I set the stepDefinitionsTemplate option to "typescript.legacy.ts"
     And There is a file named "/js/api-helpers/common.ts" with the content:
       """
       module.exports = function (): void {

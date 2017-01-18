@@ -1,7 +1,7 @@
 import * as TestrailApiClient from 'testrail-api';
 import {pick} from 'lodash';
 import {ScenarioSynchronizerOptions} from '../index.d';
-import {HookScenario} from 'cucumber';
+import {Scenario} from './index';
 
 export class ResultSynchronizer {
     protected config: ScenarioSynchronizerOptions;
@@ -36,11 +36,11 @@ export class ResultSynchronizer {
         return Promise.resolve();
     }
 
-    public saveTestResult(scenario: HookScenario, callback?: Function): Promise<any> {
+    public saveTestResult(scenario: Scenario, callback?: Function): Promise<any> {
         if (this.config.pushResults === true) {
-            const tcidArray = scenario.getTags()
-                                .filter((tag: any) => tag.getName().startsWith('@tcid:'))
-                                .map((tag: any) => tag.getName().split(':').pop());
+            const tcidArray = scenario.tags
+                                .filter((tag: any) => tag.startsWith('@tcid:'))
+                                .map((tag: any) => tag.split(':').pop());
 
             if (tcidArray.length === 1) {
                 const testcaseId = tcidArray[0];
@@ -56,11 +56,11 @@ export class ResultSynchronizer {
                     result.comment = process.env.TESTRAIL_RESULTS_COMMENT;
                 }
 
-                if (scenario.isPending() || scenario.isUndefined() || scenario.isSkipped()) {
+                if (scenario.isPending || scenario.isUndefined || scenario.isSkipped) {
                     result.status_id = ResultSynchronizer.BLOCKED_STATUS_ID;
-                } else if (!scenario.isSuccessful()) {
+                } else if (!scenario.isSuccessful) {
                     result.status_id = ResultSynchronizer.FAILED_STATUS_ID;
-                    const exception = scenario.getException();
+                    const exception = scenario.exception;
 
                     if (typeof exception === 'string') {
                         result.comment += (result.comment.length ? '\n\n' : '') + exception;

@@ -78,6 +78,7 @@ export class ScenarioSynchronizer {
             },
             stepDefinitionsTemplate: Joi.string(),
             stepDefinitionsStringPatterns: Joi.boolean().default(false),
+            stepDefinitionsExpressions: Joi.boolean().default(false),
             indent: Joi.string().required(),
             silent: Joi.boolean().default(false),
             directoryStructure: {
@@ -269,7 +270,7 @@ export class ScenarioSynchronizer {
             path.resolve(this.config.stepDefinitionsDir, '..', 'support')
         ];
 
-        const re = /^this\.(Given|When|Then|defineStep)\((\/|')(.+)(\/|')(\w*)/;
+        const re = /^(?:(?:this|ctx)\.)(Given|When|Then|defineStep)\((\/|')(.+)(\/|')(\w*)/;
         for (const folder of foldersToScan) {
             try {
                 if (!fs.lstatSync(folder).isDirectory()) {
@@ -297,6 +298,7 @@ export class ScenarioSynchronizer {
                             if (matches[2] === '\'') {
                               isStringPattern = true;
                               pattern = pattern.replace(/\$\w+/g, '<\\w+>');
+                              pattern = pattern.replace(/{\w+}/g, '<\\w+>');
                             }
 
                             const step: Step = {
@@ -383,12 +385,14 @@ export class ScenarioSynchronizer {
         let testcases: any[] = [];
         if (this.config.testrail.filters.run_id) {
             testcases = await this.testrailClient.getTests(this.config.testrail.filters.run_id);
+            this.debug(`Found #${testcases.length} cases on TestRail for run_id = ${this.config.testrail.filters.run_id}`);
         // all runs in a test plan
         } else {
             let uniqueCaseIds: number[] = [];
             for (const planentry of this.plan.entries) {
                 for (const run of planentry.runs) {
                     const testcasesOfRun = await this.testrailClient.getTests(run.id);
+                    this.debug(`Found #${testcasesOfRun.length} cases on TestRail for run_id = ${run.id}`);
 
                     const newTestcases = testcasesOfRun.filter((t: any) => uniqueCaseIds.indexOf(t.case_id) === -1);
                     testcases = testcases.concat(newTestcases);
@@ -464,7 +468,11 @@ export class ScenarioSynchronizer {
             include_all: false
         };
 
-        return this.testrailClient.updatePlanEntry(planId, planEntry.id, content);
+        const response = await this.testrailClient.updatePlanEntry(planId, planEntry.id, content);
+        this.debug(`API call - update_plan_entry - plan_id=${planId}, entry_id=${planEntry.id} - content = ${JSON.stringify(content)}`);
+        this.debug(`Current plan entry = ${JSON.stringify(planEntry)}`);
+        this.debug(`API response = ${JSON.stringify(response)}`);
+        return Promise.resolve();
     }
 
     protected getGherkinFromTestcase(testcase: any): string {
@@ -516,6 +524,10 @@ export class ScenarioSynchronizer {
     public getGherkinLines(testcase: any): string[] {
         const arr = this.getGherkinFromTestcase(testcase).replace(/[\r]/g, '').split('\n')
           .map(Function.prototype.call, String.prototype.trim)
+          .map((line: string) => {
+            // replace ” by "
+            return line.replace(/”/g, '"');
+          })
           .map((line: string) => {
             // remove extra spaces
             // convert the first character to uppercase
@@ -763,6 +775,10 @@ export class ScenarioSynchronizer {
             }
         }
 
+        const isTypescript: boolean = (template === 'typescript.ts' || template === 'typescript.legacy.ts');
+        const isJavascript: boolean = template === 'es5.js' || template === 'es5.legacy.js' ||
+            template === 'es6.js' || template === 'es6.legacy.js';
+
         for (let i = 0; i < gherkinSteps.length; i++) {
             const gherkinsStep = gherkinSteps[i];
             // an example table or a comment
@@ -788,7 +804,7 @@ export class ScenarioSynchronizer {
 
             if (i + 1 < gherkinSteps.length) {
                 if (gherkinSteps[i + 1][0] === '|') { // an example table
-                    tableParam = template === 'typescript.ts' ? 'table: any' : 'table';
+                    tableParam = isTypescript ? 'table: any' : 'table';
                 }
             }
 
@@ -841,7 +857,7 @@ export class ScenarioSynchronizer {
                 let pattern: string = null;
                 const params: string[] = [];
 
-                if (this.config.stepDefinitionsStringPatterns) {
+                if (this.config.stepDefinitionsStringPatterns || this.config.stepDefinitionsExpressions) {
                     let match: any;
                     pattern = regex.replace(/\*/g, '\\*');
 
@@ -849,10 +865,12 @@ export class ScenarioSynchronizer {
                         do {
                             match = /<(\w+)>/.exec(pattern);
                             if (match) {
-                                pattern = pattern.substring(0, match.index) + '$' + match[1] +
+                                const varName = this.config.stepDefinitionsStringPatterns ? ('$' + match[1]) :
+                                    ('{' + match[1] + '}');
+                                pattern = pattern.substring(0, match.index) + varName +
                                     pattern.substring(match.index + match[0].length);
 
-                                params.push(template === 'typescript.ts' ? match[1] + ': any' : match[1]);
+                                params.push(isTypescript ? match[1] + ': any' : match[1]);
                             }
                         } while (match);
                     }
@@ -871,7 +889,7 @@ export class ScenarioSynchronizer {
                             match = /<(\w+)>/.exec(pattern);
                             if (match) {
                                 pattern = pattern.substring(0, match.index) + '(\\w+)' + pattern.substring(match.index + match[0].length);
-                                params.push(template === 'typescript.ts' ? match[1] + ': any' : match[1]);
+                                params.push(isTypescript ? match[1] + ': any' : match[1]);
                             }
                         } while (match);
 
@@ -893,7 +911,7 @@ export class ScenarioSynchronizer {
                         for (let n = 0; n < paramCount; n++) {
                           const argName = 'arg' + (n + 1);
 
-                          params.push(template === 'typescript.ts' ? argName + ': string' : argName);
+                          params.push(isTypescript ? argName + ': string' : argName);
                         }
 
                         if (tableParam.length) {
@@ -905,9 +923,9 @@ export class ScenarioSynchronizer {
                     pattern = '/' + step.regex + '/';
                 }
 
-                if (template === 'typescript.ts') {
+                if (isTypescript) {
                     params.push('callback: Function');
-                } else if (template === 'es5.js' || template === 'es6.js') {
+                } else if (isJavascript) {
                     params.push('callback');
                 }
 
@@ -1074,17 +1092,19 @@ export class ScenarioSynchronizer {
     }
 
     protected async promptForConfirmation(message: string): Promise<boolean> {
-        if (ScenarioSynchronizer.forcedPrompt !== undefined) {
-            return Promise.resolve(ScenarioSynchronizer.forcedPrompt);
-        }
-        /* istanbul ignore next */
-        return inquirer.prompt({
-            type: 'confirm',
-            name: 'confirm',
-            message,
-            default: false
-        }).then((answers: any) => {
-            return Promise.resolve(answers.confirm);
+        return new Promise<boolean>((resolve, reject) => {
+            if (ScenarioSynchronizer.forcedPrompt !== undefined) {
+                return resolve(ScenarioSynchronizer.forcedPrompt);
+            }
+            /* istanbul ignore next */
+            inquirer.prompt({
+                type: 'confirm',
+                name: 'confirm',
+                message,
+                default: false
+            }).then((answers: any) => {
+                return resolve(answers.confirm);
+            });
         });
     }
 

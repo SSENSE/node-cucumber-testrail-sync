@@ -2,12 +2,11 @@ import * as nock from 'nock';
 import * as fsMock from 'mock-fs';
 import * as path from 'path';
 import {duplicateFSInMemory} from './mock-fs-helper';
-import {HookScenario} from 'cucumber';
 import {ScenarioSynchronizer} from '../../../src/index';
 
 /* tslint:disable:no-invalid-this max-line-length max-func-body-length */
 const myHooks = function (): void {
-    this.Before((scenario: HookScenario, callback: Function) => {
+    this.Before((scenario: any, callback: Function) => {
         process.env.SILENT = true;
 
         this.syncOptions = {
@@ -242,7 +241,7 @@ const myHooks = function (): void {
         callback();
     });
 
-    this.After((scenario: HookScenario, callback: Function) => {
+    this.After((scenario: any, callback: Function) => {
         fsMock.restore();
         callback();
     });

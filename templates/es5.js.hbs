@@ -1,7 +1,9 @@
-module.exports = function () {
-{{#steps}}	this.{{keyword}}({{{pattern}}}, function ({{params}}) {
+var cucumber = require('cucumber');
+
+cucumber.defineSupportCode(function (ctx) {
+{{#steps}}	ctx.{{keyword}}({{{pattern}}}, function ({{params}}) {
 		callback(null, 'pending');
-	}.bind(this));
+	});
 
 {{/steps}}
-};
+});

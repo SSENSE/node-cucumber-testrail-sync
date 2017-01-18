@@ -23,6 +23,7 @@ interface ScenarioSynchronizerOptions extends TestrailOptions {
   };
   stepDefinitionsTemplate?: string;
   stepDefinitionsStringPatterns?: boolean;
+  stepDefinitionsExpressions?: boolean;
   indent?: string;
   silent?: boolean;
   directoryStructure?: {
