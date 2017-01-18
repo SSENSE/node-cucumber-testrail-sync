@@ -43,7 +43,13 @@ There are other possible options:
   }
   ```
 
-  * __stepDefinitionsTemplate__:  The template to use to generate blank step definition files - Possible values: `ruby.rb`, [`es5.js`, `es6.js`, `typescript.ts` => for cucumber-js >= 2.x], [`es5.legacy.js`, `es6.legacy.js`, `typescript.legacy.ts` => for cucumber-js 1.x]
+  * __stepDefinitionsTemplate__:  The template to use to generate blank step definition files - Possible values:
+
+    * for cucumber-js >= 2.x: `es5.js`, `es6.js`, `typescript.ts`
+
+    * for cucumber-js 1.x: `es5.legacy.js`, `es6.legacy.js`, `typescript.legacy.ts`
+
+    * other: `ruby.rb`
 
   * __indent__: The indentation character(s) to use when generating `.feature` or `.js` files (ie. `indent: '    '`, default: 2 spaces)
 
@@ -51,7 +57,9 @@ There are other possible options:
 
   * __stepDefinitionsDir__: The directory where blank step definition files should be created (default: `features/step_definitions`)
 
-  * __stepDefinitionsStringPatterns__: If set to `true`, [Strings patterns](https://github.com/cucumber/cucumber-js/blob/master/docs/support_files/string_patterns.md) will be used instead of regexps to write step definition files.
+  * __stepDefinitionsStringPatterns__: (cucumber-js 1.x only) If set to `true`, [Strings patterns](https://github.com/cucumber/cucumber-js/blob/v1.3.1/docs/support_files/string_patterns.md) will be used instead of regexps to write step definition files.
+
+  * __stepDefinitionsExpressions__: (cucumber-js >= 2.x only) If set to `true`, [Cucumber expressions](https://docs.cucumber.io/cucumber-expressions/) will be used instead of regexps to write step definition files.
 
   * __directoryStructure__: Used to match the TestRail sections tree with the local tests directory structure.
 
