@@ -72,6 +72,8 @@ const myHooks = function (): void {
             'custom_status': 5
         };
 
+        this.pushedGherkin = '';
+
         nock.disableNetConnect();
 
         // Plan 1: a single test run with 2 test cases
@@ -227,6 +229,7 @@ const myHooks = function (): void {
         .post('/index.php?/api/v2/add_case/1')
         .reply(200, (uri: any, requestBody: any) => {
             requestBody.id = 9900;
+            this.pushedGherkin = requestBody.custom_gherkin;
 
             return [200, requestBody];
         });

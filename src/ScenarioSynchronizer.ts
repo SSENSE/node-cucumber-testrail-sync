@@ -12,6 +12,7 @@ import * as uniquefilename from 'uniquefilename';
 import * as mkdirp from 'mkdirp';
 import * as Handlebars from 'handlebars';
 import {ScenarioSynchronizerOptions} from '../index.d';
+import {GherkinFormatter} from './GherkinFormatter';
 
 interface Step {
     keyword: string;
@@ -49,6 +50,7 @@ export class ScenarioSynchronizer {
     protected testFiles: any;
     protected implementedSteps: Step[];
     protected skippedCount: number;
+    protected formatter: GherkinFormatter;
     public static forcedPrompt: any;
 
     public async synchronize(config: ScenarioSynchronizerOptions, callback: Function): Promise<void> {
@@ -95,6 +97,8 @@ export class ScenarioSynchronizer {
         this.config = <ScenarioSynchronizerOptions> _.defaultsDeep(config, defaultConfig);
 
         this.templateDir = path.resolve(__dirname, '..', 'templates');
+
+        this.formatter = new GherkinFormatter();
 
         try {
             await this.validateConfig(schema);
@@ -439,7 +443,7 @@ export class ScenarioSynchronizer {
         const sectionId = this.config.newTestCase.section_id;
         const props: any = _.omit(this.config.newTestCase, 'section_id');
         props.title = testcase.title;
-        props.custom_gherkin = testcase.custom_gherkin;
+        props.custom_gherkin = this.formatter.replaceTablesByMultiPipesTables(testcase.custom_gherkin);
         return this.testrailClient.addCase(sectionId, props);
     }
 
@@ -473,122 +477,6 @@ export class ScenarioSynchronizer {
         this.debug(`Current plan entry = ${JSON.stringify(planEntry)}`);
         this.debug(`API response = ${JSON.stringify(response)}`);
         return Promise.resolve();
-    }
-
-    protected getGherkinFromTestcase(testcase: any): string {
-        if (testcase.custom_gherkin && testcase.custom_gherkin.length > 0) {
-            return testcase.custom_gherkin;
-        } else if (testcase.custom_steps && testcase.custom_steps.length > 0) {
-            return testcase.custom_steps;
-        } else if (testcase.custom_steps_separated && testcase.custom_steps_separated.length > 0) {
-            return testcase.custom_steps_separated.map((s: any) => s.content).join('\n');
-        }
-        return '';
-    }
-
-    /**
-     * Verify that each line is valid gherkin syntax
-     */
-    public isValidGherkin(gherkin: string): boolean {
-        if (gherkin === null) {
-            return false;
-        }
-
-        const lines = gherkin.split('\n')
-            .map(Function.prototype.call, String.prototype.trim)
-            .filter((line: string) => line.length > 0 && line.indexOf('Feature:') !== 0 && line.indexOf('Scenario:') !== 0);
-
-        const re = new RegExp('^(Given|When|And|Then|Examples|\\||#)', 'i');
-        const validLines = lines.filter((line: string) => re.test(line));
-
-        let numLinesWithData = 0;
-        let isData = false;
-        for (let i = 0; i < lines.length; i++) {
-            if (lines[i].substr(0, 3) === '"""') {
-                numLinesWithData++;
-                isData = !isData;
-                continue;
-            }
-            if (isData) {
-                numLinesWithData++;
-                continue;
-            }
-        }
-
-        return (lines.length === validLines.length + numLinesWithData);
-    }
-
-    /**
-     * Split the gherkin content from TestRail into lines
-     */
-    public getGherkinLines(testcase: any): string[] {
-        const arr = this.getGherkinFromTestcase(testcase).replace(/[\r]/g, '').split('\n')
-          .map(Function.prototype.call, String.prototype.trim)
-          .map((line: string) => {
-            // replace ” by "
-            return line.replace(/”/g, '"');
-          })
-          .map((line: string) => {
-            // remove extra spaces
-            // convert the first character to uppercase
-            return line.replace(/^(Given|When|Then|And)\s+(\w)/i, (match: any, first: any, second: any) => {
-              return first.charAt(0).toUpperCase() + first.slice(1) + ' ' + second.toUpperCase();
-            });
-          })
-          .filter((line: string) => line.length > 0 && line.indexOf('Scenario:') !== 0)
-          // replace line like: |:header1|:header2| by |header1|header2|
-          .map((line: string) => {
-            if (line[0] !== '|') {
-                return line;
-            }
-            return line.replace(/\|:/g, '|');
-          });
-
-        // insert a blank line before Examples
-        for (let i = arr.length - 1; i > 0; i--) {
-            if (arr[i].indexOf('Examples') === 0) {
-                arr.splice(i, 0, '');
-            }
-        }
-
-        return this.replaceMultiPipesTables(arr);
-    }
-
-    protected replaceMultiPipesTables(arr: string[]): string[] {
-        let tableStart = -1;
-        for (let i = 0; i < arr.length; i++) {
-            if (arr[i][0] === '|' && i + 1 < arr.length) {
-                if (tableStart === -1) {
-                    tableStart = i;
-                }
-            } else if (tableStart !== -1) {
-                let tableEnd = i;
-                if (arr[i][0] === '|' && i + 1 === arr.length) {
-                    tableEnd = tableEnd + 1;
-                }
-
-                // Replace tables like: ||value1|value2 by |value1|value2|
-                // All rows of the table should start with ||'s - or ||| for the first one
-                const len = tableEnd - tableStart;
-                const multiPipesLines = arr.filter((value: string, index: Number): boolean => {
-                    return index >= tableStart && index < tableEnd;
-                }).filter((value: string): boolean => {
-                    return value.substr(0, 2) === '||';
-                }).length;
-
-                if (len === multiPipesLines) {
-                    arr.splice.apply(arr, (<any[]> [ tableStart, len ]).concat(
-                         arr.filter((value: string, index: Number): boolean => {
-                            return index >= tableStart && index < tableEnd;
-                        }).map((line: string) => line.replace(/^(\|{2,})(.*)$/, '|$2|'))
-                    ));
-                }
-
-                tableStart = -1;
-            }
-        }
-
-        return arr;
     }
 
     /**
@@ -670,7 +558,7 @@ export class ScenarioSynchronizer {
             .slice(3)
             .map(Function.prototype.call, String.prototype.trim);
 
-        const customGherkin = gherkinSteps.join('\n');
+        const customGherkin = this.formatter.replaceTablesByMultiPipesTables(gherkinSteps.join('\n'));
 
         if (testcase.custom_steps && testcase.custom_steps.length > 0) {
             return this.testrailClient.updateCase(testcase.case_id, { custom_steps: customGherkin });
@@ -962,7 +850,7 @@ export class ScenarioSynchronizer {
                 continue;
             }
 
-            const gherkin = this.getGherkinLines(testcase);
+            const gherkin = this.formatter.formatLinesFromTestrail(testcase);
             const remoteFileContent = this.getFeatureFileContent(testcase, gherkin);
 
             const featurePath = this.testFiles[testcase.case_id];
@@ -1033,12 +921,12 @@ export class ScenarioSynchronizer {
         const testcases = await this.getTests();
         for (const testcase of testcases) {
             const slug = S(testcase.title).slugify().s;
-            const gherkin = this.getGherkinFromTestcase(testcase);
+            const gherkin = this.formatter.getGherkinFromTestcase(testcase);
             /* istanbul ignore else: isValidGherkin function covered in unit test */
             if (gherkin.length === 0) {
                 const log = `Empty gherkin content for TestCase #${testcase.case_id}-${slug}`;
                 this.output(chalk.yellow(log));
-            } else if (this.isValidGherkin(gherkin)) {
+            } else if (this.formatter.isValidGherkin(gherkin)) {
                 this.debug(`Valid gherkin for TestCase #${testcase.case_id}-${slug}`);
                 await this.synchronizeCase(testcase, this.getRelativePath(testcase.case_id));
             } else {
@@ -1053,8 +941,8 @@ export class ScenarioSynchronizer {
             this.config.newTestCase !== undefined) {
             const newLocalTestcases = await this.getNewLocalTests();
             for (const localTestcase of newLocalTestcases) {
-                const gherkin = this.getGherkinFromTestcase(localTestcase);
-                if (this.isValidGherkin(gherkin)) {
+                const gherkin = this.formatter.getGherkinFromTestcase(localTestcase);
+                if (this.formatter.isValidGherkin(gherkin)) {
                     this.output('  ' + chalk.green(`Pushing new testcase "${localTestcase.title}" to TestRail`));
 
                     localTestcase.custom_gherkin = gherkin.split('\n')
@@ -1156,7 +1044,7 @@ export class ScenarioSynchronizer {
             mkdirp.sync(this.config.featuresDir + '/' + relativePath);
         }
 
-        const gherkin = this.getGherkinLines(testcase);
+        const gherkin = this.formatter.formatLinesFromTestrail(testcase);
         const remoteFileContent = this.getFeatureFileContent(testcase, gherkin);
 
         if (!exists) {

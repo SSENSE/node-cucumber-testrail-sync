@@ -5,7 +5,5 @@ tsconfig.json
 tslint.json
 typings.json
 typings.d.ts
-typings
 .gitignore
 .travis.yml
-.publishrc

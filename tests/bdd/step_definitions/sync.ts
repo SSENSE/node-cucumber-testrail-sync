@@ -91,4 +91,9 @@ module.exports = function (): void {
         expect(fs.readFileSync(filePath).toString()).to.equal(fileContent);
         callback();
     });
+
+    this.Then(/^The pushed testcase should have the following gherkin:$/, (gherkins: string, callback: Function) => {
+        expect(this.pushedGherkin).to.be.equal(gherkins);
+        callback();
+    });
 };
