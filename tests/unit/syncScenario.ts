@@ -52,6 +52,13 @@ describe('GherkinFormatter', () => {
         expect(formatter.formatLinesFromTestrail({ custom_gherkin: gherkin })).to.deep.equal(expected);
     });
 
+    it('formatLinesFromTestrail succeed when called with valid gherkin with tables #3', () => {
+        const gherkin = '|||:Header 1|:Header 2\n|| Line 1.1 | Line 1.2\n||| Line 2.2';
+        const expected = [ '|Header 1|Header 2|', '| Line 1.1 | Line 1.2|', '|| Line 2.2|'];
+
+        expect(formatter.formatLinesFromTestrail({ custom_gherkin: gherkin })).to.deep.equal(expected);
+    });
+
     // In case of a hardcoded table, rows should end by a |
     // | header1 | header2 |
     // || value |

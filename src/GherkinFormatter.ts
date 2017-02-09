@@ -104,7 +104,12 @@ export class GherkinFormatter {
                     arr.splice.apply(arr, (<any[]> [ tableStart, len ]).concat(
                          arr.filter((value: string, index: Number): boolean => {
                             return index >= tableStart && index < tableEnd;
-                        }).map((line: string) => line.replace(/^(\|{2,})(.*)$/, '|$2|'))
+                        }).map((line: string, index: number) => {
+                            if (index === 0) {
+                                return line.replace(/^(\|{2,})(.*)$/, '|$2|');
+                            }
+                            return line.replace(/^(\|{2})(.*)$/, '|$2|');
+                        })
                     ));
                 }
 
