@@ -36,6 +36,7 @@ const myHooks = function (): void {
         this.scriptError = null;
 
         this.fsMockConfig = {
+            node_modules: duplicateFSInMemory(path.resolve('node_modules')),
             templates: duplicateFSInMemory(path.resolve('templates')),
             '/feature': {},
             '/js': {}
