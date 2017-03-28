@@ -1,6 +1,6 @@
 {
   "name": "@ssense/cucumber-testrail-sync",
-  "version": "3.0.2",
+  "version": "3.0.3",
   "description": "Synchronize test cases from TestRail & pushes Cucumber results",
   "bin": {
     "cucumber-testrail-sync": "./dist/bin/sync-test-cases.js",
@@ -47,7 +47,7 @@
     "lodash": "^4.13.1",
     "mkdirp": "^0.5.1",
     "string": "^3.3.1",
-    "testrail-api": "^1.0.5",
+    "testrail-api": "^1.0.6",
     "uniquefilename": "^1.1.1",
     "walkdir": "0.0.11"
   },

@@ -1,6 +1,6 @@
 # Change Log
 
-## [3.0.0](https://github.com/SSENSE/node-cucumber-testrail-sync/tree/3.0.0) (2017-01-?)
+## [3.0.0](https://github.com/SSENSE/node-cucumber-testrail-sync/tree/3.0.0) (2017-01-18)
 
 - Replace word accents (replace ” by ") when importing from TestRail
 
