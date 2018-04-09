@@ -30,13 +30,13 @@ interface TestRun {
 
 interface TestPlan {
     project_id: number;
-    entries: [TestPlanEntry];
+    entries: TestPlanEntry[];
 }
 
 interface TestPlanEntry {
     id: string;
     name: string;
-    runs: [TestRun];
+    runs: TestRun[];
     suite_id: number;
 }
 

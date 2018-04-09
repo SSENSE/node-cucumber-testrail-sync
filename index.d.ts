@@ -14,7 +14,7 @@ interface TestrailOptions {
   };
 }
 
-interface ScenarioSynchronizerOptions extends TestrailOptions {
+export interface ScenarioSynchronizerOptions extends TestrailOptions {
   featuresDir: string;
   stepDefinitionsDir: string;
   overwrite?: {
