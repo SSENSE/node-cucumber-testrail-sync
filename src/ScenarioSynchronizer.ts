@@ -1,6 +1,5 @@
 import * as TestrailApiClient from 'testrail-api';
 import * as path from 'path';
-import * as S from 'string';
 import * as chalk from 'chalk';
 import * as jsdiff from 'diff';
 import * as fs from 'fs';
@@ -227,7 +226,7 @@ export class ScenarioSynchronizer {
             const sectionId = sections[i].id;
             const node = {
                 name: sections[i].name,
-                slug: S(sections[i].name).slugify().s,
+                slug: this.slugify(sections[i].name),
                 parent_id: sections[i].parent_id
             };
             this.sectionTree[sectionId] = node;
@@ -920,7 +919,7 @@ export class ScenarioSynchronizer {
 
         const testcases = await this.getTests();
         for (const testcase of testcases) {
-            const slug = S(testcase.title).slugify().s;
+            const slug = this.slugify(testcase.title);
             const gherkin = this.formatter.getGherkinFromTestcase(testcase);
             /* istanbul ignore else: isValidGherkin function covered in unit test */
             if (gherkin.length === 0) {
@@ -1025,7 +1024,7 @@ export class ScenarioSynchronizer {
      * Synchronize a test case from TestRail to the local filesystem
      */
     protected async synchronizeCase(testcase: any, relativePath: string): Promise<any> {
-        const basename = S(testcase.title).slugify().s;
+        const basename = this.slugify(testcase.title);
         const exists = (this.testFiles[testcase.case_id] !== undefined);
 
         let featurePath = path.resolve(this.config.featuresDir + '/' + relativePath, basename + '.feature');
@@ -1099,5 +1098,14 @@ export class ScenarioSynchronizer {
                 return Promise.resolve();
             }
         }
+    }
+
+    protected slugify(string: string): string {
+        return string
+            .split(' ')
+            .join('-')
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .toLowerCase();
     }
 }
