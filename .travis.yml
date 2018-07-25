@@ -1,10 +1,10 @@
 sudo: false
 language: node_js
 node_js:
-  - 4
-  - 5
-  - 6
-  - stable
+  - lts/argon
+  - lts/boron
+  - lts/carbon
+  - 10.4.0
 
 before_install:
   - npm config set progress=false
