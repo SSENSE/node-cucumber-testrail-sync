@@ -10,7 +10,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const TestrailApiClient = require("testrail-api");
 const path = require("path");
-const S = require("string");
 const chalk = require("chalk");
 const jsdiff = require("diff");
 const fs = require("fs");
@@ -187,7 +186,7 @@ class ScenarioSynchronizer {
                 const sectionId = sections[i].id;
                 const node = {
                     name: sections[i].name,
-                    slug: S(sections[i].name).slugify().s,
+                    slug: sections[i].name.split(' ').join('-').toLowerCase(),
                     parent_id: sections[i].parent_id
                 };
                 this.sectionTree[sectionId] = node;
@@ -780,7 +779,7 @@ class ScenarioSynchronizer {
             this.skippedCount = 0;
             const testcases = yield this.getTests();
             for (const testcase of testcases) {
-                const slug = S(testcase.title).slugify().s;
+                const slug = testcase.title.split(' ').join('-').toLowerCase();
                 const gherkin = this.formatter.getGherkinFromTestcase(testcase);
                 /* istanbul ignore else: isValidGherkin function covered in unit test */
                 if (gherkin.length === 0) {
@@ -880,7 +879,7 @@ class ScenarioSynchronizer {
      */
     synchronizeCase(testcase, relativePath) {
         return __awaiter(this, void 0, void 0, function* () {
-            const basename = S(testcase.title).slugify().s;
+            const basename = testcase.title.split(' ').join('-').toLowerCase();
             const exists = (this.testFiles[testcase.case_id] !== undefined);
             let featurePath = path.resolve(this.config.featuresDir + '/' + relativePath, basename + '.feature');
             const stepDefinitionsExtension = this.config.stepDefinitionsTemplate ?
