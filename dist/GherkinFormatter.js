@@ -10,7 +10,7 @@ class GherkinFormatter {
         }
         const lines = gherkin.split('\n')
             .map(Function.prototype.call, String.prototype.trim)
-            .filter((line) => line.length > 0 && line.indexOf('Feature:') !== 0 && line.indexOf('Scenario:') !== 0);
+            .filter((line) => line.length > 0 && line.indexOf('Feature:') !== 0 && line.indexOf('Scenario:') !== 0 && line.indexOf('Scenario Outline:') !== 0);
         const re = new RegExp('^(Given|When|And|Then|Examples|\\||#)', 'i');
         const validLines = lines.filter((line) => re.test(line));
         let numLinesWithData = 0;
