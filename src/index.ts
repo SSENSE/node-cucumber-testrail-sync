@@ -19,13 +19,13 @@ export interface Scenario {
 export interface TestCaseReport {
   id: Number;
   name: string;
-  tags: Array<Tag>;
+  tags: Tag[];
   type: string;
   steps: Array<Step>;
 }
 
 export interface Step {
-  arguments: Array<any>;
+  arguments: any[];
   keyword: string;
   line: Number;
   name: string;
