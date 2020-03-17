@@ -1,6 +1,6 @@
-import {readConfig} from './readConfig';
-import {ResultSynchronizer} from './ResultSynchronizer';
-import {Scenario} from './index';
+import { readConfig } from './readConfig';
+import { ResultSynchronizer } from './ResultSynchronizer';
+import { Scenario } from './index';
 
 // tslint:disable-next-line:variable-name
 const installHandlers = (registerHandler: any, After: any): void => {
