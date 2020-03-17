@@ -34,20 +34,18 @@ export class GherkinFormatter {
     public getGherkinFromTestcase(testcase: any): string {
         let gherkinTest = '';
         if (testcase.custom_preconds && testcase.custom_preconds.length > 0) {
-            gherkinTest+= testcase.custom_preconds+'\n';
+            gherkinTest += testcase.custom_preconds + '\n';
         }
 
         if (testcase.custom_gherkin && testcase.custom_gherkin.length > 0) {
-            gherkinTest+= testcase.custom_gherkin;
-        }
-        else if (testcase.custom_steps && testcase.custom_steps.length > 0) {
-            gherkinTest+= testcase.custom_steps;
-        }
-        else if (testcase.custom_steps_separated && testcase.custom_steps_separated.length > 0) {
-            gherkinTest+= testcase.custom_steps_separated.map((s) => s.content).join('\n');
+            gherkinTest += testcase.custom_gherkin;
+        } else if (testcase.custom_steps && testcase.custom_steps.length > 0) {
+            gherkinTest += testcase.custom_steps;
+        } else if (testcase.custom_steps_separated && testcase.custom_steps_separated.length > 0) {
+            gherkinTest += testcase.custom_steps_separated.map((s) => s.content).join('\n');
         }
         if (testcase.custom_expected && testcase.custom_expected.length > 0) {
-            gherkinTest+= '\n'+testcase.custom_expected+'\n';
+            gherkinTest += '\n' + testcase.custom_expected + '\n';
         }
 
         return gherkinTest;

@@ -16,8 +16,8 @@ export const fixtures = {
           tags: [
             {
               name: '@tcid:77980',
-              line: 2,
-            },
+              line: 2
+            }
           ],
           type: 'scenario',
           steps: [
@@ -28,8 +28,8 @@ export const fixtures = {
               name: 'I am on my page',
               result: {
                 status: 'passed',
-                duration: 8021000000,
-              },
+                duration: 8021000000
+              }
             },
             {
               arguments: [],
@@ -38,8 +38,8 @@ export const fixtures = {
               name: 'I log as a valid user',
               result: {
                 status: 'passed',
-                duration: 9687000000,
-              },
+                duration: 9687000000
+              }
             },
             {
               arguments: [],
@@ -48,13 +48,13 @@ export const fixtures = {
               name: 'I see the News Line',
               result: {
                 status: 'passed',
-                duration: 7555000000,
-              },
-            },
-          ],
-        },
-      ],
-    },
+                duration: 7555000000
+              }
+            }
+          ]
+        }
+      ]
+    }
   ],
   emptyElements: [
     {
@@ -64,8 +64,8 @@ export const fixtures = {
       id: 'test-cases',
       tags: [],
       uri: 'login.feature',
-      elements: [],
-    },
+      elements: []
+    }
   ],
   empty: [],
   errorOnLastStep: [
@@ -85,8 +85,8 @@ export const fixtures = {
           tags: [
             {
               name: '@tcid:77980',
-              line: 2,
-            },
+              line: 2
+            }
           ],
           type: 'scenario',
           steps: [
@@ -97,8 +97,8 @@ export const fixtures = {
               name: 'I am on my page',
               result: {
                 status: 'passed',
-                duration: 8021000000,
-              },
+                duration: 8021000000
+              }
             },
             {
               arguments: [],
@@ -107,8 +107,8 @@ export const fixtures = {
               name: 'I log as a valid user',
               result: {
                 status: 'passed',
-                duration: 9687000000,
-              },
+                duration: 9687000000
+              }
             },
             {
               arguments: [],
@@ -117,12 +117,12 @@ export const fixtures = {
               name: 'I see the News Line',
               result: {
                 status: 'failed',
-                duration: 7555000000,
-              },
-            },
-          ],
-        },
-      ],
-    },
-  ],
-}
+                duration: 7555000000
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+};

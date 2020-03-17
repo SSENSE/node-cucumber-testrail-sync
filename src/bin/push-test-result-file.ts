@@ -1,62 +1,62 @@
 #!/usr/bin/env node
-import * as program from 'commander'
-import * as path from 'path'
-import { ResultSynchronizer, readConfig, CucumberReportParser } from '../index'
+import * as program from 'commander';
+import * as path from 'path';
+import { ResultSynchronizer, readConfig, CucumberReportParser } from '../index';
 
-let parser = new CucumberReportParser()
+const parser = new CucumberReportParser();
 
 program
-  .option('--file <String>', 'filename in results directory')
-  .parse(process.argv)
+    .option('--file <String>', 'filename in results directory')
+    .parse(process.argv);
 
 const error = (s: string): void => {
-  program.outputHelp()
-  console.log()
-  console.log('Error: ' + s)
-  process.exit(1)
-}
+    program.outputHelp();
+    console.log();
+    console.log('Error: ' + s);
+    process.exit(1);
+};
 
-if (!(<any>program).file || [0, NaN].indexOf((<any>program).file) !== -1) {
-  error('<testcase file> is required and must be a string')
+if (!(<any> program).file || [0, NaN].indexOf((<any> program).file) !== -1) {
+    error('<testcase file> is required and must be a string');
 }
-let config = readConfig()
-config.pushResults = true
+const config = readConfig();
+config.pushResults = true;
 
-const resultFile = String((<any>program).file)
-let results
+const resultFile = String((<any> program).file);
+let results;
 try {
-  results = require(path.resolve(config.resultsDir, resultFile))
+    results = require(path.resolve(config.resultsDir, resultFile));
 } catch (e) {
-  error(
-    `<testcase file> error reading file[${path.resolve(
-      config.resultsDir,
-      resultFile
-    )}] exception[${e}]`
-  )
+    error(
+        `<testcase file> error reading file[${path.resolve(
+            config.resultsDir,
+            resultFile
+        )}] exception[${e}]`
+    );
 }
 
 if (!Array.isArray(results)) {
-  error(
-    `<testcase file> wrong cucumber format result file ${path.resolve(
-      config.resultsDir,
-      resultFile
-    )}`
-  )
+    error(
+        `<testcase file> wrong cucumber format result file ${path.resolve(
+            config.resultsDir,
+            resultFile
+        )}`
+    );
 }
 
-const scenarios = parser.parseReport(results)
+const scenarios = parser.parseReport(results);
 
-const sync = new ResultSynchronizer(config)
-const savePromises = []
+const sync = new ResultSynchronizer(config);
+const savePromises = [];
 for (const scenario of scenarios) {
-  savePromises.push(sync.saveTestResult(scenario))
+    savePromises.push(sync.saveTestResult(scenario));
 }
 Promise.all(savePromises)
-  .then(() =>
-    sync.readRemoteTestRuns().then(() =>
-      sync.pushTestResults().then(function() {
-        console.log(`sync done`)
-      })
+    .then(() =>
+        sync.readRemoteTestRuns().then(() =>
+            sync.pushTestResults().then(function() {
+                console.log(`sync done`);
+            })
+        )
     )
-  )
-  .catch(e => error(e))
+    .catch(e => error(e));

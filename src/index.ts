@@ -1,43 +1,43 @@
 // tslint:disable-next-line:no-reference
 /// <reference path="../typings.d.ts" />
-export { ScenarioSynchronizer } from './ScenarioSynchronizer'
-export { ResultSynchronizer } from './ResultSynchronizer'
-export { CucumberReportParser } from './CucumberReportParser'
+export { ScenarioSynchronizer } from './ScenarioSynchronizer';
+export { ResultSynchronizer } from './ResultSynchronizer';
+export { CucumberReportParser } from './CucumberReportParser';
 
-export { readConfig } from './readConfig'
-export { install, legacyInstall } from './install'
+export { readConfig } from './readConfig';
+export { install, legacyInstall } from './install';
 
 export interface Scenario {
-  tags: string[]
-  isPending: boolean
-  isUndefined: boolean
-  isSkipped: boolean
-  isSuccessful: boolean
-  exception: Error
+  tags: string[];
+  isPending: boolean;
+  isUndefined: boolean;
+  isSkipped: boolean;
+  isSuccessful: boolean;
+  exception: Error;
 }
 
 export interface TestCaseReport {
-  id: Number
-  name: string
-  tags: Array<Tag>
-  type: string
-  steps: Array<Step>
+  id: Number;
+  name: string;
+  tags: Array<Tag>;
+  type: string;
+  steps: Array<Step>;
 }
 
 export interface Step {
-  arguments: Array<any>
-  keyword: string
-  line: Number
-  name: string
-  result: StepResult
+  arguments: Array<any>;
+  keyword: string;
+  line: Number;
+  name: string;
+  result: StepResult;
 }
 
 export interface StepResult {
-  status: string
-  duration: Number
+  status: string;
+  duration: Number;
 }
 
 export interface Tag {
-  line: Number
-  name: String
+  line: Number;
+  name: String;
 }
