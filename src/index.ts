@@ -21,7 +21,7 @@ export interface TestCaseReport {
   name: string;
   tags: Tag[];
   type: string;
-  steps: Array<Step>;
+  steps: Step[];
 }
 
 export interface Step {
