@@ -6,7 +6,8 @@ exports.readConfig = () => {
     const dir = process.cwd();
     const defaultOptions = {
         featuresDir: path.resolve(dir, 'features'),
-        stepDefinitionsDir: path.resolve(dir, 'features', 'step_definitions')
+        stepDefinitionsDir: path.resolve(dir, 'features', 'step_definitions'),
+        resultsDir: path.resolve(dir, 'results'),
     };
     const options = require(path.resolve(dir, '.testrail-sync.js'));
     if (options.featuresDir) {

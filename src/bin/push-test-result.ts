@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import * as program from 'commander';
-import {ResultSynchronizer, readConfig} from '../index';
+import { ResultSynchronizer, readConfig } from '../index';
 
 program
     .option('--id <id>', 'testcase id')
