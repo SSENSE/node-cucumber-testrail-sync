@@ -25,7 +25,6 @@ export interface TestCaseReport {
 }
 
 export interface Step {
-  arguments: any[];
   keyword: string;
   line: Number;
   name: string;
