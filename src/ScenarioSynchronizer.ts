@@ -479,6 +479,23 @@ export class ScenarioSynchronizer {
     }
 
     /**
+     * Sets the tags for .feature file content based on the test status from TestRail
+     */
+    protected getTags(testcase: any): string {
+        const STATUSES: any = {
+            1: 'passed',
+            2: 'blocked',
+            3: 'untested',
+            4: 'retest',
+            5: 'failed',
+            6: 'knownissue',
+            7: 'outofscope'
+        };
+        let tags = `${this.config.indent}@tcid:${testcase.case_id}\n`;
+        tags += `${this.config.indent}@:${STATUSES[testcase.status_id]}`;
+        return tags;
+    }
+    /**
      * Gets the .feature file content based on a test case from TestRail
      */
     protected getFeatureFileContent(testcase: any, gherkin: string[]): string {
@@ -488,7 +505,7 @@ export class ScenarioSynchronizer {
         }
 
         let content = 'Feature: ' + this.getLastSectionName(testcase.case_id) + '\n';
-        content += this.config.indent + '@tcid:' + testcase.case_id + '\n';
+        content += this.getTags(testcase);
         content += this.config.indent + scenarioType + ': ' + testcase.title + '\n' + this.config.indent + this.config.indent;
         content += gherkin.join('\n' + this.config.indent + this.config.indent);
 
