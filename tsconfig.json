@@ -9,7 +9,8 @@
     "noImplicitAny": true,
     "noImplicitReturns": true,
     "forceConsistentCasingInFileNames": true,
-    "removeComments": false
+    "removeComments": false,
+    "skipLibCheck": true
   },
   "exclude": [
     "node_modules",

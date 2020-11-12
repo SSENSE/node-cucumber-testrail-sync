@@ -1,14 +1,15 @@
 {
-  "name": "@ssense/cucumber-testrail-sync",
-  "version": "3.0.5",
-  "description": "Synchronize test cases from TestRail & pushes Cucumber results",
+  "name": "@els-qa/cucumber-testrail-sync",
+  "version": "1.0.0",
+  "description": "Synchronize test cases from TestRail & pushes test results",
   "bin": {
     "cucumber-testrail-sync": "./dist/bin/sync-test-cases.js",
     "push-result-to-testrail": "./dist/bin/push-test-result.js"
   },
   "main": "./dist/index.js",
   "scripts": {
-    "compile": "rm -rf dist/* && tsc",
+    "compile-unix": "rm -rf dist/* && tsc",
+    "compile-win": "rmdir /s /q dist/* && tsc",
     "lint": "tslint ./src/{,**/}*.ts ./tests/{,**/}*.ts --format verbose",
     "test": "npm run test:unit && npm run test:bdd",
     "test:unit": "NODE_ENV=test mocha tests/unit --recursive --compilers ts:ts-node/register --bail",
@@ -20,7 +21,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/SSENSE/node-cucumber-testrail-sync.git"
+    "url": "git+https://github.com/tsvetkovaa/els-qa-cucumber-testrail-sync.git"
   },
   "keywords": [
     "cucumber",
@@ -28,7 +29,7 @@
     "bdd",
     "qa"
   ],
-  "author": "Mickael Burguet <www.rundef.com>",
+  "author": "Alexandra Tsvetkova",
   "publishConfig": {
     "access": "public"
   },
